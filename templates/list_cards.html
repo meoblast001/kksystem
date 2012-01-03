@@ -1,0 +1,37 @@
+<!--
+Copyright (C) 2011 Braden Walters
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+{% extends "menu.html" %}
+
+{% block extras %}
+	<div style="text-align: center;">
+		{% if current_first_card > 0 %}
+			<a href="{% url edit-view-cards-by-set set_id %}?first_card={{ previous_first_card }}&search={{ search }}&card_front={% if card_front %}on{% else %}off{% endif %}&card_back={% if card_back %}on{% else %}off{% endif %}">&lt;Previous&gt;</a>
+		{% endif %}
+		{% if next_first_card < num_cards %}
+			<a href="{% url edit-view-cards-by-set set_id %}?first_card={{ next_first_card }}&search={{ search }}&card_front={% if card_front %}on{% else %}off{% endif %}&card_back={% if card_back %}on{% else %}off{% endif %}">&lt;Next&gt;</a>
+		{% endif %}
+		<br /><br />
+		Search:<br />
+		<form action="{% url edit-search-cards-by-set set_id %}" method="get" style="width: 95%;">
+			<input type="text" name="search" style="width: 100%;" value="{{ search }}" /><br />
+			<input type="checkbox" name="card_front" {% if card_front == 2 or card_front == 0 %}checked="checked"{% endif %} /> Card Front<br />
+			<input type="checkbox" name="card_back" {% if card_back == 2 %}checked="checked"{% endif %} /> Card Back<br />
+			<input type="submit" value="Search" style="width: 50%;" />
+		</form>
+	</div>
+{% endblock %}

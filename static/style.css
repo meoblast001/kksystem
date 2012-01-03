@@ -1,0 +1,40 @@
+body
+{
+	font-family: sans;
+	font-size: 12px;
+	margin-top: 25px;
+}
+
+.block
+{
+	margin-left: auto;
+	margin-right: auto;
+	border: solid 1px #2A00FF;
+	padding: 10px;
+	box-shadow: 5px 5px 5px #8270E0;
+}
+
+.box
+{
+	border: 1px solid #000000;
+	width: 95%;
+}
+
+.menuitem
+{
+	padding-bottom: 5px;
+}
+
+a.menuitem_link
+{
+	color: #000000;
+	font-style: italic;
+	text-decoration: none;
+}
+
+.dashbutton
+{
+	border: solid 1px #000000;
+	color: #000000;
+	text-decoration: none;
+}

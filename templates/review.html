@@ -1,0 +1,55 @@
+<!--
+Copyright (C) 2011 Braden Walters
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+{% extends "base.html" %}
+
+{% block title %}{{ menu_title }}{% endblock %}
+
+{% block head %}
+	<script type="text/javascript">
+		function Show()
+		{
+			document.getElementById("back").style.visibility = "visible";
+			document.getElementById("correct").innerHTML = "<a href=\"{% url run-correct card.id %}{{ url_append }}\" class=\"dashbutton\" style=\"background-color: #00A000;\">Correct</a>";
+			document.getElementById("incorrect").innerHTML = "<a href=\"{% url run-incorrect card.id %}{{ url_append }}\" class=\"dashbutton\" style=\"background-color: #A00000;\">Incorrect</a>";
+		}
+	</script>
+{% endblock %}
+
+{% block body %}
+	{% if card_box %}
+		<h3>Card Box: {{ card_box.name }}</h3>
+	{% else %}
+		<h3>No Card Box</h3>
+	{% endif %}
+	<div id="front" class="block" style="width: 200px;">
+		{{ card.front }}
+	</div>
+	<br /><br />
+	<div id="back" class="block" style="width: 200px; visibility: hidden;">
+		{{ card.back }}
+	</div>
+	<br /><br />
+	<div style="text-align: center;">
+		<a href="javascript:Show()" class="dashbutton" style="background-color: #FFFFFF;">Show</a><br /><br />
+		<span id="correct"><span class="dashbutton" style="background-color: #00A000;">Correct</span></span><br /><br />
+		<span id="incorrect"><span class="dashbutton" style="background-color: #A00000;">Incorrect</span></span><br /><br />
+		{% if not card_box %}
+			<a href="{% url run-finished %}" class="dashbutton" style="background-color: #FFFFFF;">Finished</a><br /><br />
+		{% endif %}
+	</div>
+{% endblock %}
