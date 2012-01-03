@@ -1,8 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
-	url(r'^accounts/login/$', 'karteikarten.login.Form', name = 'login-form'),
-	url(r'^accounts/login/request/$', 'karteikarten.login.Submit', name = 'login-submit'),
+	url(r'^accounts/login/$', 'karteikarten.login.Login', name = 'login'),
 	url(r'^accounts/logout/$', 'karteikarten.login.Logout', name = 'logout'),
 	url(r'^accounts/register/$', 'karteikarten.login.RegisterForm', name = 'register-form'),
 	url(r'^accounts/register/request/$', 'karteikarten.login.RegisterSubmit', name = 'register-submit'),

@@ -20,6 +20,20 @@ body
 	width: 95%;
 }
 
+.box_form input
+{
+	border: 1px solid #000000;
+	width: 95%;
+}
+
+.errorlist
+{
+	color: #FF0000;
+	list-style-type: none;
+	padding-left: 0px;
+	margin: 0px;
+}
+
 .menuitem
 {
 	padding-bottom: 5px;

@@ -23,11 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<div style="text-align: center;"><img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikarten System" /></div>
 	<div class="block" style="width: 200px; text-align: center;">
 		<h2>Login</h2>
-		<form action="{% url login-submit %}{{ url_append }}" method="post">
+		<form action="{% url login %}{{ url_append }}" method="post" class="box_form">
 			{% csrf_token %}
-			Username: <input type="text" name="username" class="box" /><br />
-			Password: <input type="password" name="password" class="box" /><br />
-			<br />
+			{% for field in form %}
+				{{ field.label_tag }}: {{ field }}
+				{{ field.errors }}
+			{% endfor %}
+			<br /><br />
 			<input type="submit" value="Login" class="box"/>
 		</form>
 		<br />

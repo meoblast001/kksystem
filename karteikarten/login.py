@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from models import *
+from forms import *
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -29,28 +30,33 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.decorators import login_required
 
 #
-# Display login form
+# Login
 #
-def Form(request):
-	if 'next' in request.GET:
-		url_append = '?next=' + request.GET['next']
-	else:
-		url_append = ''
-	return render_to_response('login_form.html', {'url_append' : url_append}, context_instance = RequestContext(request))
-
-#
-# Submit login
-#
-def Submit(request):
-	user = authenticate(username = request.POST['username'], password = request.POST['password'])
-	if user is not None:
-		if user.is_active:
-			login(request, user)
+def Login(request):
+	if request.POST:
+		form = LoginForm(request.POST)
+		if form.is_valid():
+			user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
+			if user is not None:
+				if user.is_active:
+					login(request, user)
+					if 'next' in request.GET:
+						return HttpResponseRedirect(request.GET['next'])
+					else:
+						return HttpResponseRedirect(reverse('centre'))
+			return render_to_response('error.html', {'message' : 'Login failed.', 'go_back_to' : reverse('login')}, context_instance = RequestContext(request))
+		else:
 			if 'next' in request.GET:
-				return HttpResponseRedirect(request.GET['next'])
+				url_append = '?next=' + request.GET['next']
 			else:
-				return HttpResponseRedirect(reverse('centre'))
-	return render_to_response('error.html', {'message' : 'Login failed.', 'go_back_to' : reverse('login-form')}, context_instance = RequestContext(request))
+				url_append = ''
+			return render_to_response('login_form.html', {'form' : LoginForm(request.POST), 'url_append' : url_append}, context_instance = RequestContext(request))
+	else:
+		if 'next' in request.GET:
+			url_append = '?next=' + request.GET['next']
+		else:
+			url_append = ''
+		return render_to_response('login_form.html', {'form' : LoginForm(), 'url_append' : url_append}, context_instance = RequestContext(request))
 
 #
 # Logout
