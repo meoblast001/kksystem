@@ -33,7 +33,8 @@ from django.contrib.auth.decorators import login_required
 # Login
 #
 def Login(request):
-	if request.POST:
+	#Submit
+	if request.method == 'POST':
 		form = LoginForm(request.POST)
 		if form.is_valid():
 			user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
@@ -51,6 +52,8 @@ def Login(request):
 			else:
 				url_append = ''
 			return render_to_response('login_form.html', {'form' : LoginForm(request.POST), 'url_append' : url_append}, context_instance = RequestContext(request))
+
+	#Form
 	else:
 		if 'next' in request.GET:
 			url_append = '?next=' + request.GET['next']
@@ -67,33 +70,33 @@ def Logout(request):
 	return HttpResponseRedirect(reverse('centre'))
 
 #
-# Display register form
+# Register
 #
-def RegisterForm(request):
-	return render_to_response('register_form.html', {}, context_instance = RequestContext(request))
+def Register(request):
+	#Submit
+	if request.method == 'POST':
+		if 'dnm_verify' in request.POST and request.POST['dnm_verify'] != '':
+			raise Http404
 
-#
-# Submit registration
-#
-def RegisterSubmit(request):
-	if request.POST['dnm_verify'] != '':
-		raise Http404
-
-	#Username, email, and password fields must be valid
-	if 'username' in request.POST and request.POST['username'] != '' and 'email' in request.POST and request.POST['email'] != '' and 'password' in request.POST and request.POST['password'] != '':
-		#Must create a unique user
-		users_with_same_username = User.objects.filter(username = request.POST['username'])
-		users_with_same_email = User.objects.filter(email = request.POST['email'])
-		if len(users_with_same_username) == 0:
-			if len(users_with_same_email) == 0:
-				new_user = User.objects.create_user(username = request.POST['username'], email = request.POST['email'], password = request.POST['password'])
-				return render_to_response('confirmation.html', {'message' : 'Registration successful.', 'short_messsage' : 'Registered', 'go_to' : reverse('centre'), 'go_to_name' : 'Back to Centre'}, context_instance = RequestContext(request))
+		form = RegisterForm(request.POST)
+		if form.is_valid():
+			#Must create a unique user
+			users_with_same_username = User.objects.filter(username = form.cleaned_data['username'])
+			users_with_same_email = User.objects.filter(email = form.cleaned_data['email'])
+			if len(users_with_same_username) == 0:
+				if len(users_with_same_email) == 0:
+					new_user = User.objects.create_user(username = form.cleaned_data['username'], email = form.cleaned_data['email'], password = form.cleaned_data['password'])
+					return render_to_response('confirmation.html', {'message' : 'Registration successful.', 'short_messsage' : 'Registered', 'go_to' : reverse('centre'), 'go_to_name' : 'Back to Centre'}, context_instance = RequestContext(request))
+				else:
+					return render_to_response('error.html', {'message' : 'Email matches that of another user.', 'go_back_to' : reverse('register')}, context_instance = RequestContext(request))
 			else:
-				return render_to_response('error.html', {'message' : 'Email matches that of another user.', 'go_back_to' : reverse('register-form')}, context_instance = RequestContext(request))
+				return render_to_response('error.html', {'message' : 'Username matches that of another user.', 'go_back_to' : reverse('register')}, context_instance = RequestContext(request))
 		else:
-			return render_to_response('error.html', {'message' : 'Username matches that of another user.', 'go_back_to' : reverse('register-form')}, context_instance = RequestContext(request))
+			return render_to_response('register_form.html', {'form' : RegisterForm(request.POST)}, context_instance = RequestContext(request))
+
+	#Form
 	else:
-		return render_to_response('error.html', {'message' : 'Register failed.', 'go_back_to' : reverse('register-form')}, context_instance = RequestContext(request))
+		return render_to_response('register_form.html', {'form' : RegisterForm()}, context_instance = RequestContext(request))
 
 #
 # Display password recovery form
