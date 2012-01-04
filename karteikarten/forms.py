@@ -22,7 +22,25 @@ class LoginForm(forms.Form):
 	username = forms.CharField(max_length = 30)
 	password = forms.CharField(widget = forms.PasswordInput)
 
+#
+# Form displayed on registration page.
+#
 class RegisterForm(forms.Form):
 	username = forms.CharField(max_length = 30)
 	password = forms.CharField(widget = forms.PasswordInput)
 	email = forms.EmailField()
+
+#
+# Form displayed on password recovery email request page.
+#
+class RecoverPasswordForm(forms.Form):
+	username = forms.CharField(max_length = 30)
+	email = forms.EmailField()
+
+#
+# Form displayed on password reset form.
+#
+class RecoverResetPasswordForm(forms.Form):
+	username = forms.CharField(max_length = 30)
+	password = forms.CharField(widget = forms.PasswordInput)
+	repeat_password = forms.CharField(widget = forms.PasswordInput)

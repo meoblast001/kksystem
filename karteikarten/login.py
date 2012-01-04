@@ -99,67 +99,76 @@ def Register(request):
 		return render_to_response('register_form.html', {'form' : RegisterForm()}, context_instance = RequestContext(request))
 
 #
-# Display password recovery form
+# Request password recovery email
 #
-def RecoverPasswordForm(request):
-	return render_to_response('recover_password_form.html', {}, context_instance = RequestContext(request))
+def RecoverPassword(request):
+	#Submit
+	if request.method == 'POST':
+		form = RecoverPasswordForm(request.POST)
+		if form.is_valid():
+			users = User.objects.filter(username = form.cleaned_data['username'], email = form.cleaned_data['email'])
+			if len(users) > 0:
+				user = users[0]
 
-#
-# Submit password recovery request
-#
-def RecoverPasswordSubmit(request):
-	if 'username' in request.POST and request.POST['username'] != '' and 'email' in request.POST and request.POST['email'] != '':
-		users = User.objects.filter(username = request.POST['username'], email = request.POST['email'])
-		if len(users) > 0:
-			user = users[0]
-
-			#Generate random identification string for this password recovery session
-			ident_string = ''
-			for i in range(10):
-				ident_string += random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
-			#Get current recovery session information
-			password_recovery = cache.get('password_recovery')
-			if password_recovery == None:
-				password_recovery = []
-			#Purge all expired recovery sessions
-			for session in password_recovery:
-				time_delta = datetime.now() - session['datetime']
-				if ((time_delta.microseconds + (time_delta.seconds + time_delta.days * 24 * 3600) * 10 ** 6) / 10 **6) > 18000:
-					password_recovery.remove(session)
-			#Cache recovery session information
-			password_recovery.append({'user' : user, 'ident' : ident_string, 'datetime' : datetime.now()})
-			cache.set('password_recovery', password_recovery, 18000)
-			#Dispatch email
-			site = Site.objects.get_current()
-			send_mail('Password Recovery', 'Reset your password here: http://' + site.domain + reverse('recover-reset-password-form') + '?id=' + ident_string, 'noreply@' + site.domain, [user.email], fail_silently = False)
-
-			return render_to_response('confirmation.html', {'message' : 'An email was sent to you with a link to reset your password.', 'short_messsage' : 'Request Pending', 'go_to' : reverse('login-form'), 'go_to_name' : 'Back to Login'}, context_instance = RequestContext(request))
-
-	return render_to_response('error.html', {'message' : 'Username and email address do not match a valid user.', 'go_back_to' : reverse('recover-password-form')}, context_instance = RequestContext(request))
-
-#
-# Reset password recovery form.
-#
-def RecoverResetPasswordForm(request):
-	password_recovery = cache.get('password_recovery')
-	if password_recovery != None and 'id' in request.GET:
-		for session in password_recovery:
-			if session['ident'] == request.GET['id']:
-				return render_to_response('recover_reset_password_form.html', {'url_append' : '?id=' + request.GET['id']}, context_instance = RequestContext(request))
-	return render_to_response('error.html', {'message' : 'Recovery session ID is invalid.', 'go_back_to' : settings.APP_ROOT + '/'}, context_instance = RequestContext(request))
-
-#
-# Submit reset password recovery.
-#
-def RecoverResetPasswordSubmit(request):
-	password_recovery = cache.get('password_recovery')
-	if password_recovery != None and 'id' in request.GET:
-		for session in password_recovery:
-			if session['ident'] == request.GET['id'] and session['user'].username == request.POST['username']:
-				session['user'].set_password(request.POST['password'])
-				session['user'].save()
-				#Remove current recovery session
-				password_recovery.remove(session)
+				#Generate random identification string for this password recovery session
+				ident_string = ''
+				for i in range(10):
+					ident_string += random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
+				#Get current recovery session information
+				password_recovery = cache.get('password_recovery')
+				if password_recovery == None:
+					password_recovery = []
+				#Purge all expired recovery sessions
+				for session in password_recovery:
+					time_delta = datetime.now() - session['datetime']
+					if ((time_delta.microseconds + (time_delta.seconds + time_delta.days * 24 * 3600) * 10 ** 6) / 10 **6) > 18000:
+						password_recovery.remove(session)
+				#Cache recovery session information
+				password_recovery.append({'user' : user, 'ident' : ident_string, 'datetime' : datetime.now()})
 				cache.set('password_recovery', password_recovery, 18000)
+				#Dispatch email
+				site = Site.objects.get_current()
+				send_mail('Password Recovery', 'Reset your password here: http://' + site.domain + reverse('recover-reset-password') + '?id=' + ident_string, 'noreply@' + site.domain, [user.email], fail_silently = False)
 
-				return render_to_response('confirmation.html', {'message' : 'Password changed.', 'short_messsage' : 'Password Recovery Complete', 'go_to' : reverse('login-form'), 'go_to_name' : 'Back to Login'}, context_instance = RequestContext(request))
+				return render_to_response('confirmation.html', {'message' : 'An email was sent to you with a link to reset your password.', 'short_messsage' : 'Request Pending', 'go_to' : reverse('login'), 'go_to_name' : 'Back to Login'}, context_instance = RequestContext(request))
+			else:
+				return render_to_response('error.html', {'message' : 'Username and email address do not match a valid user.', 'go_back_to' : reverse('recover-password')}, context_instance = RequestContext(request))
+		else:
+			return render_to_response('recover_password_form.html', {'form' : RecoverPasswordForm(request.POST)}, context_instance = RequestContext(request))
+	#Form
+	else:
+		return render_to_response('recover_password_form.html', {'form' : RecoverPasswordForm()}, context_instance = RequestContext(request))
+
+#
+# Reset password from password recovery email
+#
+def RecoverResetPassword(request):
+	#Submit
+	if request.method == 'POST':
+		form = RecoverResetPasswordForm(request.POST)
+		password_recovery = cache.get('password_recovery')
+		if password_recovery != None and 'id' in request.GET:
+			if form.is_valid():
+				for session in password_recovery:
+					if session['ident'] == request.GET['id'] and session['user'].username == form.cleaned_data['username']:
+						session['user'].set_password(request.POST['password'])
+						session['user'].save()
+						#Remove current recovery session
+						password_recovery.remove(session)
+						cache.set('password_recovery', password_recovery, 18000)
+
+						return render_to_response('confirmation.html', {'message' : 'Password changed.', 'short_messsage' : 'Password Recovery Complete', 'go_to' : reverse('login'), 'go_to_name' : 'Back to Login'}, context_instance = RequestContext(request))
+					else:
+						return render_to_response('error.html', {'message' : 'Data provided does not match password recovery session information. Either your username is incorrect or you did not follow the correct URL.', 'go_back_to' : reverse('recover-password')}, context_instance = RequestContext(request))
+			else:
+				return render_to_response('recover_reset_password_form.html', {'form' : RecoverResetPasswordForm(request.POST), 'url_append' : '?id=' + request.GET['id']}, context_instance = RequestContext(request))
+		else:
+			return render_to_response('error.html', {'message' : 'An error occurred. Perhaps you did not provide a recovery session ID in the URL.', 'go_back_to' : reverse('recover-password')}, context_instance = RequestContext(request))
+	#Form
+	else:
+		password_recovery = cache.get('password_recovery')
+		if password_recovery != None and 'id' in request.GET:
+			for session in password_recovery:
+				if session['ident'] == request.GET['id']:
+					return render_to_response('recover_reset_password_form.html', {'form' : RecoverResetPasswordForm(), 'url_append' : '?id=' + request.GET['id']}, context_instance = RequestContext(request))
+		return render_to_response('error.html', {'message' : 'Recovery session ID is invalid.', 'go_back_to' : reverse('centre')}, context_instance = RequestContext(request))
