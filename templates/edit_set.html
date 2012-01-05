@@ -17,12 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% extends "base.html" %}
 
-{% block title %}Edit Set{% if already_exists %} - {{ name }}{% endif %}{% endblock %}
+{% block title %}Edit Set{% if already_exists %} - {{ form.name.value }}{% endif %}{% endblock %}
 
 {% block body %}
 	<div style="text-align: center;"><a href="{% url centre %}"><img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikarten System" /></a></div>
 	<div class="block" style="width: 200px; text-align: center;">
-		<form action="{% if already_exists %}{% url edit-set-submit id %}{% else %}{% url new-set %}{% endif %}" method="post" class="box_form">
+		<form action="{% if already_exists %}{% url edit-set id %}{% else %}{% url new-set %}{% endif %}" method="post" class="box_form">
 			{% csrf_token %}
 			{% for field in form %}
 				{{ field.label_tag }}: {{ field }}

@@ -17,17 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% extends "base.html" %}
 
-{% block title %}Edit Box{% if already_exists %} - {{ name }}{% endif %}{% endblock %}
+{% block title %}Edit Box{% if already_exists %} - {{ form.name.value }}{% endif %}{% endblock %}
 
 {% block body %}
 	<div style="text-align: center;"><a href="{% url centre %}"><img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikarten System" /></a></div>
 	<div class="block" style="width: 200px; text-align: center;">
-		<form action="{% if already_exists %}{% url edit-box-submit set_id id %}{% else %}{% url new-box-submit set_id %}{% endif %}" method="post">
+		<form action="{% if already_exists %}{% url edit-box set_id id %}{% else %}{% url new-box set_id %}{% endif %}" method="post" class="box_form">
 			{% csrf_token %}
-			Name: <input type="text" name="name" class="box"{% if already_exists %} value="{{ name }}"{% endif %} /><br />
-			<br />
-			Review Frequency (In Days): <input type="text" name="review_frequency" class="box"{% if already_exists %} value="{{ review_frequency }}"{% endif %} /><br />
-			<br />
+			{% for field in form %}
+				{{ field.label_tag }}: {{ field }}
+				{{ field.errors }}
+			{% endfor %}
+			<br /><br />
 			<input type="submit" value="{% if already_exists %}Edit{% else %}Create{% endif %}" class="box"/>
 		</form>
 	</div>

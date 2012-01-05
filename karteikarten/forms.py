@@ -50,3 +50,10 @@ class RecoverResetPasswordForm(forms.Form):
 #
 class EditSetForm(forms.Form):
 	name = forms.CharField(max_length = 60)
+
+#
+# Form displayed when creating and editing card boxes.
+#
+class EditBoxForm(forms.Form):
+	name = forms.CharField(max_length = 60)
+	review_frequency = forms.IntegerField(label = "Review Frequency (In Days)")

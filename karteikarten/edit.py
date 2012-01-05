@@ -45,24 +45,23 @@ def NewSet(request):
 		return render_to_response('edit_set.html', {'form' : EditSetForm(), 'already_exists' : False}, context_instance = RequestContext(request))
 
 #
-# Display form with which to edit a card set.
+# Edit card set
 #
 @login_required
 def EditSet(request, set_id):
-	cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-	return render_to_response('edit_set.html', {'already_exists' : True, 'id' : cardset.pk, 'name' : cardset.name}, context_instance = RequestContext(request))
-
-#
-# Submit changes to card set.
-#
-@login_required
-def EditSetSubmit(request, set_id):
-	if 'name' in request.POST and request.POST['name'] != '':
+	if request.method == 'POST':
+		form = EditSetForm(request.POST)
+		if form.is_valid():
+			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+			cardset.name = form.cleaned_data['name']
+			cardset.save()
+			return HttpResponseRedirect(reverse('select-set-to-edit'))
+		else:
+			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+			return render_to_response('edit_set.html', {'form' : EditSetForm(request.POST), 'already_exists' : True, 'id' : cardset.pk}, context_instance = RequestContext(request))
+	else:
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-		cardset.name = request.POST['name']
-		cardset.save()
-		return HttpResponseRedirect(reverse('select-set-to-edit'))
-	return render_to_response('error.html', {'app_root' : settings.APP_ROOT, 'message' : 'Failed to edit cardset. No name was provided.', 'go_back_to' : reverse('select-set-to-edit')})
+		return render_to_response('edit_set.html', {'form' : EditSetForm({'name' : cardset.name}), 'already_exists' : True, 'id' : cardset.pk}, context_instance = RequestContext(request))
 
 #
 # View boxes within a set.
@@ -78,55 +77,56 @@ def ViewBoxesBySet(request, set_id):
 	return render_to_response('menu.html', {'menu_title' : 'Boxes by Set', 'menu_list' : zip(names, gotos)}, context_instance = RequestContext(request))
 
 #
-# Display form with which to edit a box.
+# Edit card box
 #
 @login_required
 def EditBox(request, set_id, box_id):
-	cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-	box = get_object_or_404(CardBox, pk = box_id, parent_card_set = cardset, owner = request.user)
-	return render_to_response('edit_box.html', {'already_exists' : True, 'id' : box_id, 'set_id' : set_id, 'name' : box.name, 'review_frequency' : box.review_frequency}, context_instance = RequestContext(request))
-
-#
-# Submit changes to box.
-#
-@login_required
-def EditBoxSubmit(request, set_id, box_id):
-	if 'name' in request.POST and request.POST['name'] != '' and 'review_frequency' in request.POST and request.POST['review_frequency'] != '':
+	#Submit
+	if request.method == 'POST':
 		try:
-			box = get_object_or_404(CardBox, pk = box_id)
-			box.name = request.POST['name']
-			box.review_frequency = int(request.POST['review_frequency'])
-			if box.review_frequency == 0:
+			form = EditBoxForm(request.POST)
+			if form.is_valid():
+				box = get_object_or_404(CardBox, pk = box_id)
+				box.name = form.cleaned_data['name']
+				box.review_frequency = int(form.cleaned_data['review_frequency'])
+				if box.review_frequency == 0:
+					raise ValueError()
+				box.save()
+				return HttpResponseRedirect(reverse('edit-view-boxes-by-set', args = [str(set_id)]))
+			else:
 				raise ValueError()
-			box.save()
-			return HttpResponseRedirect(reverse('edit-view-boxes-by-set', args = [str(set_id)]))
 		except ValueError:
-			return render_to_response('error.html', {'message' : 'Review frequency is not an integer, or is 0.', 'go_back_to' : reverse('edit-view-boxes-by-set', args = [str(set_id)])})
+			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+			box = get_object_or_404(CardBox, pk = box_id, parent_card_set = cardset, owner = request.user)
+			return render_to_response('edit_box.html', {'form' : EditBoxForm(request.POST), 'already_exists' : True, 'id' : box_id, 'set_id' : set_id,}, context_instance = RequestContext(request))
+	#Form
+	else:
+		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+		box = get_object_or_404(CardBox, pk = box_id, parent_card_set = cardset, owner = request.user)
+		return render_to_response('edit_box.html', {'form' : EditBoxForm({'name' : box.name, 'review_frequency' : box.review_frequency}), 'already_exists' : True, 'id' : box_id, 'set_id' : set_id,}, context_instance = RequestContext(request))
 
 #
-# Display form with which to create a new box.
+# Create card box
 #
 @login_required
 def NewBox(request, set_id):
-	cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-	return render_to_response('edit_box.html', {'already_exists' : False, 'set_id' : set_id}, context_instance = RequestContext(request))
-
-#
-# Submit new box.
-#
-@login_required
-def NewBoxSubmit(request, set_id):
-	if 'name' in request.POST and request.POST['name'] != '' and 'review_frequency' in request.POST and request.POST['review_frequency'] != '':
-		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+	if request.method == 'POST':
 		try:
-			box = CardBox(name = request.POST['name'], owner = request.user, parent_card_set = cardset, review_frequency = int(request.POST['review_frequency']), last_reviewed = datetime.now())
-			if box.review_frequency == 0:
+			form = EditBoxForm(request.POST)
+			if form.is_valid():
+				cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+				box = CardBox(name = form.cleaned_data['name'], owner = request.user, parent_card_set = cardset, review_frequency = int(form.cleaned_data['review_frequency']), last_reviewed = datetime.now())
+				if box.review_frequency == 0:
+					raise ValueError()
+				box.save()
+				return HttpResponseRedirect(reverse('select-set-to-edit'))
+			else:
 				raise ValueError()
 		except ValueError:
-			return render_to_response('error.html', {'app_root' : settings.APP_ROOT, 'message' : 'Review frequency is not an integer, or is 0.', 'go_back_to' : reverse('select-set-to-edit')}, context_instance = RequestContext(request))
-		box.save()
-		return HttpResponseRedirect(reverse('select-set-to-edit'))
-	return render_to_response('error.html', {'message' : 'No box data was provided.', 'go_back_to' : reverse('select-set-to-edit')}, context_instance = RequestContext(request))
+			return render_to_response('edit_box.html', {'form' : EditBoxForm(request.POST), 'already_exists' : False, 'set_id' : set_id}, context_instance = RequestContext(request))
+	else:
+		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+		return render_to_response('edit_box.html', {'form' : EditBoxForm(), 'already_exists' : False, 'set_id' : set_id}, context_instance = RequestContext(request))
 
 #
 # View cards within set.
