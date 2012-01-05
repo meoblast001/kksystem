@@ -44,3 +44,9 @@ class RecoverResetPasswordForm(forms.Form):
 	username = forms.CharField(max_length = 30)
 	password = forms.CharField(widget = forms.PasswordInput)
 	repeat_password = forms.CharField(widget = forms.PasswordInput)
+
+#
+# Form displayed when creating and editing card sets.
+#
+class EditSetForm(forms.Form):
+	name = forms.CharField(max_length = 60)

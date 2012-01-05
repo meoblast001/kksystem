@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from models import *
+from forms import *
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -23,24 +24,25 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
 #
-# Display form with which to create a new card set.
+# Create new card set
 #
 @login_required
 def NewSet(request):
-	return render_to_response('edit_set.html', {'already_exists' : False}, context_instance = RequestContext(request))
-
-#
-# Submit new card set.
-#
-@login_required
-def NewSetSubmit(request):
-	if 'name' in request.POST and request.POST['name'] != '':
-		existing_cardset = CardSet.objects.filter(name = request.POST['name'], owner = request.user)
-		if not len(existing_cardset):
-			cardset = CardSet(name = request.POST['name'], owner = request.user)
-			cardset.save()
-			return HttpResponseRedirect(reverse('select-set-to-edit'))
-	return render_to_response('error.html', {'message' : 'Failed to create cardset. Either already exists or no name was provided.', 'go_back_to' : reverse('select-set-to-edit')})
+	#Submit
+	if request.method == 'POST':
+		form = EditSetForm(request.POST)
+		if form.is_valid():
+			existing_cardset = CardSet.objects.filter(name = form.cleaned_data['name'], owner = request.user)
+			if not len(existing_cardset):
+				cardset = CardSet(name = form.cleaned_data['name'], owner = request.user)
+				cardset.save()
+				return HttpResponseRedirect(reverse('select-set-to-edit'))
+			return render_to_response('error.html', {'message' : 'Failed to create cardset. Already exists.', 'go_back_to' : reverse('select-set-to-edit')})
+		else:
+			return render_to_response('edit_set.html', {'form' : EditSetForm(request.POST), 'already_exists' : False}, context_instance = RequestContext(request))
+	#Form
+	else:
+		return render_to_response('edit_set.html', {'form' : EditSetForm(), 'already_exists' : False}, context_instance = RequestContext(request))
 
 #
 # Display form with which to edit a card set.
