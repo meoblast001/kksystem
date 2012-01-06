@@ -24,6 +24,5 @@ urlpatterns = patterns('',
 	url(r'^edit/(?P<set_id>\d+)/cards/search/$', 'karteikarten.edit.SearchCardsBySet', name = 'edit-search-cards-by-set'),
 	url(r'^edit/(?P<set_id>\d+)/cards/new/$', 'karteikarten.edit.NewCard', name = 'new-card'),
 	url(r'^edit/(?P<set_id>\d+)/cards/(?P<card_id>\d+)/$', 'karteikarten.edit.EditCard', name = 'edit-card'),
-	url(r'^edit/(?P<set_id>\d+)/cards/(?P<card_id>\d+)/request/$', 'karteikarten.edit.EditCardSubmit', name = 'edit-card-submit'),
 	url(r'^edit/(?P<set_id>\d+)/cards/(?P<card_id>\d+)/delete/$', 'karteikarten.edit.DeleteCard', name = 'delete-card'),
 )

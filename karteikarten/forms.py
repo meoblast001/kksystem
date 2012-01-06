@@ -66,14 +66,13 @@ class EditCardForm(forms.Form):
 	back = forms.CharField(widget = forms.Textarea({'rows' : 5}))
 	card_box = forms.ChoiceField()
 
-	def __init__(self, card_box_choices, initial, values = None):
+	def __init__(self, card_box_choices, values = None):
 		super(EditCardForm, self).__init__(values)
 		#Copy box id and name for value and text of choices
 		card_box_names = []
 		for i, item in enumerate(card_box_choices):
 			card_box_names.append([str(item.pk), item.name])
+		#Create no box option
+		card_box_names.append(['0', '[No Box]'])
 		#Provide choices for card box choice field
 		self.fields['card_box'].choices = card_box_names
-		#Set default value if provided
-		if initial != None:
-			self.fields['card_box'].initial = initial

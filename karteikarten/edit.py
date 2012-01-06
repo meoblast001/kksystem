@@ -186,7 +186,7 @@ def NewCard(request, set_id):
 	#Submit
 	if request.method == 'POST':
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-		form = EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), None, request.POST)
+		form = EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), request.POST)
 		if form.is_valid():
 			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
 			box = get_object_or_404(CardBox, pk = int(form.cleaned_data['card_box']), owner = request.user, parent_card_set = cardset) if int(form.cleaned_data['card_box']) != 0 else None
@@ -198,30 +198,34 @@ def NewCard(request, set_id):
 	#Form
 	else:
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-		return render_to_response('edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), None), 'already_exists' : False, 'set_id' : set_id}, context_instance = RequestContext(request))
+		return render_to_response('edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset)), 'already_exists' : False, 'set_id' : set_id}, context_instance = RequestContext(request))
 
 #
 # Display form with which to edit a card.
 #
 @login_required
 def EditCard(request, set_id, card_id):
-	cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-	card = get_object_or_404(Card, pk = card_id, parent_card_set = cardset, owner = request.user)
-	return render_to_response('edit_card.html', {'already_exists' : True, 'current_box' : card.current_box.pk if card.current_box != None else 'no_box', 'id' : card_id, 'set_id' : set_id, 'front' : card.front, 'back' : card.back, 'card_boxes' : CardBox.objects.filter(owner = request.user, parent_card_set = cardset)}, context_instance = RequestContext(request))
-
-#
-# Submit changes to card.
-#
-@login_required
-def EditCardSubmit(request, set_id, card_id):
-	if 'front' in request.POST and request.POST['front'] != '' and 'back' in request.POST and request.POST['back'] != '' and 'card_box' in request.POST:
+	#Submit
+	if request.method == 'POST':
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-		card = get_object_or_404(Card, pk = card_id, owner = request.user)
-		card.front = request.POST['front']
-		card.back = request.POST['back']
-		card.current_box = get_object_or_404(CardBox, pk = int(request.POST['card_box']), owner = request.user, parent_card_set = cardset) if int(request.POST['card_box']) != 0 else None
-		card.save()
-		return HttpResponseRedirect(reverse('edit-view-cards-by-set', args = [str(set_id)]))
+		form = EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), request.POST)
+		if form.is_valid():
+			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+			card = get_object_or_404(Card, pk = card_id, owner = request.user)
+			card.front = form.cleaned_data['front']
+			card.back = form.cleaned_data['back']
+			card.current_box = get_object_or_404(CardBox, pk = int(form.cleaned_data['card_box']), owner = request.user, parent_card_set = cardset) if int(form.cleaned_data['card_box']) != 0 else None
+			card.save()
+			return HttpResponseRedirect(reverse('edit-view-cards-by-set', args = [str(set_id)]))
+		else:
+			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+			card = get_object_or_404(Card, pk = card_id, parent_card_set = cardset, owner = request.user)
+			return render_to_response('edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), request.POST), 'already_exists' : True, 'id' : card_id, 'set_id' : set_id}, context_instance = RequestContext(request))
+	#Form
+	else:
+		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+		card = get_object_or_404(Card, pk = card_id, parent_card_set = cardset, owner = request.user)
+		return render_to_response('edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), {'front' : card.front, 'back' : card.back, 'card_box' : card.current_box.pk if card.current_box != None else 0}), 'already_exists' : True, 'id' : card_id, 'set_id' : set_id}, context_instance = RequestContext(request))
 
 #
 # Delete card

@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block body %}
 	<div style="text-align: center;"><a href="{% url centre %}"><img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikarten System" /></a></div>
 	<div class="block" style="width: 200px; text-align: center;">
-		<form action="{% if already_exists %}{% url edit-card-submit set_id id %}{% else %}{% url new-card set_id %}{% endif %}" method="post" class="box_form">
+		<form action="{% if already_exists %}{% url edit-card set_id id %}{% else %}{% url new-card set_id %}{% endif %}" method="post" class="box_form">
 			{% csrf_token %}
 			{% csrf_token %}
 			{% for field in form %}
