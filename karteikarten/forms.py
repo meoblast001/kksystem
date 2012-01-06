@@ -57,3 +57,23 @@ class EditSetForm(forms.Form):
 class EditBoxForm(forms.Form):
 	name = forms.CharField(max_length = 60)
 	review_frequency = forms.IntegerField(label = "Review Frequency (In Days)")
+
+#
+# Form displayed when creating and editing cards.
+#
+class EditCardForm(forms.Form):
+	front = forms.CharField(widget = forms.Textarea({'rows' : 5}))
+	back = forms.CharField(widget = forms.Textarea({'rows' : 5}))
+	card_box = forms.ChoiceField()
+
+	def __init__(self, card_box_choices, initial, values = None):
+		super(EditCardForm, self).__init__(values)
+		#Copy box id and name for value and text of choices
+		card_box_names = []
+		for i, item in enumerate(card_box_choices):
+			card_box_names.append([str(item.pk), item.name])
+		#Provide choices for card box choice field
+		self.fields['card_box'].choices = card_box_names
+		#Set default value if provided
+		if initial != None:
+			self.fields['card_box'].initial = initial

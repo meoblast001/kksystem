@@ -179,25 +179,26 @@ def SearchCardsBySet(request, set_id):
 		return render_to_response('error.html', {'message' : 'No box data was provided.', 'go_back_to' : reverse('select-set-to-edit')}, context_instance = RequestContext(request))
 
 #
-# Display form with which to add a new card.
+# Create new card
 #
 @login_required
 def NewCard(request, set_id):
-	cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-	return render_to_response('edit_card.html', {'already_exists' : False, 'current_box' : None, 'set_id' : set_id, 'card_boxes' : CardBox.objects.filter(owner = request.user, parent_card_set = cardset)}, context_instance = RequestContext(request))
-
-#
-# Submit new card.
-#
-@login_required
-def NewCardSubmit(request, set_id):
-	if 'front' in request.POST and request.POST['front'] != '' and 'back' in request.POST and request.POST['back'] != '' and 'card_box' in request.POST:
+	#Submit
+	if request.method == 'POST':
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-		box = get_object_or_404(CardBox, pk = int(request.POST['card_box']), owner = request.user, parent_card_set = cardset) if int(request.POST['card_box']) != 0 else None
-		card = Card(front = request.POST['front'], back = request.POST['back'], owner = request.user, parent_card_set = cardset, current_box = box)
-		card.save()
-		return HttpResponseRedirect(reverse('edit-set', args = [str(set_id)]))
-	return render_to_response('error.html', {'message' : 'No card data was provided.', 'go_back_to' : reverse('select-set-to-edit')}, context_instance = RequestContext(request))
+		form = EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), None, request.POST)
+		if form.is_valid():
+			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+			box = get_object_or_404(CardBox, pk = int(form.cleaned_data['card_box']), owner = request.user, parent_card_set = cardset) if int(form.cleaned_data['card_box']) != 0 else None
+			card = Card(front = form.cleaned_data['front'], back = form.cleaned_data['back'], owner = request.user, parent_card_set = cardset, current_box = box)
+			card.save()
+			return HttpResponseRedirect(reverse('edit-set', args = [str(set_id)]))
+		else:
+			return render_to_response('edit_card.html', {'form' : form, 'already_exists' : False, 'set_id' : set_id}, context_instance = RequestContext(request))
+	#Form
+	else:
+		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+		return render_to_response('edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), None), 'already_exists' : False, 'set_id' : set_id}, context_instance = RequestContext(request))
 
 #
 # Display form with which to edit a card.
