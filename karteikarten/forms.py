@@ -28,7 +28,13 @@ class LoginForm(forms.Form):
 class RegisterForm(forms.Form):
 	username = forms.CharField(max_length = 30)
 	password = forms.CharField(widget = forms.PasswordInput)
+	repeat_password = forms.CharField(widget = forms.PasswordInput)
 	email = forms.EmailField()
+
+	def clean_repeat_password(self):
+		if self.cleaned_data['password'] != self.cleaned_data['repeat_password']:
+			raise forms.ValidationError('The two passwords do not match.')
+		return self.cleaned_data
 
 #
 # Form displayed on password recovery email request page.
@@ -44,6 +50,11 @@ class RecoverResetPasswordForm(forms.Form):
 	username = forms.CharField(max_length = 30)
 	password = forms.CharField(widget = forms.PasswordInput)
 	repeat_password = forms.CharField(widget = forms.PasswordInput)
+
+	def clean_repeat_password(self):
+		if self.cleaned_data['password'] != self.cleaned_data['repeat_password']:
+			raise forms.ValidationError('The two passwords do not match.')
+		return self.cleaned_data
 
 #
 # Form displayed when creating and editing card sets.
