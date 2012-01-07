@@ -1,0 +1,12 @@
+Karteikartensystem Coding Standards:
+ * Use tabs for indentation.
+ * No lines with only white space. Empty lines should actually be empty.
+ * Use UNIX-style line endings (Should be a setting in the text editor).
+ * New line at end of file (Should be a setting in the text editor).
+ * Do not automatically wrap new lines (It's the text editor's job to wrap lines; there is no need to put the line wrapping in the file). Lines should only be wrapped if doing so helps code readability.
+ * No space before parentheses (except when parentheses are used in if/while/for statements).
+ * No space inside parentheses at beginning or end.
+ * Use a space after commas.
+ * Use a space between operators and other words.
+ * Classes, methods, and functions should use pascal case (ThisIsAnExample).
+ * Variables should use all lower-case and separate words with underscores (this_is_an_example).
