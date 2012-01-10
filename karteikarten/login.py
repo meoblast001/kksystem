@@ -51,7 +51,7 @@ def Login(request):
 				url_append = '?next=' + request.GET['next']
 			else:
 				url_append = ''
-			return render_to_response('login_form.html', {'form' : LoginForm(request.POST), 'url_append' : url_append}, context_instance = RequestContext(request))
+			return render_to_response('login/login_form.html', {'form' : LoginForm(request.POST), 'title' : 'Login', 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
 
 	#Form
 	else:
@@ -59,7 +59,7 @@ def Login(request):
 			url_append = '?next=' + request.GET['next']
 		else:
 			url_append = ''
-		return render_to_response('login_form.html', {'form' : LoginForm(), 'url_append' : url_append}, context_instance = RequestContext(request))
+		return render_to_response('login/login_form.html', {'form' : LoginForm(), 'title' : 'Login', 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
 
 #
 # Logout
