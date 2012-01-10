@@ -1,60 +1,176 @@
 body
 {
-	font-family: sans;
-	font-size: 12px;
-	margin-top: 25px;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	background-color: #bfd0ea;
 }
 
-.block
+a
 {
+	color: #000011;
+}
+
+ul
+{
+	list-style: none;
+}
+
+ul li:before
+{
+	content: "\00BB \0020";
+}
+
+a img
+{
+	border-width: 0px;
+}
+
+.tree
+{
+	font-size: 12px;
+}
+
+.tree a
+{
+	color: #000000;
+}
+
+.main_menu_item
+{
+	color: #000000;
+	text-decoration: none;
+	width: 200px;
+	height: 150px;
+	border: 1px #0c1b33 solid;
+	margin: 5px;
+	background-image: url('button_normal.png');
+	display: inline-block;
+	text-align: center;
+	position: relative;
+}
+
+.main_menu_item_text
+{
+	position: absolute;
+	bottom: 5px;
+	width: 100%;
+}
+
+.page
+{
+	width: 350px;
 	margin-left: auto;
 	margin-right: auto;
-	border: solid 1px #2A00FF;
-	padding: 10px;
-	box-shadow: 5px 5px 5px #8270E0;
+	background-color: #ddddff;
+	border: 1px #0c1b33 solid;
 }
 
-.box
+.page_header
 {
-	border: 1px solid #000000;
-	width: 95%;
-}
-
-.box_form input
-{
-	border: 1px solid #000000;
-	width: 95%;
-}
-
-.box_form textarea
-{
-	border: 1px solid #000000;
-	width: 95%;
-}
-
-.errorlist
-{
-	color: #FF0000;
-	list-style-type: none;
-	padding-left: 0px;
-	margin: 0px;
-}
-
-.menuitem
-{
+	color: #ffffff;
+	background-color: #5982c1;
+	border-bottom: 1px #0c1b33 solid;
+	width: 100%;
+	padding-top: 5px;
 	padding-bottom: 5px;
+	text-align: center;
 }
 
-a.menuitem_link
+.page_content
 {
-	color: #000000;
-	font-style: italic;
-	text-decoration: none;
+	padding: 5px;
+	text-align: center;
 }
 
-.dashbutton
+.page_content select
 {
-	border: solid 1px #000000;
-	color: #000000;
-	text-decoration: none;
+	width: 95%;
+}
+
+.page_content input
+{
+	border: 1px solid #000000;
+	width: 95%;
+	margin-bottom: 5px;
+}
+
+.grid
+{
+	width: 100%;
+	font-size: 14px;
+}
+
+.grid_item
+{
+	text-align: center;
+}
+
+.item
+{
+	display: block;
+	width: 95%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+	border: 1px #000000 solid;
+	background-color: #ccccff;
+}
+
+.practice_sidebar
+{
+	background-color: #ddddff;
+	width: 190px;
+	margin-left: 5px;
+	margin-right: 5px;
+	padding: 5px;
+	border: 1px #000000 solid;
+	float: left;
+}
+
+.card
+{
+	position: relative;
+	background-color: #ffffff;
+	width: 400px;
+	height: 200px;
+	margin-left: 210px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	border: 1px #000000 solid;
+	display: block;
+}
+
+.card_not_visible
+{
+	position: relative;
+	background-image: url('card_not_visible.png');
+	width: 400px;
+	height: 200px;
+	margin-left: 210px;
+	margin-right: 5px;
+	border: 1px #000000 solid;
+	display: block;
+}
+
+.card_content
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.card_content tr
+{
+	width: 100%;
+	height: 100%;
+}
+
+.card_content tr td
+{
+	width: 100%;
+	height: 100%;
 }

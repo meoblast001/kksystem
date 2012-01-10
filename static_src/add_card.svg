@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.1"
+   width="768.78241"
+   height="499.72247"
+   id="svg2">
+  <title
+     id="title4333">Add Card Icon</title>
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient4145">
+      <stop
+         id="stop4147"
+         style="stop-color:#277213;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop4149"
+         style="stop-color:#005604;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3957">
+      <stop
+         id="stop3959"
+         style="stop-color:#80e565;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop3961"
+         style="stop-color:#008d07;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient6666">
+      <stop
+         id="stop6668"
+         style="stop-color:#6e9de4;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop6670"
+         style="stop-color:#305998;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient6660">
+      <stop
+         id="stop6662"
+         style="stop-color:#d2d2d2;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop6664"
+         style="stop-color:#f5f5f5;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient6654">
+      <stop
+         id="stop6656"
+         style="stop-color:#689cea;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop6658"
+         style="stop-color:#305998;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient6194">
+      <stop
+         id="stop6196"
+         style="stop-color:#d2d2d2;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop6198"
+         style="stop-color:#eeeeee;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4613">
+      <stop
+         id="stop4615"
+         style="stop-color:#f5f5f5;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop4621"
+         style="stop-color:#b4b4b4;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5038">
+      <stop
+         id="stop4611"
+         style="stop-color:#d2d2d2;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop5042"
+         style="stop-color:#f5f5f5;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <filter
+       x="-0.25"
+       y="-0.25"
+       width="1.5"
+       height="1.5"
+       color-interpolation-filters="sRGB"
+       id="filter5136">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="1.000000"
+         in="SourceAlpha"
+         id="feGaussianBlur5138" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.65 0"
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix5140" />
+      <feOffset
+         result="offsetBlur"
+         dy="0.700000"
+         dx="0.700000"
+         in="bluralpha"
+         id="feOffset5142" />
+      <feMerge
+         id="feMerge5144">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode5146" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode5148" />
+      </feMerge>
+    </filter>
+    <filter
+       x="-0.25"
+       y="-0.25"
+       width="1.5"
+       height="1.5"
+       color-interpolation-filters="sRGB"
+       id="filter5339">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="1.000000"
+         in="SourceAlpha"
+         id="feGaussianBlur5341" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.65 0"
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix5343" />
+      <feOffset
+         result="offsetBlur"
+         dy="5.000000"
+         dx="5.000000"
+         in="bluralpha"
+         id="feOffset5345" />
+      <feMerge
+         id="feMerge5347">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode5349" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode5351" />
+      </feMerge>
+    </filter>
+    <radialGradient
+       cx="350.36221"
+       cy="-1412.5"
+       r="117.25"
+       fx="350.36221"
+       fy="-1412.5"
+       id="radialGradient2861"
+       xlink:href="#linearGradient5038"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.928052,-1.02761e-6,1.24157e-6,1.84825,506.174,1566.85)" />
+    <radialGradient
+       cx="350.36221"
+       cy="-1412.5"
+       r="117.25"
+       fx="350.36221"
+       fy="-1412.5"
+       id="radialGradient2863"
+       xlink:href="#linearGradient5038"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.928052,-1.02761e-6,1.24157e-6,1.84825,506.174,1566.85)" />
+    <radialGradient
+       cx="1309.8484"
+       cy="1718.9395"
+       r="303.69574"
+       fx="1309.8484"
+       fy="1718.9395"
+       id="radialGradient3645"
+       xlink:href="#linearGradient5038"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,0.53103,0,806.131)" />
+    <radialGradient
+       cx="1309.8484"
+       cy="1718.9395"
+       r="303.69574"
+       fx="1309.8484"
+       fy="1718.9395"
+       id="radialGradient3902"
+       xlink:href="#linearGradient5038"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.821965,0,0,0.531469,-932.783,1243.24)" />
+    <filter
+       x="-0.25"
+       y="-0.25"
+       width="1.5"
+       height="1.5"
+       color-interpolation-filters="sRGB"
+       id="filter4001">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="1.000000"
+         in="SourceAlpha"
+         id="feGaussianBlur4003" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.65 0"
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix4005" />
+      <feOffset
+         result="offsetBlur"
+         dy="1.000000"
+         dx="1.000000"
+         in="bluralpha"
+         id="feOffset4007" />
+      <feMerge
+         result="fbSourceGraphic"
+         id="feMerge4009">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode4011" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode4013" />
+      </feMerge>
+      <feColorMatrix
+         id="feColorMatrix4597"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         in="fbSourceGraphic"
+         result="fbSourceGraphicAlpha" />
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="2.000000"
+         in="fbSourceGraphicAlpha"
+         id="feGaussianBlur4599" />
+      <feColorMatrix
+         values="-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 0.65 0"
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix4601" />
+      <feOffset
+         result="offsetBlur"
+         dy="1.500000"
+         dx="1.500000"
+         in="bluralpha"
+         id="feOffset4603" />
+      <feMerge
+         id="feMerge4605">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode4607" />
+        <feMergeNode
+           in="fbSourceGraphic"
+           id="feMergeNode4609" />
+      </feMerge>
+    </filter>
+    <radialGradient
+       cx="1587.5283"
+       cy="2815.3914"
+       r="255.80447"
+       fx="1587.5283"
+       fy="2815.3914"
+       id="radialGradient6292"
+       xlink:href="#linearGradient6194"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,0.64838,-3747.79,-319.602)" />
+    <radialGradient
+       cx="2593.4219"
+       cy="-1555.8085"
+       r="157.7941"
+       fx="2593.4219"
+       fy="-1555.8085"
+       id="radialGradient3979"
+       xlink:href="#linearGradient3957"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0,1.97195e-4)" />
+    <radialGradient
+       cx="2593.4219"
+       cy="-1555.8085"
+       r="157.7941"
+       fx="2593.4219"
+       fy="-1555.8085"
+       id="radialGradient3981"
+       xlink:href="#linearGradient3957"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0,1.97195e-4)" />
+    <radialGradient
+       cx="2593.4219"
+       cy="-1555.8085"
+       r="157.7941"
+       fx="2593.4219"
+       fy="-1555.8085"
+       id="radialGradient3983"
+       xlink:href="#linearGradient3957"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0,1.97195e-4)" />
+    <filter
+       x="-0.25"
+       y="-0.25"
+       width="1.5"
+       height="1.5"
+       color-interpolation-filters="sRGB"
+       id="filter3995">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="2.000000"
+         in="SourceAlpha"
+         id="feGaussianBlur3997" />
+      <feColorMatrix
+         values="-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 0.500000 0 "
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix3999" />
+      <feOffset
+         result="offsetBlur"
+         dy="4.000000"
+         dx="4.000000"
+         in="bluralpha"
+         id="feOffset4001" />
+      <feMerge
+         result="fbSourceGraphic"
+         id="feMerge4003">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode4005" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode4007" />
+      </feMerge>
+      <feColorMatrix
+         id="feColorMatrix4107"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         in="fbSourceGraphic"
+         result="fbSourceGraphicAlpha" />
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="2.000000"
+         in="fbSourceGraphicAlpha"
+         id="feGaussianBlur4109" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.800000 0 "
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix4111" />
+      <feOffset
+         result="offsetBlur"
+         dy="-1.000000"
+         dx="-1.000000"
+         in="bluralpha"
+         id="feOffset4113" />
+      <feMerge
+         id="feMerge4115">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode4117" />
+        <feMergeNode
+           in="fbSourceGraphic"
+           id="feMergeNode4119" />
+      </feMerge>
+    </filter>
+    <filter
+       x="-0.25"
+       y="-0.25"
+       width="1.5"
+       height="1.5"
+       color-interpolation-filters="sRGB"
+       id="filter4065">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="2.000000"
+         in="SourceAlpha"
+         id="feGaussianBlur4067" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.800000 0 "
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix4069" />
+      <feOffset
+         result="offsetBlur"
+         dy="-4.000000"
+         dx="-2.000000"
+         in="bluralpha"
+         id="feOffset4071" />
+      <feMerge
+         result="fbSourceGraphic"
+         id="feMerge4073">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode4075" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode4077" />
+      </feMerge>
+      <feColorMatrix
+         id="feColorMatrix4319"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         in="fbSourceGraphic"
+         result="fbSourceGraphicAlpha" />
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="10.000000"
+         in="fbSourceGraphicAlpha"
+         id="feGaussianBlur4321" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.700000 0 "
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix4323" />
+      <feOffset
+         result="offsetBlur"
+         dy="-4.000000"
+         dx="-4.000000"
+         in="bluralpha"
+         id="feOffset4325" />
+      <feMerge
+         id="feMerge4327">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode4329" />
+        <feMergeNode
+           in="fbSourceGraphic"
+           id="feMergeNode4331" />
+      </feMerge>
+    </filter>
+    <radialGradient
+       cx="1496.875"
+       cy="849.65588"
+       r="112.375"
+       fx="1496.875"
+       fy="849.65588"
+       id="radialGradient4131"
+       xlink:href="#linearGradient3957"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,0.977753,796.314,-2293.67)" />
+    <radialGradient
+       cx="2293.1895"
+       cy="-1462.9194"
+       r="118.375"
+       fx="2293.1895"
+       fy="-1462.9194"
+       id="radialGradient4143"
+       xlink:href="#linearGradient4145"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,0.978881,0,-30.8959)" />
+    <filter
+       x="-0.25"
+       y="-0.25"
+       width="1.5"
+       height="1.5"
+       color-interpolation-filters="sRGB"
+       id="filter4151">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="2.000000"
+         in="SourceAlpha"
+         id="feGaussianBlur4153" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.800000 0 "
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix4155" />
+      <feOffset
+         result="offsetBlur"
+         dy="-1.000000"
+         dx="-1.000000"
+         in="bluralpha"
+         id="feOffset4157" />
+      <feMerge
+         id="feMerge4159">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode4161" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode4163" />
+      </feMerge>
+    </filter>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Add Card Icon</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title />
+          </cc:Agent>
+        </dc:creator>
+        <dc:date>2012-01-08</dc:date>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-1771.53,1761.91)"
+     id="layer1">
+    <text
+       x="1409"
+       y="2223"
+       transform="translate(0,-1947.64)"
+       id="text5054"
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:sans"><tspan
+         x="1409"
+         y="2223"
+         id="tspan5058" /></text>
+    <rect
+       width="508.95938"
+       height="329.06775"
+       ry="5.5292697"
+       x="-2414.7378"
+       y="1341.308"
+       transform="matrix(-0.999996,0.00287719,-0.00287719,-0.999996,0,0)"
+       id="rect6290"
+       style="fill:url(#radialGradient6292);fill-opacity:1;stroke:#737373;stroke-width:2.64932871;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter4065)" />
+    <path
+       d="m 2270.0645,-1572.2944 0,82.5 -88.75,0 0,51.25 88.75,0 0,85 48.75,0 0,-83.75 86.25,0 0,-51.25 -87.5,0 0,-83.75 -47.5,0 z"
+       id="path4123"
+       style="fill:url(#radialGradient4131);fill-opacity:1;stroke:url(#radialGradient4143);stroke-width:13;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter4151)" />
+  </g>
+</svg>
