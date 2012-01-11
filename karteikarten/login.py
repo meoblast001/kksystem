@@ -92,11 +92,11 @@ def Register(request):
 			else:
 				return render_to_response('error.html', {'message' : 'Username matches that of another user.', 'go_back_to' : reverse('register'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 		else:
-			return render_to_response('register_form.html', {'form' : RegisterForm(request.POST)}, context_instance = RequestContext(request))
+			return render_to_response('login/register_form.html', {'form' : RegisterForm(request.POST), 'title' : 'Register', 'site_link_chain' : zip([reverse('login')], ['Login'])}, context_instance = RequestContext(request))
 
 	#Form
 	else:
-		return render_to_response('register_form.html', {'form' : RegisterForm()}, context_instance = RequestContext(request))
+		return render_to_response('login/register_form.html', {'form' : RegisterForm(), 'title' : 'Register', 'site_link_chain' : zip([reverse('login')], ['Login'])}, context_instance = RequestContext(request))
 
 #
 # Request password recovery email
