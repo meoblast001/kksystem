@@ -26,9 +26,7 @@ from django.contrib.auth import logout
 #
 @login_required
 def Centre(request):
-	names = ['Run Card Set', 'Practice Cards with No Box', 'Practice Card Box', 'Edit Card Sets', 'Logout']
-	gotos = [reverse('select-set-to-run'), reverse('select-set-to-run') + '?box=None', reverse('select-set-to-run') + '?box=specific', reverse('select-set-to-edit'), reverse('logout')]
-	return render_to_response('menu.html', {'menu_title' : 'Centre', 'menu_list' : zip(names, gotos)}, context_instance = RequestContext(request))
+	return render_to_response('centre.html', {}, context_instance = RequestContext(request))
 
 #
 # Select card set to run.
