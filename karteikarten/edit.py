@@ -37,7 +37,7 @@ def NewSet(request):
 				cardset = CardSet(name = form.cleaned_data['name'], owner = request.user)
 				cardset.save()
 				return HttpResponseRedirect(reverse('select-set-to-edit'))
-			return render_to_response('error.html', {'message' : 'Failed to create cardset. Already exists.', 'go_back_to' : reverse('select-set-to-edit')})
+			return render_to_response('error.html', {'message' : 'Failed to create cardset. Already exists.', 'go_back_to' : reverse('select-set-to-edit'), 'title' : 'Error', 'site_link_chain' : zip([], [])})
 		else:
 			return render_to_response('edit_set.html', {'form' : EditSetForm(request.POST), 'already_exists' : False}, context_instance = RequestContext(request))
 	#Form
@@ -176,7 +176,7 @@ def SearchCardsBySet(request, set_id):
 					retrieved_cards.append(card.pk)
 		return render_to_response('list_cards.html', {'menu_title' : 'Search Cards by Set', 'menu_list' : zip(names, gotos), 'set_id' : set_id, 'previous_first_card' : first_card - 10 if first_card > 10 else 0, 'current_first_card' : first_card, 'next_first_card' : first_card + 10, 'num_cards' : len(names), 'search' : request.GET['search'], 'card_front' : 2 if ('card_front' in request.GET and request.GET['card_front'] == 'on') else 1, 'card_back' : 2 if ('card_back' in request.GET and request.GET['card_back'] == 'on') else 1}, context_instance = RequestContext(request))
 	else:
-		return render_to_response('error.html', {'message' : 'No box data was provided.', 'go_back_to' : reverse('select-set-to-edit')}, context_instance = RequestContext(request))
+		return render_to_response('error.html', {'message' : 'No box data was provided.', 'go_back_to' : reverse('select-set-to-edit'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 
 #
 # Create new card

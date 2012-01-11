@@ -35,7 +35,7 @@ def Start(request, set_id):
 			try:
 				cardboxes_to_review.append(int(request.GET['box']))
 			except ValueError:
-				return render_to_response('error.html', {'message' : 'Box is not an integer.', 'go_back_to' : reverse('centre')}, context_instance = RequestContext(request))
+				return render_to_response('error.html', {'message' : 'Box is not an integer.', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 	else:
 		for cardbox in cardboxes:
 			diff = datetime.now() - cardbox.last_reviewed
@@ -68,7 +68,7 @@ def Run(request):
 		if len(cardboxes) < 1:
 			raise KeyError
 	except KeyError:
-		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre')}, context_instance = RequestContext(request))
+		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 
 	cur_cardbox = get_object_or_404(CardBox, pk = cardboxes[cur_cardbox_index])
 	cards = Card.objects.filter(current_box = cur_cardbox).order_by('?')
@@ -102,13 +102,13 @@ def RunSpecificBox(request):
 			#Box must be set to "None"; Assume so
 			pass
 	else:
-		return render_to_response('error.html', {'app_root' : settings.APP_ROOT, 'message' : 'No card box specified', 'go_back_to' : reverse('centre')}, context_instance = RequestContext(request))
+		return render_to_response('error.html', {'app_root' : settings.APP_ROOT, 'message' : 'No card box specified', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 
 	try:
 		cardset_id = request.session['cardset']
 		cards_reviewed = request.session['cards_reviewed']
 	except KeyError:
-		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre')}, context_instance = RequestContext(request))
+		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 
 	cardset = get_object_or_404(CardSet, pk = cardset_id, owner = request.user)
 	cards = cardset.card_set.filter(current_box = current_box).order_by('?')
@@ -131,7 +131,7 @@ def Correct(request, card_id):
 	try:
 		cards_reviewed = request.session['cards_reviewed']
 	except KeyError:
-		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre')}, context_instance = RequestContext(request))
+		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 	#Card reviewed
 	cards_reviewed.append(int(card_id))
 	request.session['cards_reviewed'] = cards_reviewed
@@ -167,7 +167,7 @@ def Incorrect(request, card_id):
 	try:
 		cards_reviewed = request.session['cards_reviewed']
 	except KeyError:
-		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre')}, context_instance = RequestContext(request))
+		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 	#Card reviewed
 	cards_reviewed.append(int(card_id))
 	request.session['cards_reviewed'] = cards_reviewed
@@ -177,7 +177,7 @@ def Incorrect(request, card_id):
 		card_set = card.parent_card_set
 		cardboxes = CardBox.objects.filter(owner = request.user, parent_card_set = card_set).order_by('review_frequency')
 		if not len(cardboxes):
-			return render_to_response('error.html', {'message' : 'There are no cardboxes. Cannot move card to first box.', 'go_back_to' : reverse('run-run') + url_append}, context_instance = RequestContext(request))
+			return render_to_response('error.html', {'message' : 'There are no cardboxes. Cannot move card to first box.', 'go_back_to' : reverse('run-run') + url_append, 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 		card.current_box = cardboxes[0]
 		card.save()
 	return HttpResponseRedirect(reverse('run-run') + url_append)
