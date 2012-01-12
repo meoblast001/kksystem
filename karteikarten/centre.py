@@ -14,12 +14,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from models import *
+from forms import *
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib.auth import logout
+from django.http import Http404
 
 #
 # Main menu.
@@ -33,25 +36,16 @@ def Centre(request):
 #
 @login_required
 def SelectSetToRun(request):
-	cardsets = CardSet.objects.filter(owner = request.user)
-	names = []
-	gotos = []
-
-	run_action = 'start'
-	url_append = ''
-	#Find strings to append to URL
-	if 'box' in request.GET:
-		url_append = '?box=' + request.GET['box']
-		if request.GET['box'] == 'specific':
-			run_action = 'select_box'
-
-	for cardset in cardsets:
-		names.append(cardset.name)
-		if run_action == 'start':
-			gotos.append(reverse('run-start', args = [str(cardset.pk)]) + url_append)
-		else:
-			gotos.append(reverse('select-set-box-to-run', args = [str(cardset.pk)]) + url_append)
-	return render_to_response('menu.html', {'menu_title' : 'Select Set', 'menu_list' : zip(names, gotos)}, context_instance = RequestContext(request))
+	#Submit
+	if request.method == 'POST':
+		try:
+			#404 temporarily
+			raise Http404()
+		except ValueError:
+			return render_to_response('error.html', {'message' : 'Value of set was not an integer. Something is wrong.', 'go_back_to' : reverse('select-set-to-run'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+	#Form
+	else:
+		return render_to_response('select_set.html', {'form' : SelectSetForm(CardSet.objects.filter(owner = request.user), False), 'action_url' : reverse('select-set-to-run'), 'title' : 'Study', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))
 
 #
 # Select box within set to run.
@@ -73,10 +67,21 @@ def SelectSetBoxToRun(request, set_id):
 #
 @login_required
 def SelectSetToEdit(request):
-	cardsets = CardSet.objects.filter(owner = request.user)
-	names = ['[Create New Cardset]']
-	gotos = [reverse('new-set')]
-	for cardset in cardsets:
-		names.append(cardset.name)
-		gotos.append(reverse('edit-set', args = [str(cardset.pk)]))
-	return render_to_response('menu.html', {'menu_title' : 'Select Set', 'menu_list' : zip(names, gotos)}, context_instance = RequestContext(request))
+	#Submit
+	if request.method == 'POST':
+		form = SelectSetForm(CardSet.objects.filter(owner = request.user), True, request.POST)
+		if form.is_valid():
+			#New card set
+			if form.cleaned_data['card_set'] == 'new':
+				return HttpResponseRedirect(reverse('new-set'))
+			#Edit card set
+			else:
+				try:
+					return HttpResponseRedirect(reverse('edit-set', args = [int(form.cleaned_data['card_set'])]))
+				except ValueError:
+					return render_to_response('error.html', {'message' : 'Value of set was not an integer. Something is wrong.', 'go_back_to' : reverse('select-set-to-edit'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+		else:
+			return render_to_response('select_set.html', {'form' : SelectSetForm(CardSet.objects.filter(owner = request.user), True), 'action_url' : reverse('select-set-to-edit'), 'title' : 'Edit', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))
+	#Form
+	else:
+		return render_to_response('select_set.html', {'form' : SelectSetForm(CardSet.objects.filter(owner = request.user), True), 'action_url' : reverse('select-set-to-edit'), 'title' : 'Edit', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))

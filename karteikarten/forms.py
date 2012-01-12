@@ -57,6 +57,24 @@ class RecoverResetPasswordForm(forms.Form):
 		return self.cleaned_data
 
 #
+# Form displayed when selecting set to edit
+#
+class SelectSetForm(forms.Form):
+	card_set = forms.ChoiceField()
+
+	def __init__(self, card_set_choices, is_edit_set, values = None):
+		super(SelectSetForm, self).__init__(values)
+		card_set_names = []
+		#If edit set form, display option to create a new set
+		if is_edit_set:
+			card_set_names.append(['new', '[Create New Set]'])
+		#Copy set id and name for value and text of choices
+		for i, item in enumerate(card_set_choices):
+			card_set_names.append([str(item.pk), item.name])
+		#Provide choices for card set choice field
+		self.fields['card_set'].choices = card_set_names
+
+#
 # Form displayed when creating and editing card sets.
 #
 class EditSetForm(forms.Form):
