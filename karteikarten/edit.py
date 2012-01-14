@@ -99,12 +99,12 @@ def EditBox(request, set_id, box_id):
 		except ValueError:
 			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
 			box = get_object_or_404(CardBox, pk = box_id, parent_card_set = cardset, owner = request.user)
-			return render_to_response('edit/edit_box.html', {'form' : EditBoxForm(request.POST), 'already_exists' : True, 'id' : box_id, 'set_id' : set_id, 'title' : 'Edit Box: ' + box.name, 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name])}, context_instance = RequestContext(request))
+			return render_to_response('edit/edit_box.html', {'form' : EditBoxForm(request.POST), 'already_exists' : True, 'id' : box_id, 'set_id' : set_id, 'title' : 'Edit Box: ' + box.name, 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id]), reverse('edit-view-boxes-by-set', args= [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name, 'Boxes by Set'])}, context_instance = RequestContext(request))
 	#Form
 	else:
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
 		box = get_object_or_404(CardBox, pk = box_id, parent_card_set = cardset, owner = request.user)
-		return render_to_response('edit/edit_box.html', {'form' : EditBoxForm({'name' : box.name, 'review_frequency' : box.review_frequency}), 'already_exists' : True, 'id' : box_id, 'set_id' : set_id, 'title' : 'Edit Box: ' + box.name, 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name])}, context_instance = RequestContext(request))
+		return render_to_response('edit/edit_box.html', {'form' : EditBoxForm({'name' : box.name, 'review_frequency' : box.review_frequency}), 'already_exists' : True, 'id' : box_id, 'set_id' : set_id, 'title' : 'Edit Box: ' + box.name, 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id]), reverse('edit-view-boxes-by-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name, 'Boxes by Set'])}, context_instance = RequestContext(request))
 
 #
 # Create card box
@@ -186,11 +186,11 @@ def NewCard(request, set_id):
 			card.save()
 			return HttpResponseRedirect(reverse('edit-set', args = [str(set_id)]))
 		else:
-			return render_to_response('edit_card.html', {'form' : form, 'already_exists' : False, 'set_id' : set_id}, context_instance = RequestContext(request))
+			return render_to_response('edit/edit_card.html', {'form' : form, 'already_exists' : False, 'set_id' : set_id, 'title' : 'New Card', 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name])}, context_instance = RequestContext(request))
 	#Form
 	else:
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-		return render_to_response('edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset)), 'already_exists' : False, 'set_id' : set_id}, context_instance = RequestContext(request))
+		return render_to_response('edit/edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset)), 'already_exists' : False, 'set_id' : set_id, 'title' : 'New Card', 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name])}, context_instance = RequestContext(request))
 
 #
 # Display form with which to edit a card.
@@ -212,12 +212,12 @@ def EditCard(request, set_id, card_id):
 		else:
 			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
 			card = get_object_or_404(Card, pk = card_id, parent_card_set = cardset, owner = request.user)
-			return render_to_response('edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), request.POST), 'already_exists' : True, 'id' : card_id, 'set_id' : set_id}, context_instance = RequestContext(request))
+			return render_to_response('edit/edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), request.POST), 'already_exists' : True, 'id' : card_id, 'set_id' : set_id, 'title' : 'Edit Card', 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id]), reverse('edit-view-cards-by-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name, 'Cards by Set'])}, context_instance = RequestContext(request))
 	#Form
 	else:
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
 		card = get_object_or_404(Card, pk = card_id, parent_card_set = cardset, owner = request.user)
-		return render_to_response('edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), {'front' : card.front, 'back' : card.back, 'card_box' : card.current_box.pk if card.current_box != None else 0}), 'already_exists' : True, 'id' : card_id, 'set_id' : set_id}, context_instance = RequestContext(request))
+		return render_to_response('edit/edit_card.html', {'form' : EditCardForm(CardBox.objects.filter(owner = request.user, parent_card_set = cardset), {'front' : card.front, 'back' : card.back, 'card_box' : card.current_box.pk if card.current_box != None else 0}), 'already_exists' : True, 'id' : card_id, 'set_id' : set_id, 'title' : 'Edit Card', 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id]), reverse('edit-view-cards-by-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name, 'Cards by Set'])}, context_instance = RequestContext(request))
 
 #
 # Delete card
