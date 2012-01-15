@@ -23,6 +23,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib.auth import logout
 from django.http import Http404
+import json
 
 #
 # Main menu.
@@ -35,32 +36,33 @@ def Centre(request):
 # Select card set to run.
 #
 @login_required
-def SelectSetToRun(request):
+def SelectRunOptions(request):
 	#Submit
 	if request.method == 'POST':
-		try:
-			#404 temporarily
-			raise Http404()
-		except ValueError:
-			return render_to_response('error.html', {'message' : 'Value of set was not an integer. Something is wrong.', 'go_back_to' : reverse('select-set-to-run'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+		cardsets = CardSet.objects.filter(owner = request.user)
+		cardset = get_object_or_404(CardSet, pk = request.POST['card_set'], owner = request.user)
+		cardboxes = CardBox.objects.filter(parent_card_set = get_object_or_404(cardset, pk = request.POST['card_set']))
+		form = RunOptionsForm(cardsets, cardboxes, request.POST)
+		if form.is_valid():
+			try:
+				if form.cleaned_data['study_type'] == 'normal':
+					return HttpResponseRedirect(reverse('run-start', args = [int(form.cleaned_data['card_set'])]))
+				elif form.cleaned_data['study_type'] == 'single_box':
+					return HttpResponseRedirect(reverse('run-start', args = [int(form.cleaned_data['card_set'])]) + '?box=' + form.cleaned_data['card_box'])
+				elif form.cleaned_data['study_type'] == 'no_box':
+					return HttpResponseRedirect(reverse('run-start', args = [int(form.cleaned_data['card_set'])]) + '?box=None')
+				else:
+					raise ValueError()
+			except ValueError:
+				return render_to_response('error.html', {'message' : 'An invalid value was given on this form. Something is wrong.', 'go_back_to' : reverse('select-run-options'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+		else:
+			boxes_in_sets = CardBox.GetBoxesBySets(cardsets)
+			return render_to_response('run/run_options.html', {'form' : form, 'boxes_in_sets' : json.dumps(boxes_in_sets), 'title' : 'Study', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))
 	#Form
 	else:
-		return render_to_response('select_set.html', {'form' : SelectSetForm(CardSet.objects.filter(owner = request.user), False), 'action_url' : reverse('select-set-to-run'), 'title' : 'Study', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))
-
-#
-# Select box within set to run.
-#
-@login_required
-def SelectSetBoxToRun(request, set_id):
-	cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-	cardboxes = CardBox.objects.filter(parent_card_set = cardset)
-	names = []
-	gotos = []
-
-	for cardbox in cardboxes:
-		names.append(cardbox.name)
-		gotos.append(reverse('run-start', args = [str(set_id)]) + '?box=' + str(cardbox.pk))
-	return render_to_response('menu.html', {'menu_title' : 'Select Box', 'menu_list' : zip(names, gotos)}, context_instance = RequestContext(request))
+		cardsets = CardSet.objects.filter(owner = request.user)
+		boxes_in_sets = CardBox.GetBoxesBySets(cardsets)
+		return render_to_response('run/run_options.html', {'form' : RunOptionsForm(cardsets, {}), 'boxes_in_sets' : json.dumps(boxes_in_sets), 'title' : 'Study', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))
 
 #
 # Select card set to edit.

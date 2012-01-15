@@ -75,6 +75,28 @@ class SelectSetForm(forms.Form):
 		self.fields['card_set'].choices = card_set_names
 
 #
+# Form displayed when beginning a study session.
+#
+class RunOptionsForm(forms.Form):
+	card_set = forms.ChoiceField()
+	study_type = forms.ChoiceField(widget = forms.RadioSelect, choices = [['normal', 'Normal'], ['single_box', 'Practice Single Box'], ['no_box', 'Practice Cards with No Box']])
+	card_box = forms.ChoiceField(required = False)
+
+	def __init__(self, card_set_choices, card_box_choices, values = None):
+		super(RunOptionsForm, self).__init__(values)
+		card_set_names = []
+		card_box_names = []
+		#Copy set id and name for value and text of choices
+		for i, item in enumerate(card_set_choices):
+			card_set_names.append([str(item.pk), item.name])
+		#Copy box id and name for value and text of choices
+		for i, item in enumerate(card_box_choices):
+			card_box_names.append([str(item.pk), item.name])
+		#Provide choices for card set and boxes choice fields
+		self.fields['card_set'].choices = card_set_names
+		self.fields['card_box'].choices = card_box_names
+
+#
 # Form displayed when creating and editing card sets.
 #
 class EditSetForm(forms.Form):
