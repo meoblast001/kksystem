@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>Karteikarten System - Centre</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css" />
 	</head>
 	<body>
@@ -36,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				<img src="{{ STATIC_URL }}edit.png" alt="Edit" />
 				<div class="main_menu_item_text">Edit</div>
 			</a>
-			<a href="" class="main_menu_item">
+			<a href="{% url settings %}" class="main_menu_item">
 				<img src="{{ STATIC_URL }}settings.png" alt="Settings" />
 				<div class="main_menu_item_text">Settings</div>
 			</a>
