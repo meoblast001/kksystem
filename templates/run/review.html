@@ -1,0 +1,88 @@
+<!--
+Copyright (C) 2012 Braden Walters
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Karteikarten System - Study</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css" />
+		<script type="text/javascript" src="{{ STATIC_URL }}jquery-1.7.1.min.js"></script>
+
+		<script type="text/javascript">
+			function FlipCard()
+			{
+				$('#back_content').show();
+				$('#buttons').show();
+			}
+		</script>
+	</head>
+	<body>
+		<div style="position: absolute; top: 5px; left: 5px; text-align: center; font-size: 10px;">
+			<img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikartensystem" /><br />
+			Version 2.0
+		</div>
+		<div style="margin-left: auto; margin-right: auto; width: 600px; text-align: center;">
+			<div class="practice_sidebar">
+				<b>Study Mode:</b><br />
+				{{ study_mode }}<br /><br />
+				<b>Current Set:</b><br />
+				{{ card_set.name }}<br /><br />
+				<b>Current Box:</b><br />
+				{{ card_box.name }}<br /><br />
+				<b>Card:</b> ? / ?<br />
+				<b>Correct:</b> ?
+				{% if not card_box %}
+					<br /><br />
+					<a href="{% url run-finished %}" class="button" style="background-color: #ffffff;" >Finish</a>
+				{% endif %}
+			</div>
+			<div id="front" class="card">
+				<table class="card_content">
+					<tr>
+						<td>
+							{{ card.front }}
+						</td>
+					<tr>
+				</table>
+			</div>
+			<div id="back" class="card_not_visible">
+				<a href="javascript:FlipCard();" style="display: block;">
+					<table class="card_content">
+						<tr>
+							<td>
+								Click here to flip card.
+							</td>
+						<tr>
+					</table>
+				</a>
+
+				<table id="back_content" class="card_content" style="float: left; background-color: #ffffff; display: none;">
+					<tr>
+						<td>
+							{{ card.back }}
+						</td>
+					<tr>
+				</table>
+			</div>
+			<div id="buttons" class="non_card" style="display: none;">
+				<a href="{% url run-correct card.id %}{{ url_append }}" class="button" style="background-color: #00a000;">Correct</a>
+				<a href="{% url run-incorrect card.id %}{{ url_append }}" class="button" style="background-color: #a00000;;">Incorrect</a>
+			</div>
+		</div>
+	</body>
+</html>

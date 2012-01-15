@@ -74,7 +74,7 @@ def Run(request):
 	cards = Card.objects.filter(current_box = cur_cardbox).order_by('?')
 	for card in cards:
 		if card.pk not in cards_reviewed:
-			return render_to_response('review.html', {'card' : card, 'card_box' : cur_cardbox, 'card_set' : cur_cardbox.parent_card_set, 'url_append' : ''}, context_instance = RequestContext(request))
+			return render_to_response('run/review.html', {'card' : card, 'card_box' : cur_cardbox, 'card_set' : cur_cardbox.parent_card_set, 'study_mode' : 'Normal', 'url_append' : ''}, context_instance = RequestContext(request))
 
 	#Update review time on current box
 	cur_cardbox.last_reviewed = datetime.now()
@@ -93,13 +93,15 @@ def Run(request):
 @login_required
 def RunSpecificBox(request):
 	#Get box to run
-	current_box = None
 	if 'box' in request.GET:
 		try:
 			current_box_id = int(request.GET['box'])
 			current_box = get_object_or_404(CardBox, pk = current_box_id, owner = request.user)
+			study_mode = 'Single Box'
 		except ValueError:
 			#Box must be set to "None"; Assume so
+			current_box = None
+			study_mode = 'No Box'
 			pass
 	else:
 		return render_to_response('error.html', {'app_root' : settings.APP_ROOT, 'message' : 'No card box specified', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
@@ -115,7 +117,7 @@ def RunSpecificBox(request):
 
 	for card in cards:
 		if card.pk not in cards_reviewed:
-			return render_to_response('review.html', {'card' : card, 'card_box' : current_box, 'card_set' : cardset, 'url_append' : '?box=' + request.GET['box']}, context_instance = RequestContext(request))
+			return render_to_response('run/review.html', {'card' : card, 'card_box' : current_box, 'card_set' : cardset, 'study_mode' : study_mode, 'url_append' : '?box=' + request.GET['box']}, context_instance = RequestContext(request))
 	return HttpResponseRedirect(reverse('run-finished'))
 
 #
