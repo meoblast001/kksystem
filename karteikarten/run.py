@@ -189,4 +189,4 @@ def Incorrect(request, card_id):
 #
 @login_required
 def Finished(request):
-	return render_to_response('confirmation.html', {'message' : 'Completed.', 'short_messsage' : 'Completed', 'go_to' : reverse('centre'), 'go_to_name' : 'Back to Centre'}, context_instance = RequestContext(request))
+	return render_to_response('confirmation.html', {'message' : 'Completed.', 'short_messsage' : 'Completed', 'go_to' : reverse('centre'), 'go_to_name' : 'Back to Centre', 'title' : 'Confirmation', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
