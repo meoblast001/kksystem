@@ -18,9 +18,11 @@ from forms import *
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from django.db.models import Q
 
@@ -173,6 +175,7 @@ def ViewCardsBySet(request, set_id):
 #
 # Create new card
 #
+@csrf_exempt
 @login_required
 def NewCard(request, set_id):
 	#Submit
@@ -184,9 +187,15 @@ def NewCard(request, set_id):
 			box = get_object_or_404(CardBox, pk = int(form.cleaned_data['card_box']), owner = request.user, parent_card_set = cardset) if int(form.cleaned_data['card_box']) != 0 else None
 			card = Card(front = form.cleaned_data['front'], back = form.cleaned_data['back'], owner = request.user, parent_card_set = cardset, current_box = box)
 			card.save()
-			return HttpResponseRedirect(reverse('edit-set', args = [str(set_id)]))
+			if request.is_ajax():
+				return HttpResponse('{"status" : 0}')
+			else:
+				return HttpResponseRedirect(reverse('edit-set', args = [str(set_id)]))
 		else:
-			return render_to_response('edit/edit_card.html', {'form' : form, 'already_exists' : False, 'set_id' : set_id, 'title' : 'New Card', 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name])}, context_instance = RequestContext(request))
+			if request.is_ajax():
+				return HttpResponse('{"status" : 1, "message" : "Form not valid. Fields contain invalid data or were left blank."}')
+			else:
+				return render_to_response('edit/edit_card.html', {'form' : form, 'already_exists' : False, 'set_id' : set_id, 'title' : 'New Card', 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name])}, context_instance = RequestContext(request))
 	#Form
 	else:
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
