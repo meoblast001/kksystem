@@ -44,8 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				{{ card_set.name }}<br /><br />
 				<b>Current Box:</b><br />
 				{{ card_box.name }}<br /><br />
-				<b>Card:</b> ? / ?<br />
-				<b>Correct:</b> ?
+				<b>Cards{% if card_box %} (In this Box){% endif %}:</b><br />
+				{{ num_completed_cards }} / {{ num_cards }}
 				{% if not card_box %}
 					<br /><br />
 					<a href="{% url run-finished %}" class="button" style="background-color: #ffffff;" >Finish</a>

@@ -30,23 +30,29 @@ def Start(request, set_id):
 	cardboxes_to_review = []
 	cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
 	cardboxes = cardset.cardbox_set.all().order_by('-review_frequency')
+	total_cards = 0
 	if 'box' in request.GET:
 		if request.GET['box'] != 'None':
 			try:
-				cardboxes_to_review.append(int(request.GET['box']))
+				cardbox = get_object_or_404(CardBox, pk = int(request.GET['box']))
+				total_cards = cardbox.card_set.count()
 			except ValueError:
 				return render_to_response('error.html', {'message' : 'Box is not an integer.', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+		else:
+			total_cards = cardset.card_set.filter(current_box = None).count()
 	else:
 		for cardbox in cardboxes:
 			diff = datetime.now() - cardbox.last_reviewed
 			#If time between now and last review time is more than 6 hours before the review frequency
 			if (diff.days * 24) + (diff.seconds / 3600) >= (cardbox.review_frequency * 24) - 6:
-				cardboxes_to_review.append(cardbox.pk) #Review this cardbox
+				cardboxes_to_review.append({'box' : cardbox.pk, 'card_count' : cardbox.card_set.count()}) #Review this cardbox
 
 	request.session['cardset'] = set_id #ID of cardset that will be reviewed
 	request.session['cardboxes'] = cardboxes_to_review #IDs of cardboxes that will be reviewed
+	request.session['total_cards'] = total_cards #Total cards to review; Not used in normal review model
 	request.session['cur_cardbox_index'] = 0 #Index into array, representing the ID of the current cardbox
 	request.session['cards_reviewed'] = [] #IDs of cards already reviewed
+	request.session['cards_reviewed_this_set'] = [] #IDs of cards already reviewed in the current set
 
 	if 'box' in request.GET:
 		return HttpResponseRedirect(reverse('run-run') + '?box=' + request.GET['box'])
@@ -65,16 +71,17 @@ def Run(request):
 		cardboxes = request.session['cardboxes']
 		cur_cardbox_index = request.session['cur_cardbox_index']
 		cards_reviewed = request.session['cards_reviewed']
+		cards_reviewed_this_set = request.session['cards_reviewed_this_set']
 		if len(cardboxes) < 1:
 			raise KeyError
 	except KeyError:
 		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 
-	cur_cardbox = get_object_or_404(CardBox, pk = cardboxes[cur_cardbox_index])
+	cur_cardbox = get_object_or_404(CardBox, pk = cardboxes[cur_cardbox_index]['box'])
 	cards = Card.objects.filter(current_box = cur_cardbox).order_by('?')
 	for card in cards:
 		if card.pk not in cards_reviewed:
-			return render_to_response('run/review.html', {'card' : card, 'card_box' : cur_cardbox, 'card_set' : cur_cardbox.parent_card_set, 'study_mode' : 'Normal', 'url_append' : ''}, context_instance = RequestContext(request))
+			return render_to_response('run/review.html', {'card' : card, 'card_box' : cur_cardbox, 'card_set' : cur_cardbox.parent_card_set, 'study_mode' : 'Normal', 'num_completed_cards' : len(cards_reviewed_this_set), 'num_cards' : cardboxes[cur_cardbox_index]['card_count'], 'url_append' : ''}, context_instance = RequestContext(request))
 
 	#Update review time on current box
 	cur_cardbox.last_reviewed = datetime.now()
@@ -82,6 +89,7 @@ def Run(request):
 	if cur_cardbox_index + 1 < len(cardboxes):
 		#Advance to next cardbox
 		request.session['cur_cardbox_index'] = cur_cardbox_index + 1
+		request.session['cards_reviewed_this_set'] = []
 		return Run(request)
 	else:
 		#Finished
@@ -109,6 +117,7 @@ def RunSpecificBox(request):
 	try:
 		cardset_id = request.session['cardset']
 		cards_reviewed = request.session['cards_reviewed']
+		total_cards = request.session['total_cards']
 	except KeyError:
 		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 
@@ -117,7 +126,7 @@ def RunSpecificBox(request):
 
 	for card in cards:
 		if card.pk not in cards_reviewed:
-			return render_to_response('run/review.html', {'card' : card, 'card_box' : current_box, 'card_set' : cardset, 'study_mode' : study_mode, 'url_append' : '?box=' + request.GET['box']}, context_instance = RequestContext(request))
+			return render_to_response('run/review.html', {'card' : card, 'card_box' : current_box, 'card_set' : cardset, 'study_mode' : study_mode, 'num_completed_cards' : len(cards_reviewed), 'num_cards' : total_cards, 'url_append' : '?box=' + request.GET['box']}, context_instance = RequestContext(request))
 	return HttpResponseRedirect(reverse('run-finished'))
 
 #
@@ -132,11 +141,14 @@ def Correct(request, card_id):
 
 	try:
 		cards_reviewed = request.session['cards_reviewed']
+		cards_reviewed_this_set = request.session['cards_reviewed_this_set']
 	except KeyError:
 		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 	#Card reviewed
 	cards_reviewed.append(int(card_id))
+	cards_reviewed_this_set.append(int(card_id))
 	request.session['cards_reviewed'] = cards_reviewed
+	request.session['cards_reviewed_this_set'] = cards_reviewed_this_set
 
 	if 'box' not in request.GET: #Only update card status if not reviewing a specific box
 		card = get_object_or_404(Card, pk = card_id, owner = request.user)
@@ -168,11 +180,14 @@ def Incorrect(request, card_id):
 
 	try:
 		cards_reviewed = request.session['cards_reviewed']
+		cards_reviewed_this_set = request.session['cards_reviewed_this_set']
 	except KeyError:
 		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 	#Card reviewed
 	cards_reviewed.append(int(card_id))
+	cards_reviewed_this_set.append(int(card_id))
 	request.session['cards_reviewed'] = cards_reviewed
+	request.session['cards_reviewed_this_set'] = cards_reviewed_this_set
 
 	if 'box' not in request.GET or request.GET['box'] == 'None': #Only update card status if not reviewing a specific box or if reviewing cards from no box
 		card = get_object_or_404(Card, pk = card_id, owner = request.user)
