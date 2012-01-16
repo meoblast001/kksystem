@@ -1,4 +1,6 @@
-<!--
+{% extends "base_page.html" %}
+
+{% comment %}
 Copyright (C) 2011 Braden Walters
 
 This program is free software: you can redistribute it and/or modify
@@ -13,16 +15,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
-
-{% extends "base.html" %}
-
-{% block title %}{{ short_message }}{% endblock %}
+{% endcomment %}
 
 {% block body %}
-	<div class="block" style="width: 200px;">
-		{{ message }}<br />
-		<br />
-		<div style="text-align: center;"><a href="{{ go_to }}">{{ go_to_name }}</a></div>
-	</div>
+	{{ message }}<br />
+	<br />
+	<a href="{{ go_to }}">{{ go_to_name }}</a>
 {% endblock %}

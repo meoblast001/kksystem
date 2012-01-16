@@ -1,5 +1,7 @@
-<!--
-Copyright (C) 2011 Braden Walters
+{% extends "base_page.html" %}
+
+{% comment %}
+Copyright (C) 2012 Braden Walters
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -13,24 +15,8 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
-
-{% extends "base.html" %}
-
-{% block title %}Reset Password{% endblock %}
+{% endcomment %}
 
 {% block body %}
-	<div style="text-align: center;"><a href="{{ app_root }}/"><img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikarten System" /></a></div>
-	<div class="block" style="width: 200px; text-align: center;">
-		<h2>Reset Password</h2>
-		<form action="{% url recover-reset-password %}{{ url_append }}" method="post" class="box_form">
-			{% csrf_token %}
-			{% for field in form %}
-				{{ field.label_tag }}: {{ field }}
-				{{ field.errors }}
-			{% endfor %}
-			<br /><br />
-			<input type="submit" value="Request" class="box"/>
-		</form>
-	</div>
+	There are currently no settings.
 {% endblock %}

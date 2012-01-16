@@ -1,7 +1,7 @@
 {% extends "base_page.html" %}
 
 {% comment %}
-Copyright (C) 2011 Braden Walters
+Copyright (C) 2012 Braden Walters
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
 {% block body %}
-	{{ message }}<br />
-	<br />
-	<a href="{{ go_back_to }}">Go Back</a>
+	Boxes:<br /><br />
+	{% for box in boxes %}
+		<a href="{% url edit-box set_id box.id %}" class="item">{{ box.name }}</a>
+	{% endfor %}
 {% endblock %}

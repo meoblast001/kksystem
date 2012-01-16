@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.1"
+   width="579.32703"
+   height="519.37927"
+   id="svg2">
+  <title
+     id="title2816">Exit Icon</title>
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3606">
+      <stop
+         id="stop3608"
+         style="stop-color:#e91b1b;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop3614"
+         style="stop-color:#470808;stop-opacity:1"
+         offset="0.5" />
+      <stop
+         id="stop3610"
+         style="stop-color:#e91b1b;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       x1="1697.4834"
+       y1="2092.1526"
+       x2="1697.4834"
+       y2="2614.1355"
+       id="linearGradient3612"
+       xlink:href="#linearGradient3606"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       x="-0.25"
+       y="-0.25"
+       width="1.5"
+       height="1.5"
+       color-interpolation-filters="sRGB"
+       id="filter3872">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="1.000000"
+         in="SourceAlpha"
+         id="feGaussianBlur3874" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.900000 0 "
+         type="matrix"
+         result="bluralpha"
+         id="feColorMatrix3876" />
+      <feOffset
+         result="offsetBlur"
+         dy="3.000000"
+         dx="3.000000"
+         in="bluralpha"
+         id="feOffset3878" />
+      <feMerge
+         id="feMerge3880">
+        <feMergeNode
+           in="offsetBlur"
+           id="feMergeNode3882" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode3884" />
+      </feMerge>
+    </filter>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Exit Icon</dc:title>
+        <dc:date>2012-01-07</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title />
+          </cc:Agent>
+        </dc:creator>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-1407.38,-146.414)"
+     id="layer1">
+    <path
+       d="m 1986.2069,2446.5517 -318.9655,0 0,166.3793 -259.3615,-259.7252"
+       transform="translate(0,-1947.64)"
+       id="path2826"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="m 1408.4828,405.67254 258.7586,-258.75864 0,166.3793 318.9655,0 0,186.12068"
+       id="path2828"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="m 1537.7851,2481.5901 -128.2328,-128.235 128.4483,-128.4461 128.4483,-128.4461 0,82.542 0,82.542 159.4828,0 159.4827,0 0,92.2414 0,92.2414 -159.4784,0 -159.4784,0 -0.2199,81.8977 -0.2198,81.8977 -128.2328,-128.235 z"
+       transform="translate(0,-1947.64)"
+       id="path2832"
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:8.62068939;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3872)" />
+  </g>
+</svg>

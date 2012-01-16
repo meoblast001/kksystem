@@ -1,0 +1,67 @@
+{% extends "base_page.html" %}
+
+{% comment %}
+Copyright (C) 2012 Braden Walters
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+
+{% block body %}
+	<script type="text/javascript">
+		var boxes_in_sets = {% autoescape off %}{{ boxes_in_sets }}{% endautoescape %};
+
+		$(document).ready(function()
+		{
+			//If "Practice Single Box" initially checked, hide card box field
+			if (!$('#id_study_type_1').is(':checked'))
+				$('#card_box_field').hide();
+			//Bind a change event to all study type radio buttons, which changes the visibility of the card box field
+			$('#study_type_field ul li input:radio').live('change', function(event)
+			{
+				if ($('#id_study_type_1').is(':checked'))
+					$('#card_box_field').show();
+				else
+					$('#card_box_field').hide();
+			});
+			$('#id_card_set').change(function(event)
+			{
+				var id_card_box = $('#id_card_box');
+				id_card_box.html('');
+				var boxes_in_this_set = boxes_in_sets[$('#id_card_set option:selected').val()]
+				for (var i in boxes_in_this_set)
+				{
+					id_card_box.append('<option value="' + boxes_in_this_set[i].id + '">' + boxes_in_this_set[i].name + '</option>');
+				}
+			});
+		});
+	</script>
+
+	<form action="{% url select-run-options %}" method="post" class="box_form">
+		{% csrf_token %}
+		{{ form.card_set.label_tag }}: {{ form.card_set }}
+		{{ form.card_set.errors }}
+		<br /><br />
+		{{ form.study_type.label_tag }}:
+		<div id="study_type_field" style="width: 70%; margin-left: auto; margin-right: auto; text-align: left;">
+			{{ form.study_type }}
+			{{ form.study_type.errors }}
+		</div>
+		<div id="card_box_field">
+			{{ form.card_box.label_tag }}: {{ form.card_box }}
+			{{ form.card_box.errors }}
+		</div>
+		<br /><br />
+		<input type="submit" value="Continue" class="box"/>
+	</form>
+{% endblock %}

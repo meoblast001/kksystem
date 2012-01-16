@@ -1,0 +1,51 @@
+<!--
+Copyright (C) 2012 Braden Walters
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Karteikarten System - Centre</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css" />
+	</head>
+	<body>
+		<div style="position: absolute; top: 5px; left: 5px; text-align: center; font-size: 10px;">
+			<img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikartensystem" /><br />
+			Version 2.0
+		</div>
+		<div style="margin-left: auto; margin-right: auto; width: 430px; text-align: center;">
+			<span class="tree">Centre</span>
+			<hr style="border: none; height: 1px; background-color: #000000;" />
+			<a href="{% url select-run-options %}" class="main_menu_item">
+				<img src="{{ STATIC_URL }}study.png" alt="Study" />
+				<div class="main_menu_item_text">Study</div>
+			</a>
+			<a href="{% url select-set-to-edit %}" class="main_menu_item">
+				<img src="{{ STATIC_URL }}edit.png" alt="Edit" />
+				<div class="main_menu_item_text">Edit</div>
+			</a>
+			<a href="{% url settings %}" class="main_menu_item">
+				<img src="{{ STATIC_URL }}settings.png" alt="Settings" />
+				<div class="main_menu_item_text">Settings</div>
+			</a>
+			<a href="{% url logout %}" class="main_menu_item">
+				<img src="{{ STATIC_URL }}exit.png" alt="Exit" />
+				<div class="main_menu_item_text">Exit</div>
+			</a>
+		</div>
+	</body>
+</html>

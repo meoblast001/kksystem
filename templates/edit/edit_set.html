@@ -1,0 +1,49 @@
+{% extends "base_page.html" %}
+
+{% comment %}
+Copyright (C) 2011 Braden Walters
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+
+{% block body %}
+	<form action="{% if already_exists %}{% url edit-set id %}{% else %}{% url new-set %}{% endif %}" method="post" class="box_form">
+		{% csrf_token %}
+		{% for field in form %}
+			{{ field.label_tag }}: {{ field }}
+			{{ field.errors }}
+		{% endfor %}
+		<br /><br />
+		<input type="submit" value="Continue" class="box"/>
+	</form>
+	{% if already_exists %}
+		<div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+			<table class="grid">
+				<tr>
+					<td>Cards:</td>
+				</tr>
+				<tr>
+					<td><a href="{% url new-card id %}"><img src="{{ STATIC_URL }}new_card.png" alt="" />New Card</a></td>
+					<td><a href="{% url edit-view-cards-by-set id %}"><img src="{{ STATIC_URL }}edit_card.png" alt="" />Edit Card</a></td>
+				<tr>
+					<td>Boxes:</td>
+				</tr>
+				<tr>
+					<td><a href="{% url new-box id %}"><img src="{{ STATIC_URL }}new_box.png" alt="" />New Box</a></td>
+					<td><a href="{% url edit-view-boxes-by-set id %}"><img src="{{ STATIC_URL }}edit_box.png" alt="" />Edit Box</a></td>
+				</tr>
+			</table>
+		</div>
+	{% endif %}
+{% endblock %}

@@ -33,6 +33,19 @@ class CardBox(models.Model):
 	def __unicode__(self):
 		return self.name
 
+	#
+	# Returns a dictionary of all card boxes in an array of card sets.
+	#
+	@staticmethod
+	def GetBoxesBySets(cardsets):
+		output = {}
+		for cardset in cardsets:
+			boxes = []
+			for cardbox in cardset.cardbox_set.all():
+				boxes.append({'id' : cardbox.pk, 'name' : cardbox.name})
+			output.update({cardset.pk : boxes})
+		return output
+
 class Card(models.Model):
 	front = models.TextField()
 	back = models.TextField()
