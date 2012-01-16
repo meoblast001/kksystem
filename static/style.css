@@ -96,6 +96,11 @@ a img
 	margin-bottom: 5px;
 }
 
+.box_form div ul li label input
+{
+	width: 20px;
+}
+
 .grid
 {
 	width: 100%;

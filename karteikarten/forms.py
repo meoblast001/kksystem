@@ -79,7 +79,7 @@ class SelectSetForm(forms.Form):
 #
 class RunOptionsForm(forms.Form):
 	card_set = forms.ChoiceField()
-	study_type = forms.ChoiceField(widget = forms.RadioSelect, choices = [['normal', 'Normal'], ['single_box', 'Practice Single Box'], ['no_box', 'Practice Cards with No Box']])
+	study_type = forms.ChoiceField(widget = forms.RadioSelect, choices = [['normal', 'Normal'], ['single_box', 'Practice Single Box'], ['no_box', 'Practice Cards Currently in No Box']])
 	card_box = forms.ChoiceField(required = False)
 
 	def __init__(self, card_set_choices, card_box_choices, values = None):
