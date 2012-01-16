@@ -64,7 +64,7 @@ def EditSet(request, set_id):
 			return render_to_response('edit/edit_set.html', {'form' : EditSetForm(request.POST), 'already_exists' : True, 'id' : cardset.pk, 'title' : 'Edit Set: ' + cardset.name, 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit')], ['Centre', 'Edit'])}, context_instance = RequestContext(request))
 	else:
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-		return render_to_response('edit/edit_set.html', {'form' : EditSetForm(), 'already_exists' : True, 'id' : cardset.pk, 'title' : 'Edit Set: ' + cardset.name, 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit')], ['Centre', 'Edit'])}, context_instance = RequestContext(request))
+		return render_to_response('edit/edit_set.html', {'form' : EditSetForm({'name' : cardset.name}), 'already_exists' : True, 'id' : cardset.pk, 'title' : 'Edit Set: ' + cardset.name, 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit')], ['Centre', 'Edit'])}, context_instance = RequestContext(request))
 
 #
 # View boxes within a set.
