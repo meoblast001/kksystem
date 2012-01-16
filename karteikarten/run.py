@@ -73,7 +73,7 @@ def Run(request):
 		cards_reviewed = request.session['cards_reviewed']
 		cards_reviewed_this_set = request.session['cards_reviewed_this_set']
 		if len(cardboxes) < 1:
-			raise KeyError
+			return render_to_response('error.html', {'message' : 'No boxes to review', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 	except KeyError:
 		return render_to_response('error.html', {'message' : 'Review session has expired', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 
