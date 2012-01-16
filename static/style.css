@@ -211,3 +211,21 @@ a img
 {
 	content: "\00BB \0020";
 }
+
+.ajax_error
+{
+	background-color: #FF8888;
+	border: 1px solid #000000;
+	padding: 3px;
+	margin-bottom: 5px;
+	display: none;
+}
+
+.ajax_success
+{
+	background-color: #88FF88;
+	border: 1px solid #000000;
+	padding: 3px;
+	margin-bottom: 5px;
+	display: none;
+}

@@ -17,8 +17,28 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
+{% block head %}
+	<script type="text/javascript" src="{{ STATIC_URL }}ajax_form_submit.js"></script>
+	{% if not already_exists %}
+		<script type="text/javascript">
+			$(document).ready(function()
+			{
+				AjaxFormSubmit($('#form'), $('#loading'), $('#success'), $('#error'), $('#error_message'));
+			});
+		</script>
+	{% endif %}
+{% endblock %}
+
 {% block body %}
-	<form action="{% if already_exists %}{% url edit-card set_id id %}{% else %}{% url new-card set_id %}{% endif %}" method="post" class="box_form">
+	<div id="error" class="ajax_error">
+		An error has occurred, Card data has not been saved.<br /><br />
+		<b>Message:</b><br />
+		<span id="error_message" />
+	</div>
+	<div id="success" class="ajax_success">
+		Success!
+	</div>
+	<form id="form" action="{% if already_exists %}{% url edit-card set_id id %}{% else %}{% url new-card set_id %}{% endif %}" method="post" class="box_form">
 		{% csrf_token %}
 		{% for field in form %}
 			{{ field.label_tag }}: {{ field }}
@@ -27,4 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<br /><br />
 		<input type="submit" value="{% if already_exists %}Edit{% else %}Create{% endif %}" class="box"/>
 	</form>
+	<div id="loading" style="display: none;">
+		<img src="{{ STATIC_URL }}ajax-loader.gif" alt="Loading..." />
+	</div>
 {% endblock %}
