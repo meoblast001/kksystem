@@ -111,6 +111,7 @@ def EditBox(request, set_id, box_id):
 #
 # Create card box
 #
+@csrf_exempt
 @login_required
 def NewBox(request, set_id):
 	if request.method == 'POST':
@@ -122,12 +123,18 @@ def NewBox(request, set_id):
 				if box.review_frequency == 0:
 					raise ValueError()
 				box.save()
-				return HttpResponseRedirect(reverse('select-set-to-edit'))
+				if request.is_ajax():
+					return HttpResponse('{"status" : 0}')
+				else:
+					return HttpResponseRedirect(reverse('select-set-to-edit'))
 			else:
 				raise ValueError()
 		except ValueError:
-			cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-			return render_to_response('edit/edit_box.html', {'form' : EditBoxForm(request.POST), 'already_exists' : False, 'set_id' : set_id, 'title' : 'New Box', 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name])}, context_instance = RequestContext(request))
+			if request.is_ajax():
+				return HttpResponse('{"status" : 1, "message" : "Form not valid. Fields contain invalid data or were left blank."}')
+			else:
+				cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+				return render_to_response('edit/edit_box.html', {'form' : EditBoxForm(request.POST), 'already_exists' : False, 'set_id' : set_id, 'title' : 'New Box', 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name])}, context_instance = RequestContext(request))
 	else:
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
 		return render_to_response('edit/edit_box.html', {'form' : EditBoxForm(), 'already_exists' : False, 'set_id' : set_id, 'title' : 'New Box', 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], ['Centre', 'Edit', 'Edit Set: ' + cardset.name])}, context_instance = RequestContext(request))
