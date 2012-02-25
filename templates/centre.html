@@ -15,10 +15,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
+{% load i18n %}
+
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Karteikarten System - Centre</title>
+		<title>Karteikarten System - {% trans "centre" %}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css" />
 	</head>
@@ -28,23 +30,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			Version 2.0
 		</div>
 		<div style="margin-left: auto; margin-right: auto; width: 430px; text-align: center;">
-			<span class="tree">Centre</span>
+			<span class="tree">{% trans "centre" %}</span>
 			<hr style="border: none; height: 1px; background-color: #000000;" />
 			<a href="{% url select-run-options %}" class="main_menu_item">
 				<img src="{{ STATIC_URL }}study.png" alt="Study" />
-				<div class="main_menu_item_text">Study</div>
+				<div class="main_menu_item_text">{% trans "study" %}</div>
 			</a>
 			<a href="{% url select-set-to-edit %}" class="main_menu_item">
 				<img src="{{ STATIC_URL }}edit.png" alt="Edit" />
-				<div class="main_menu_item_text">Edit</div>
+				<div class="main_menu_item_text">{% trans "edit" %}</div>
 			</a>
 			<a href="{% url settings %}" class="main_menu_item">
 				<img src="{{ STATIC_URL }}settings.png" alt="Settings" />
-				<div class="main_menu_item_text">Settings</div>
+				<div class="main_menu_item_text">{% trans "settings" %}</div>
 			</a>
 			<a href="{% url logout %}" class="main_menu_item">
 				<img src="{{ STATIC_URL }}exit.png" alt="Exit" />
-				<div class="main_menu_item_text">Exit</div>
+				<div class="main_menu_item_text">{% trans "exit" %}</div>
 			</a>
 		</div>
 	</body>

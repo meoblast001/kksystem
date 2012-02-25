@@ -1,2 +1,3 @@
 user_settings.py
 *.pyc
+*.mo

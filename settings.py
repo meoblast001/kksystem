@@ -25,6 +25,11 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+# Available languages
+LANGUAGES = (
+	('en', 'English'),
+)
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = ''
@@ -78,6 +83,7 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.csrf.CsrfViewMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'karteikartensystem.urls'
