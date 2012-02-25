@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-25 00:36-0500\n"
+"POT-Creation-Date: 2012-02-25 01:29-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,3 +46,68 @@ msgstr "Settings"
 #: templates/centre.html:49
 msgid "exit"
 msgstr "Exit"
+
+#: templates/select_set.html:30 templates/run/run_options.html:67
+msgid "continue"
+msgstr "Continue"
+
+#: templates/login/login_form.html:23
+msgid "welcome"
+msgstr "Welcome"
+
+#: templates/login/login_form.html:31 templates/login/register_form.html:31
+msgid "login"
+msgstr "Login"
+
+#: templates/login/login_form.html:34
+msgid "register"
+msgstr "Register"
+
+#: templates/login/login_form.html:35
+msgid "recover-password"
+msgstr "Recover Password"
+
+#: templates/login/recover_password_form.html:30
+#: templates/login/recover_reset_password_form.html:30
+msgid "request"
+msgstr "Request"
+
+#: templates/run/review.html:43
+msgid "study-mode"
+msgstr "Study Mode"
+
+#: templates/run/review.html:45
+msgid "current-set"
+msgstr "Current Set"
+
+#: templates/run/review.html:47
+msgid "current-box"
+msgstr "Card Box"
+
+#: templates/run/review.html:49
+msgid "cards"
+msgstr "Cards"
+
+#: templates/run/review.html:49
+msgid "in-this-box"
+msgstr "In This Box"
+
+#: templates/run/review.html:53
+msgid "finish"
+msgstr "Finish"
+
+#: templates/run/review.html:70
+msgid "click-to-flip-card"
+msgstr "Click here to flip card."
+
+#: templates/run/review.html:85
+msgid "correct"
+msgstr "Correct"
+
+#: templates/run/review.html:86
+msgid "incorrect"
+msgstr "Incorrect"
+
+#: templates/settings/settings.html:23
+msgid "currently-no-settings"
+msgstr "There are currently no settings."

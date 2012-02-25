@@ -17,6 +17,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
+{% load i18n %}
+
 {% block body %}
 	<form action="{% url register %}" method="post" class="box_form">
 		{% csrf_token %}
@@ -26,6 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		{% endfor %}
 		<div style="visibility: hidden; height: 0px;">DO NOT MODIFY: <input type="text" name="dnm_verify" /><br /></div>
 		<br /><br />
-		<input type="submit" value="Login" class="box"/>
+		<input type="submit" value="{% trans "login" %}" class="box"/>
 	</form>
 {% endblock %}

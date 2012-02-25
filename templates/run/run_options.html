@@ -17,6 +17,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
+{% load i18n %}
+
 {% block body %}
 	<script type="text/javascript">
 		var boxes_in_sets = {% autoescape off %}{{ boxes_in_sets }}{% endautoescape %};
@@ -62,6 +64,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			{{ form.card_box.errors }}
 		</div>
 		<br /><br />
-		<input type="submit" value="Continue" class="box"/>
+		<input type="submit" value="{% trans "continue" %}" class="box"/>
 	</form>
 {% endblock %}

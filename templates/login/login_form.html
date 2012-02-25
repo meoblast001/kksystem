@@ -17,8 +17,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
+{% load i18n %}
+
 {% block body %}
-	<h2>Welcome</h2>
+	<h2>{% trans "welcome" %}</h2>
 	<form action="{% url login %}{{ url_append }}" method="post" class="box_form">
 		{% csrf_token %}
 		{% for field in form %}
@@ -26,9 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			{{ field.errors }}
 		{% endfor %}
 		<br /><br />
-		<input type="submit" value="Login" class="box"/>
+		<input type="submit" value="{% trans "login" %}" class="box"/>
 	</form>
 	<br />
-	<a href="{% url register %}">Register</a><br />
-	<a href="{% url recover-password %}">Recover Password</a>
+	<a href="{% url register %}">{% trans "register" %}</a><br />
+	<a href="{% url recover-password %}">{% trans "recover-password" %}</a>
 {% endblock %}

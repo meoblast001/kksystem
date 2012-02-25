@@ -15,6 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
+{% load i18n %}
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -38,17 +40,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		</div>
 		<div style="margin-left: auto; margin-right: auto; width: 600px; text-align: center;">
 			<div class="practice_sidebar">
-				<b>Study Mode:</b><br />
+				<b>{% trans "study-mode" %}:</b><br />
 				{{ study_mode }}<br /><br />
-				<b>Current Set:</b><br />
+				<b>{% trans "current-set" %}:</b><br />
 				{{ card_set.name }}<br /><br />
-				<b>Current Box:</b><br />
+				<b>{% trans "current-box" %}:</b><br />
 				{{ card_box.name }}<br /><br />
-				<b>Cards{% if card_box %} (In this Box){% endif %}:</b><br />
+				<b>{% trans "cards" %}{% if card_box %} ({% trans "in-this-box" %}){% endif %}:</b><br />
 				{{ num_completed_cards }} / {{ num_cards }}
 				{% if not card_box %}
 					<br /><br />
-					<a href="{% url run-finished %}" class="button" style="background-color: #ffffff;" >Finish</a>
+					<a href="{% url run-finished %}" class="button" style="background-color: #ffffff;" >{% trans "finish" %}</a>
 				{% endif %}
 			</div>
 			<div id="front" class="card">
@@ -65,7 +67,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					<table class="card_content">
 						<tr>
 							<td>
-								Click here to flip card.
+								{% trans "click-to-flip-card" %}
 							</td>
 						<tr>
 					</table>
@@ -80,8 +82,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				</table>
 			</div>
 			<div id="buttons" class="non_card" style="display: none;">
-				<a href="{% url run-correct card.id %}{{ url_append }}" class="button" style="background-color: #00a000;">Correct</a>
-				<a href="{% url run-incorrect card.id %}{{ url_append }}" class="button" style="background-color: #a00000;;">Incorrect</a>
+				<a href="{% url run-correct card.id %}{{ url_append }}" class="button" style="background-color: #00a000;">{% trans "correct" %}</a>
+				<a href="{% url run-incorrect card.id %}{{ url_append }}" class="button" style="background-color: #a00000;;">{% trans "incorrect" %}</a>
 			</div>
 		</div>
 	</body>
