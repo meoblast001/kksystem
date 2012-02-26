@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-26 01:29-0500\n"
+"POT-Creation-Date: 2012-02-26 02:14-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,14 +27,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: karteikarten/centre.py:58 karteikarten/centre.py:85
+#: karteikarten/centre.py:58 karteikarten/centre.py:85 karteikarten/run.py:41
 msgid "something-wrong"
 msgstr "Something is wrong."
 
 #: karteikarten/centre.py:58 karteikarten/centre.py:85 karteikarten/edit.py:44
 #: karteikarten/login.py:49 karteikarten/login.py:92 karteikarten/login.py:94
 #: karteikarten/login.py:136 karteikarten/login.py:167
-#: karteikarten/login.py:175
+#: karteikarten/login.py:175 karteikarten/run.py:41 karteikarten/run.py:77
+#: karteikarten/run.py:79 karteikarten/run.py:116 karteikarten/run.py:123
+#: karteikarten/run.py:147 karteikarten/run.py:186
 msgid "error"
 msgstr "Error"
 
@@ -135,7 +137,7 @@ msgstr "Card Set"
 msgid "create-new-set"
 msgstr "Create New Set"
 
-#: karteikarten/forms.py:83
+#: karteikarten/forms.py:83 karteikarten/run.py:85
 msgid "study-type-normal"
 msgstr "Normal"
 
@@ -194,12 +196,12 @@ msgstr "Registration Successful"
 msgid "registered"
 msgstr "Registered"
 
-#: karteikarten/login.py:90
+#: karteikarten/login.py:90 karteikarten/run.py:208
 msgid "back-to-centre"
 msgstr "Back to Centre"
 
 #: karteikarten/login.py:90 karteikarten/login.py:134
-#: karteikarten/login.py:161
+#: karteikarten/login.py:161 karteikarten/run.py:208
 msgid "confirmation"
 msgstr "Confirmation"
 
@@ -272,6 +274,27 @@ msgstr ""
 #: karteikarten/login.py:175
 msgid "recovery-session-id-invalid"
 msgstr "Recovery session ID invalid"
+
+#: karteikarten/run.py:77
+msgid "no-boxes-to-review"
+msgstr "No boxes to review."
+
+#: karteikarten/run.py:79 karteikarten/run.py:123 karteikarten/run.py:147
+#: karteikarten/run.py:186
+msgid "review-session-expired"
+msgstr "Review session has expired."
+
+#: karteikarten/run.py:116
+msgid "no-card-box-specified"
+msgstr "No card box specified."
+
+#: karteikarten/run.py:198
+msgid "cannot-move-to-first-box"
+msgstr "There are no cardboxes. Cannot move card to first box."
+
+#: karteikarten/run.py:208
+msgid "completed"
+msgstr "Completed"
 
 #: templates/centre.html:45
 msgid "settings"
