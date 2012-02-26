@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-26 00:29-0500\n"
+"POT-Creation-Date: 2012-02-26 01:29-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,6 +32,9 @@ msgid "something-wrong"
 msgstr "Something is wrong."
 
 #: karteikarten/centre.py:58 karteikarten/centre.py:85 karteikarten/edit.py:44
+#: karteikarten/login.py:49 karteikarten/login.py:92 karteikarten/login.py:94
+#: karteikarten/login.py:136 karteikarten/login.py:167
+#: karteikarten/login.py:175
 msgid "error"
 msgstr "Error"
 
@@ -172,6 +175,104 @@ msgstr "Back"
 msgid "no-box"
 msgstr "No Box"
 
+#: karteikarten/login.py:49
+msgid "login-failed"
+msgstr "Login failed."
+
+#: karteikarten/login.py:55 karteikarten/login.py:63 karteikarten/login.py:96
+#: karteikarten/login.py:100 karteikarten/login.py:138
+#: karteikarten/login.py:141 karteikarten/login.py:174
+#: templates/login/login_form.html:31 templates/login/register_form.html:31
+msgid "login"
+msgstr "Login"
+
+#: karteikarten/login.py:90
+msgid "registration-successful"
+msgstr "Registration Successful"
+
+#: karteikarten/login.py:90
+msgid "registered"
+msgstr "Registered"
+
+#: karteikarten/login.py:90
+msgid "back-to-centre"
+msgstr "Back to Centre"
+
+#: karteikarten/login.py:90 karteikarten/login.py:134
+#: karteikarten/login.py:161
+msgid "confirmation"
+msgstr "Confirmation"
+
+#: karteikarten/login.py:92
+msgid "email-matches-that-of-another-user"
+msgstr "Email matches that of another user."
+
+#: karteikarten/login.py:94
+msgid "username-matches-that-of-another-user"
+msgstr "Username matches that of another user."
+
+#: karteikarten/login.py:96 karteikarten/login.py:100
+#: templates/login/login_form.html:34
+msgid "register"
+msgstr "Register"
+
+#: karteikarten/login.py:132
+msgid "password-recovery"
+msgstr "Password Recovery"
+
+#: karteikarten/login.py:132
+msgid "reset-password-here"
+msgstr "Reset Password Here"
+
+#: karteikarten/login.py:134
+msgid "email-sent-with-reset-password-link"
+msgstr "An email was sent to you with a link to reset your password."
+
+#: karteikarten/login.py:134
+msgid "request-pending"
+msgstr "Request Pending"
+
+#: karteikarten/login.py:134 karteikarten/login.py:161
+msgid "back-to-login"
+msgstr "Back to Login"
+
+#: karteikarten/login.py:136
+msgid "username-and-email-do-not-match-valid-user"
+msgstr "Username and email address do not match a valid user."
+
+#: karteikarten/login.py:138 karteikarten/login.py:141
+#: karteikarten/login.py:165 karteikarten/login.py:174
+msgid "request-password-recovery-email"
+msgstr "Request Password Recovery Email"
+
+#: karteikarten/login.py:161
+msgid "password-changed"
+msgstr "Password Changed"
+
+#: karteikarten/login.py:161
+msgid "password-recovery-complete"
+msgstr "Password Recovery Complete"
+
+#: karteikarten/login.py:163
+msgid "doesnt-match-password-recovery-session"
+msgstr ""
+"Data provided does not match password recovery session information. Either "
+"your username is incorrect or you did not follow the correct URL."
+
+#: karteikarten/login.py:165 karteikarten/login.py:174
+msgid "reset-password"
+msgstr "Reset Password"
+
+#: karteikarten/login.py:167
+msgid "recovery-session-id-not-found"
+msgstr ""
+"An error occurred. Perhaps you did not provide a recovery session ID in the "
+"URL."
+
+#: karteikarten/login.py:175
+msgid "recovery-session-id-invalid"
+msgstr "Recovery session ID invalid"
+
 #: templates/centre.html:45
 msgid "settings"
 msgstr "Settings"
@@ -187,14 +288,6 @@ msgstr "Continue"
 #: templates/login/login_form.html:23
 msgid "welcome"
 msgstr "Welcome"
-
-#: templates/login/login_form.html:31 templates/login/register_form.html:31
-msgid "login"
-msgstr "Login"
-
-#: templates/login/login_form.html:34
-msgid "register"
-msgstr "Register"
 
 #: templates/login/login_form.html:35
 msgid "recover-password"

@@ -28,6 +28,7 @@ import string
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.contrib.auth.decorators import login_required
+from django.utils.translation import ugettext as _
 
 #
 # Login
@@ -45,13 +46,13 @@ def Login(request):
 						return HttpResponseRedirect(request.GET['next'])
 					else:
 						return HttpResponseRedirect(reverse('centre'))
-			return render_to_response('error.html', {'message' : 'Login failed.', 'go_back_to' : reverse('login'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+			return render_to_response('error.html', {'message' : _('login-failed'), 'go_back_to' : reverse('login'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 		else:
 			if 'next' in request.GET:
 				url_append = '?next=' + request.GET['next']
 			else:
 				url_append = ''
-			return render_to_response('login/login_form.html', {'form' : LoginForm(request.POST), 'title' : 'Login', 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
+			return render_to_response('login/login_form.html', {'form' : LoginForm(request.POST), 'title' : _('login'), 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
 
 	#Form
 	else:
@@ -59,7 +60,7 @@ def Login(request):
 			url_append = '?next=' + request.GET['next']
 		else:
 			url_append = ''
-		return render_to_response('login/login_form.html', {'form' : LoginForm(), 'title' : 'Login', 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
+		return render_to_response('login/login_form.html', {'form' : LoginForm(), 'title' : _('login'), 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
 
 #
 # Logout
@@ -86,17 +87,17 @@ def Register(request):
 			if len(users_with_same_username) == 0:
 				if len(users_with_same_email) == 0:
 					new_user = User.objects.create_user(username = form.cleaned_data['username'], email = form.cleaned_data['email'], password = form.cleaned_data['password'])
-					return render_to_response('confirmation.html', {'message' : 'Registration successful.', 'short_messsage' : 'Registered', 'go_to' : reverse('centre'), 'go_to_name' : 'Back to Centre', 'title' : 'Confirmation', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+					return render_to_response('confirmation.html', {'message' : _('registration-successful'), 'short_messsage' : _('registered'), 'go_to' : reverse('centre'), 'go_to_name' : _('back-to-centre'), 'title' : _('confirmation'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 				else:
-					return render_to_response('error.html', {'message' : 'Email matches that of another user.', 'go_back_to' : reverse('register'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+					return render_to_response('error.html', {'message' : _('email-matches-that-of-another-user'), 'go_back_to' : reverse('register'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 			else:
-				return render_to_response('error.html', {'message' : 'Username matches that of another user.', 'go_back_to' : reverse('register'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+				return render_to_response('error.html', {'message' : _('username-matches-that-of-another-user'), 'go_back_to' : reverse('register'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 		else:
-			return render_to_response('login/register_form.html', {'form' : RegisterForm(request.POST), 'title' : 'Register', 'site_link_chain' : zip([reverse('login')], ['Login'])}, context_instance = RequestContext(request))
+			return render_to_response('login/register_form.html', {'form' : RegisterForm(request.POST), 'title' : _('register'), 'site_link_chain' : zip([reverse('login')], [_('login')])}, context_instance = RequestContext(request))
 
 	#Form
 	else:
-		return render_to_response('login/register_form.html', {'form' : RegisterForm(), 'title' : 'Register', 'site_link_chain' : zip([reverse('login')], ['Login'])}, context_instance = RequestContext(request))
+		return render_to_response('login/register_form.html', {'form' : RegisterForm(), 'title' : _('register'), 'site_link_chain' : zip([reverse('login')], [_('login')])}, context_instance = RequestContext(request))
 
 #
 # Request password recovery email
@@ -128,16 +129,16 @@ def RecoverPassword(request):
 				cache.set('password_recovery', password_recovery, 18000)
 				#Dispatch email
 				site = Site.objects.get_current()
-				send_mail('Password Recovery', 'Reset your password here: http://' + site.domain + reverse('recover-reset-password') + '?id=' + ident_string, 'noreply@' + site.domain, [user.email], fail_silently = False)
+				send_mail(_('password-recovery'), _('reset-password-here') + ': http://' + site.domain + reverse('recover-reset-password') + '?id=' + ident_string, 'noreply@' + site.domain, [user.email], fail_silently = False)
 
-				return render_to_response('confirmation.html', {'message' : 'An email was sent to you with a link to reset your password.', 'short_messsage' : 'Request Pending', 'go_to' : reverse('login'), 'go_to_name' : 'Back to Login', 'title' : 'Confirmation', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+				return render_to_response('confirmation.html', {'message' : _('email-sent-with-reset-password-link'), 'short_messsage' : _('request-pending'), 'go_to' : reverse('login'), 'go_to_name' : _('back-to-login'), 'title' : _('confirmation'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 			else:
-				return render_to_response('error.html', {'message' : 'Username and email address do not match a valid user.', 'go_back_to' : reverse('recover-password'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+				return render_to_response('error.html', {'message' : _('username-and-email-do-not-match-valid-user'), 'go_back_to' : reverse('recover-password'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 		else:
-			return render_to_response('login/recover_password_form.html', {'form' : RecoverPasswordForm(request.POST), 'title' : 'Request Password Recovery Email', 'site_link_chain' : zip([reverse('login')], ['Login'])}, context_instance = RequestContext(request))
+			return render_to_response('login/recover_password_form.html', {'form' : RecoverPasswordForm(request.POST), 'title' : _('request-password-recovery-email'), 'site_link_chain' : zip([reverse('login')], [_('login')])}, context_instance = RequestContext(request))
 	#Form
 	else:
-		return render_to_response('login/recover_password_form.html', {'form' : RecoverPasswordForm(), 'title' : 'Request Password Recovery Email', 'site_link_chain' : zip([reverse('login')], ['Login'])}, context_instance = RequestContext(request))
+		return render_to_response('login/recover_password_form.html', {'form' : RecoverPasswordForm(), 'title' : _('request-password-recovery-email'), 'site_link_chain' : zip([reverse('login')], [_('login')])}, context_instance = RequestContext(request))
 
 #
 # Reset password from password recovery email
@@ -157,18 +158,18 @@ def RecoverResetPassword(request):
 						password_recovery.remove(session)
 						cache.set('password_recovery', password_recovery, 18000)
 
-						return render_to_response('confirmation.html', {'message' : 'Password changed.', 'short_messsage' : 'Password Recovery Complete', 'go_to' : reverse('login'), 'go_to_name' : 'Back to Login', 'title' : 'Confirmation', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+						return render_to_response('confirmation.html', {'message' : _('password-changed'), 'short_messsage' : _('password-recovery-complete'), 'go_to' : reverse('login'), 'go_to_name' : _('back-to-login'), 'title' : _('confirmation'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 					else:
-						return render_to_response('error.html', {'message' : 'Data provided does not match password recovery session information. Either your username is incorrect or you did not follow the correct URL.', 'go_back_to' : reverse('recover-password'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+						return render_to_response('error.html', {'message' : _('doesnt-match-password-recovery-session'), 'go_back_to' : reverse('recover-password'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 			else:
-				return render_to_response('login/recover_reset_password_form.html', {'form' : RecoverResetPasswordForm(request.POST), 'url_append' : '?id=' + request.GET['id'], 'title' : 'Reset Password', 'site_link_chain' : zip([reverse('login'), reverse('recover-password')], ['Login', 'Request Password Recovery Email'])}, context_instance = RequestContext(request))
+				return render_to_response('login/recover_reset_password_form.html', {'form' : RecoverResetPasswordForm(request.POST), 'url_append' : '?id=' + request.GET['id'], 'title' : _('reset-password'), 'site_link_chain' : zip([reverse('login'), reverse('recover-password')], ['Login', _('request-password-recovery-email')])}, context_instance = RequestContext(request))
 		else:
-			return render_to_response('error.html', {'message' : 'An error occurred. Perhaps you did not provide a recovery session ID in the URL.', 'go_back_to' : reverse('recover-password'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+			return render_to_response('error.html', {'message' : _('recovery-session-id-not-found'), 'go_back_to' : reverse('recover-password'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 	#Form
 	else:
 		password_recovery = cache.get('password_recovery')
 		if password_recovery != None and 'id' in request.GET:
 			for session in password_recovery:
 				if session['ident'] == request.GET['id']:
-					return render_to_response('login/recover_reset_password_form.html', {'form' : RecoverResetPasswordForm(), 'url_append' : '?id=' + request.GET['id'], 'title' : 'Reset Password', 'site_link_chain' : zip([reverse('login'), reverse('recover-password')], ['Login', 'Request Password Recovery Email'])}, context_instance = RequestContext(request))
-		return render_to_response('error.html', {'message' : 'Recovery session ID is invalid.', 'go_back_to' : reverse('centre'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+					return render_to_response('login/recover_reset_password_form.html', {'form' : RecoverResetPasswordForm(), 'url_append' : '?id=' + request.GET['id'], 'title' : _('reset-password'), 'site_link_chain' : zip([reverse('login'), reverse('recover-password')], [_('login'), _('request-password-recovery-email')])}, context_instance = RequestContext(request))
+		return render_to_response('error.html', {'message' : _('recovery-session-id-invalid'), 'go_back_to' : reverse('centre'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
