@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-26 02:14-0500\n"
+"POT-Creation-Date: 2012-02-26 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,8 +51,8 @@ msgstr "Study"
 #: karteikarten/edit.py:81 karteikarten/edit.py:105 karteikarten/edit.py:110
 #: karteikarten/edit.py:138 karteikarten/edit.py:141 karteikarten/edit.py:181
 #: karteikarten/edit.py:206 karteikarten/edit.py:210 karteikarten/edit.py:232
-#: karteikarten/edit.py:237 templates/centre.html:23
-#: templates/centre.html.py:33
+#: karteikarten/edit.py:237 karteikarten/settings.py:27
+#: templates/centre.html:23 templates/centre.html.py:33
 msgid "centre"
 msgstr "Centre"
 
@@ -296,7 +296,7 @@ msgstr "There are no cardboxes. Cannot move card to first box."
 msgid "completed"
 msgstr "Completed"
 
-#: templates/centre.html:45
+#: karteikarten/settings.py:27 templates/centre.html:45
 msgid "settings"
 msgstr "Settings"
 
