@@ -34,7 +34,7 @@ class RegisterForm(forms.Form):
 
 	def clean_repeat_password(self):
 		if self.cleaned_data['password'] != self.cleaned_data['repeat_password']:
-			raise forms.ValidationError('The two passwords do not match.')
+			raise forms.ValidationError(_('passwords-dont-match'))
 		return self.cleaned_data
 
 #

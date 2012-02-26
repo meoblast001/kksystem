@@ -17,6 +17,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
+{% load i18n %}
+
 {% block body %}
 	<form action="{% if already_exists %}{% url edit-set id %}{% else %}{% url new-set %}{% endif %}" method="post" class="box_form">
 		{% csrf_token %}
@@ -25,23 +27,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			{{ field.errors }}
 		{% endfor %}
 		<br /><br />
-		<input type="submit" value="Continue" class="box"/>
+		<input type="submit" value="{% trans "continue" %}" class="box"/>
 	</form>
 	{% if already_exists %}
 		<div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
 			<table class="grid">
 				<tr>
-					<td>Cards:</td>
+					<td>{% trans "cards" %}:</td>
 				</tr>
 				<tr>
-					<td><a href="{% url new-card id %}"><img src="{{ STATIC_URL }}new_card.png" alt="" />New Card</a></td>
-					<td><a href="{% url edit-view-cards-by-set id %}"><img src="{{ STATIC_URL }}edit_card.png" alt="" />Edit Card</a></td>
+					<td><a href="{% url new-card id %}"><img src="{{ STATIC_URL }}new_card.png" alt="" />{% trans "new-card" %}</a></td>
+					<td><a href="{% url edit-view-cards-by-set id %}"><img src="{{ STATIC_URL }}edit_card.png" alt="" />{% trans "edit-card" %}</a></td>
 				<tr>
-					<td>Boxes:</td>
+					<td>{% trans "boxes" %}:</td>
 				</tr>
 				<tr>
-					<td><a href="{% url new-box id %}"><img src="{{ STATIC_URL }}new_box.png" alt="" />New Box</a></td>
-					<td><a href="{% url edit-view-boxes-by-set id %}"><img src="{{ STATIC_URL }}edit_box.png" alt="" />Edit Box</a></td>
+					<td><a href="{% url new-box id %}"><img src="{{ STATIC_URL }}new_box.png" alt="" />{% trans "new-box" %}</a></td>
+					<td><a href="{% url edit-view-boxes-by-set id %}"><img src="{{ STATIC_URL }}edit_box.png" alt="" />{% trans "edit-box" %}</a></td>
 				</tr>
 			</table>
 		</div>

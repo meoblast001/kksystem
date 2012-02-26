@@ -17,24 +17,26 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
+{% load i18n %}
+
 {% block body %}
-	Cards:<br /><br />
+	{% trans "cards" %}:<br /><br />
 	{% for card in cards %}
 		<a href="{% url edit-card set_id card.id %}" class="item">{{ card.front }}</a>
 	{% endfor %}
 	<br />
 	{% if current_first_card > 0 %}
-		<a href="{% url edit-view-cards-by-set set_id %}?first_card={{ previous_first_card }}&search={{ search }}&card_front={% if card_front %}on{% else %}off{% endif %}&card_back={% if card_back %}on{% else %}off{% endif %}">&lt;Previous&gt;</a>
+		<a href="{% url edit-view-cards-by-set set_id %}?first_card={{ previous_first_card }}&search={{ search }}&card_front={% if card_front %}on{% else %}off{% endif %}&card_back={% if card_back %}on{% else %}off{% endif %}">&lt;{% trans "previous" %}&gt;</a>
 	{% endif %}
 	{% if next_first_card < num_cards %}
-		<a href="{% url edit-view-cards-by-set set_id %}?first_card={{ next_first_card }}&search={{ search }}&card_front={% if card_front %}on{% else %}off{% endif %}&card_back={% if card_back %}on{% else %}off{% endif %}">&lt;Next&gt;</a>
+		<a href="{% url edit-view-cards-by-set set_id %}?first_card={{ next_first_card }}&search={{ search }}&card_front={% if card_front %}on{% else %}off{% endif %}&card_back={% if card_back %}on{% else %}off{% endif %}">&lt;{% trans "next" %}&gt;</a>
 	{% endif %}
 	<br /><br />
-	Search:<br />
+	{% trans "search" %}:<br />
 	<form action="{% url edit-view-cards-by-set set_id %}" method="get" class="box_form">
 		<input type="text" name="search" value="{{ search }}" /><br />
-		<input type="checkbox" name="card_front" {% if card_front == 2 or card_front == 0 %}checked="checked"{% endif %} /> Card Front<br />
-		<input type="checkbox" name="card_back" {% if card_back == 2 %}checked="checked"{% endif %} /> Card Back<br />
-		<input type="submit" value="Search" style="width: 50%;" />
+		<input type="checkbox" name="card_front" {% if card_front == 2 or card_front == 0 %}checked="checked"{% endif %} /> {% trans "card-front" %}<br />
+		<input type="checkbox" name="card_back" {% if card_back == 2 %}checked="checked"{% endif %} /> {% trans "card-back" %}<br />
+		<input type="submit" value="{% trans "search" %}" style="width: 50%;" />
 	</form>
 {% endblock %}
