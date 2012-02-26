@@ -21,6 +21,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 from django.contrib.auth import logout
 from django.http import Http404
 import json
@@ -54,15 +55,15 @@ def SelectRunOptions(request):
 				else:
 					raise ValueError()
 			except ValueError:
-				return render_to_response('error.html', {'message' : 'An invalid value was given on this form. Something is wrong.', 'go_back_to' : reverse('select-run-options'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+				return render_to_response('error.html', {'message' : _('something-wrong'), 'go_back_to' : reverse('select-run-options'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 		else:
 			boxes_in_sets = CardBox.GetBoxesBySets(cardsets)
-			return render_to_response('run/run_options.html', {'form' : form, 'boxes_in_sets' : json.dumps(boxes_in_sets), 'title' : 'Study', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))
+			return render_to_response('run/run_options.html', {'form' : form, 'boxes_in_sets' : json.dumps(boxes_in_sets), 'title' : _('study'), 'site_link_chain' : zip([reverse('centre')], [_('centre')])}, context_instance = RequestContext(request))
 	#Form
 	else:
 		cardsets = CardSet.objects.filter(owner = request.user)
 		boxes_in_sets = CardBox.GetBoxesBySets(cardsets)
-		return render_to_response('run/run_options.html', {'form' : RunOptionsForm(cardsets, {}), 'boxes_in_sets' : json.dumps(boxes_in_sets), 'title' : 'Study', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))
+		return render_to_response('run/run_options.html', {'form' : RunOptionsForm(cardsets, {}), 'boxes_in_sets' : json.dumps(boxes_in_sets), 'title' : _('study'), 'site_link_chain' : zip([reverse('centre')], [_('centre')])}, context_instance = RequestContext(request))
 
 #
 # Select card set to edit.
@@ -81,9 +82,9 @@ def SelectSetToEdit(request):
 				try:
 					return HttpResponseRedirect(reverse('edit-set', args = [int(form.cleaned_data['card_set'])]))
 				except ValueError:
-					return render_to_response('error.html', {'message' : 'Value of set was not an integer. Something is wrong.', 'go_back_to' : reverse('select-set-to-edit'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+					return render_to_response('error.html', {'message' : _('something-wrong'), 'go_back_to' : reverse('select-set-to-edit'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 		else:
-			return render_to_response('select_set.html', {'form' : SelectSetForm(CardSet.objects.filter(owner = request.user), True), 'action_url' : reverse('select-set-to-edit'), 'title' : 'Edit', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))
+			return render_to_response('select_set.html', {'form' : SelectSetForm(CardSet.objects.filter(owner = request.user), True), 'action_url' : reverse('select-set-to-edit'), 'title' : _('edit'), 'site_link_chain' : zip([reverse('centre')], [_('centre')])}, context_instance = RequestContext(request))
 	#Form
 	else:
-		return render_to_response('select_set.html', {'form' : SelectSetForm(CardSet.objects.filter(owner = request.user), True), 'action_url' : reverse('select-set-to-edit'), 'title' : 'Edit', 'site_link_chain' : zip([reverse('centre')], ['Centre'])}, context_instance = RequestContext(request))
+		return render_to_response('select_set.html', {'form' : SelectSetForm(CardSet.objects.filter(owner = request.user), True), 'action_url' : reverse('select-set-to-edit'), 'title' : _('edit'), 'site_link_chain' : zip([reverse('centre')], [_('centre')])}, context_instance = RequestContext(request))

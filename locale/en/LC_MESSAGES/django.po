@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-25 01:29-0500\n"
+"POT-Creation-Date: 2012-02-25 20:54-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,17 +27,81 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/centre.html:23 templates/centre.html.py:33
-msgid "centre"
-msgstr "Centre"
+#: karteikarten/centre.py:58 karteikarten/centre.py:85
+msgid "something-wrong"
+msgstr "Something is wrong."
 
+#: karteikarten/centre.py:58 karteikarten/centre.py:85 karteikarten/edit.py:44
+msgid "error"
+msgstr "Error"
+
+#: karteikarten/centre.py:61 karteikarten/centre.py:66
 #: templates/centre.html:37
 msgid "study"
 msgstr "Study"
 
-#: templates/centre.html:41
+#: karteikarten/centre.py:61 karteikarten/centre.py:66
+#: karteikarten/centre.py:87 karteikarten/centre.py:90 karteikarten/edit.py:46
+#: karteikarten/edit.py:49 karteikarten/edit.py:65 karteikarten/edit.py:68
+#: karteikarten/edit.py:81 karteikarten/edit.py:105 karteikarten/edit.py:110
+#: karteikarten/edit.py:138 karteikarten/edit.py:141 karteikarten/edit.py:181
+#: karteikarten/edit.py:206 karteikarten/edit.py:210 karteikarten/edit.py:232
+#: karteikarten/edit.py:237 templates/centre.html:23
+#: templates/centre.html.py:33
+msgid "centre"
+msgstr "Centre"
+
+#: karteikarten/centre.py:87 karteikarten/centre.py:90 karteikarten/edit.py:46
+#: karteikarten/edit.py:49 karteikarten/edit.py:65 karteikarten/edit.py:68
+#: karteikarten/edit.py:81 karteikarten/edit.py:105 karteikarten/edit.py:110
+#: karteikarten/edit.py:138 karteikarten/edit.py:141 karteikarten/edit.py:181
+#: karteikarten/edit.py:206 karteikarten/edit.py:210 karteikarten/edit.py:232
+#: karteikarten/edit.py:237 templates/centre.html:41
 msgid "edit"
 msgstr "Edit"
+
+#: karteikarten/edit.py:44
+msgid "cardset-already-exists"
+msgstr "Failed to create cardset. Already exists."
+
+#: karteikarten/edit.py:46
+msgid "new-set"
+msgstr "New Set"
+
+#: karteikarten/edit.py:65 karteikarten/edit.py:68 karteikarten/edit.py:81
+#: karteikarten/edit.py:105 karteikarten/edit.py:110 karteikarten/edit.py:138
+#: karteikarten/edit.py:141 karteikarten/edit.py:181 karteikarten/edit.py:206
+#: karteikarten/edit.py:210 karteikarten/edit.py:232 karteikarten/edit.py:237
+msgid "edit-set"
+msgstr "Edit Set"
+
+#: karteikarten/edit.py:81 karteikarten/edit.py:105 karteikarten/edit.py:110
+msgid "boxes-by-set"
+msgstr "Boxes by Set"
+
+#: karteikarten/edit.py:105 karteikarten/edit.py:110
+msgid "edit-box"
+msgstr "Edit Box"
+
+#: karteikarten/edit.py:135 karteikarten/edit.py:204
+msgid "ajax-form-not-valid"
+msgstr "Form not valid. Fields contain invalid data or were left blank."
+
+#: karteikarten/edit.py:138 karteikarten/edit.py:141
+msgid "new-box"
+msgstr "New Box"
+
+#: karteikarten/edit.py:181 karteikarten/edit.py:232 karteikarten/edit.py:237
+msgid "cards-by-set"
+msgstr "Cards by Set"
+
+#: karteikarten/edit.py:206 karteikarten/edit.py:210
+msgid "new-card"
+msgstr "New Card"
+
+#: karteikarten/edit.py:232 karteikarten/edit.py:237
+msgid "edit-card"
+msgstr "Edit Card"
 
 #: templates/centre.html:45
 msgid "settings"
