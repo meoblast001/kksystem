@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-25 20:54-0500\n"
+"POT-Creation-Date: 2012-02-26 00:29-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,6 +103,75 @@ msgstr "New Card"
 msgid "edit-card"
 msgstr "Edit Card"
 
+#: karteikarten/forms.py:23 karteikarten/forms.py:30 karteikarten/forms.py:44
+#: karteikarten/forms.py:51
+msgid "username"
+msgstr "Username"
+
+#: karteikarten/forms.py:24 karteikarten/forms.py:31 karteikarten/forms.py:52
+msgid "password"
+msgstr "Password"
+
+#: karteikarten/forms.py:32 karteikarten/forms.py:53
+msgid "repeat-password"
+msgstr "Repeat Password"
+
+#: karteikarten/forms.py:33 karteikarten/forms.py:45
+msgid "email"
+msgstr "Email"
+
+#: karteikarten/forms.py:57
+msgid "passwords-dont-match"
+msgstr "The passwords do not match."
+
+#: karteikarten/forms.py:64 karteikarten/forms.py:82
+msgid "card-set"
+msgstr "Card Set"
+
+#: karteikarten/forms.py:71
+msgid "create-new-set"
+msgstr "Create New Set"
+
+#: karteikarten/forms.py:83
+msgid "study-type-normal"
+msgstr "Normal"
+
+#: karteikarten/forms.py:83
+msgid "study-type-single-box"
+msgstr "Practice Single Box"
+
+#: karteikarten/forms.py:83
+msgid "study-type-no-box"
+msgstr "Practice Cards Currently in No Box"
+
+#: karteikarten/forms.py:83
+msgid "study-type"
+msgstr "Study Type"
+
+#: karteikarten/forms.py:84 karteikarten/forms.py:119
+msgid "card-box"
+msgstr "Card Box"
+
+#: karteikarten/forms.py:104 karteikarten/forms.py:110
+msgid "name"
+msgstr "Name"
+
+#: karteikarten/forms.py:111
+msgid "review-frequency-in-days"
+msgstr "Review Frequency (In Days)"
+
+#: karteikarten/forms.py:117
+msgid "front"
+msgstr "Front"
+
+#: karteikarten/forms.py:118
+msgid "back"
+msgstr "Back"
+
+#: karteikarten/forms.py:128
+msgid "no-box"
+msgstr "No Box"
+
 #: templates/centre.html:45
 msgid "settings"
 msgstr "Settings"
@@ -146,7 +215,7 @@ msgstr "Current Set"
 
 #: templates/run/review.html:47
 msgid "current-box"
-msgstr "Card Box"
+msgstr "Current Box"
 
 #: templates/run/review.html:49
 msgid "cards"
