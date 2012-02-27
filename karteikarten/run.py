@@ -82,6 +82,10 @@ def Run(request):
 	cards = Card.objects.filter(current_box = cur_cardbox).order_by('?')
 	for card in cards:
 		if card.pk not in cards_reviewed:
+			#Replace ASCII line breaks with HTML line breaks
+			card.front = card.front.replace('\n', '<br />')
+			card.back = card.back.replace('\n', '<br />')
+
 			return render_to_response('run/review.html', {'card' : card, 'card_box' : cur_cardbox, 'card_set' : cur_cardbox.parent_card_set, 'study_mode' : _('study-type-normal'), 'num_completed_cards' : len(cards_reviewed_this_set), 'num_cards' : cardboxes[cur_cardbox_index]['card_count'], 'url_append' : ''}, context_instance = RequestContext(request))
 
 	#Update review time on current box
@@ -127,6 +131,10 @@ def RunSpecificBox(request):
 
 	for card in cards:
 		if card.pk not in cards_reviewed:
+			#Replace ASCII line breaks with HTML line breaks
+			card.front = card.front.replace('\n', '<br />')
+			card.back = card.back.replace('\n', '<br />')
+
 			return render_to_response('run/review.html', {'card' : card, 'card_box' : current_box, 'card_set' : cardset, 'study_mode' : study_mode, 'num_completed_cards' : len(cards_reviewed), 'num_cards' : total_cards, 'url_append' : '?box=' + request.GET['box']}, context_instance = RequestContext(request))
 	return HttpResponseRedirect(reverse('run-finished'))
 

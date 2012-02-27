@@ -57,7 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				<table class="card_content">
 					<tr>
 						<td>
-							{{ card.front }}
+							{% autoescape off %}{{ card.front }}{% endautoescape %}
 						</td>
 					<tr>
 				</table>
@@ -76,7 +76,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				<table id="back_content" class="card_content" style="float: left; background-color: #ffffff; display: none;">
 					<tr>
 						<td>
-							{{ card.back }}
+							{% autoescape off %}{{ card.back }}{% endautoescape %}
 						</td>
 					<tr>
 				</table>
