@@ -28,6 +28,7 @@ USE_L10N = True
 # Available languages
 LANGUAGES = (
 	('en', 'English'),
+	('de', 'German'),
 )
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
