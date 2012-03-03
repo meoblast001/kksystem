@@ -12,407 +12,270 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#, fuzzy
+
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-26 18:01-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
-"MIME-Version: 1.0\n"
+"Language: English\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 
-#: karteikarten/centre.py:58 karteikarten/centre.py:85 karteikarten/run.py:41
 msgid "something-wrong"
 msgstr "Something is wrong."
 
-#: karteikarten/centre.py:58 karteikarten/centre.py:85 karteikarten/edit.py:44
-#: karteikarten/login.py:49 karteikarten/login.py:92 karteikarten/login.py:94
-#: karteikarten/login.py:136 karteikarten/login.py:167
-#: karteikarten/login.py:175 karteikarten/run.py:41 karteikarten/run.py:77
-#: karteikarten/run.py:79 karteikarten/run.py:116 karteikarten/run.py:123
-#: karteikarten/run.py:147 karteikarten/run.py:186
 msgid "error"
 msgstr "Error"
 
-#: karteikarten/centre.py:61 karteikarten/centre.py:66
-#: templates/centre.html:37
 msgid "study"
 msgstr "Study"
 
-#: karteikarten/centre.py:61 karteikarten/centre.py:66
-#: karteikarten/centre.py:87 karteikarten/centre.py:90 karteikarten/edit.py:46
-#: karteikarten/edit.py:49 karteikarten/edit.py:65 karteikarten/edit.py:68
-#: karteikarten/edit.py:81 karteikarten/edit.py:105 karteikarten/edit.py:110
-#: karteikarten/edit.py:138 karteikarten/edit.py:141 karteikarten/edit.py:181
-#: karteikarten/edit.py:206 karteikarten/edit.py:210 karteikarten/edit.py:232
-#: karteikarten/edit.py:237 karteikarten/settings.py:27
-#: templates/centre.html:23 templates/centre.html.py:33
 msgid "centre"
 msgstr "Centre"
 
-#: karteikarten/centre.py:87 karteikarten/centre.py:90 karteikarten/edit.py:46
-#: karteikarten/edit.py:49 karteikarten/edit.py:65 karteikarten/edit.py:68
-#: karteikarten/edit.py:81 karteikarten/edit.py:105 karteikarten/edit.py:110
-#: karteikarten/edit.py:138 karteikarten/edit.py:141 karteikarten/edit.py:181
-#: karteikarten/edit.py:206 karteikarten/edit.py:210 karteikarten/edit.py:232
-#: karteikarten/edit.py:237 templates/centre.html:41
-#: templates/edit/edit_box.html:50 templates/edit/edit_card.html:50
 msgid "edit"
 msgstr "Edit"
 
-#: karteikarten/edit.py:44
 msgid "cardset-already-exists"
 msgstr "Failed to create cardset. Already exists."
 
-#: karteikarten/edit.py:46
 msgid "new-set"
 msgstr "New Set"
 
-#: karteikarten/edit.py:65 karteikarten/edit.py:68 karteikarten/edit.py:81
-#: karteikarten/edit.py:105 karteikarten/edit.py:110 karteikarten/edit.py:138
-#: karteikarten/edit.py:141 karteikarten/edit.py:181 karteikarten/edit.py:206
-#: karteikarten/edit.py:210 karteikarten/edit.py:232 karteikarten/edit.py:237
 msgid "edit-set"
 msgstr "Edit Set"
 
-#: karteikarten/edit.py:81 karteikarten/edit.py:105 karteikarten/edit.py:110
 msgid "boxes-by-set"
 msgstr "Boxes by Set"
 
-#: karteikarten/edit.py:105 karteikarten/edit.py:110
-#: templates/edit/edit_set.html:46
 msgid "edit-box"
 msgstr "Edit Box"
 
-#: karteikarten/edit.py:135 karteikarten/edit.py:204
 msgid "ajax-form-not-valid"
 msgstr "Form not valid. Fields contain invalid data or were left blank."
 
-#: karteikarten/edit.py:138 karteikarten/edit.py:141
-#: templates/edit/edit_set.html:45
 msgid "new-box"
 msgstr "New Box"
 
-#: karteikarten/edit.py:181 karteikarten/edit.py:232 karteikarten/edit.py:237
 msgid "cards-by-set"
 msgstr "Cards by Set"
 
-#: karteikarten/edit.py:206 karteikarten/edit.py:210
-#: templates/edit/edit_set.html:39
 msgid "new-card"
 msgstr "New Card"
 
-#: karteikarten/edit.py:232 karteikarten/edit.py:237
-#: templates/edit/edit_set.html:40
 msgid "edit-card"
 msgstr "Edit Card"
 
-#: karteikarten/forms.py:23 karteikarten/forms.py:30 karteikarten/forms.py:44
-#: karteikarten/forms.py:51
 msgid "username"
 msgstr "Username"
 
-#: karteikarten/forms.py:24 karteikarten/forms.py:31 karteikarten/forms.py:52
 msgid "password"
 msgstr "Password"
 
-#: karteikarten/forms.py:32 karteikarten/forms.py:53
 msgid "repeat-password"
 msgstr "Repeat Password"
 
-#: karteikarten/forms.py:33 karteikarten/forms.py:45
 msgid "email"
 msgstr "Email"
 
-#: karteikarten/forms.py:37 karteikarten/forms.py:57
 msgid "passwords-dont-match"
 msgstr "The passwords do not match."
 
-#: karteikarten/forms.py:64 karteikarten/forms.py:82
 msgid "card-set"
 msgstr "Card Set"
 
-#: karteikarten/forms.py:71
 msgid "create-new-set"
 msgstr "Create New Set"
 
-#: karteikarten/forms.py:83 karteikarten/run.py:85
 msgid "study-type-normal"
 msgstr "Normal"
 
-#: karteikarten/forms.py:83
 msgid "study-type-single-box"
 msgstr "Practice Single Box"
 
-#: karteikarten/forms.py:83
 msgid "study-type-no-box"
 msgstr "Practice Cards Currently in No Box"
 
-#: karteikarten/forms.py:83
 msgid "study-type"
 msgstr "Study Type"
 
-#: karteikarten/forms.py:84 karteikarten/forms.py:119
 msgid "card-box"
 msgstr "Card Box"
 
-#: karteikarten/forms.py:104 karteikarten/forms.py:110
 msgid "name"
 msgstr "Name"
 
-#: karteikarten/forms.py:111
 msgid "review-frequency-in-days"
 msgstr "Review Frequency (In Days)"
 
-#: karteikarten/forms.py:117
 msgid "front"
 msgstr "Front"
 
-#: karteikarten/forms.py:118
 msgid "back"
 msgstr "Back"
 
-#: karteikarten/forms.py:128
 msgid "no-box"
 msgstr "No Box"
 
-#: karteikarten/login.py:49
 msgid "login-failed"
 msgstr "Login failed."
 
-#: karteikarten/login.py:55 karteikarten/login.py:63 karteikarten/login.py:96
-#: karteikarten/login.py:100 karteikarten/login.py:138
-#: karteikarten/login.py:141 karteikarten/login.py:174
-#: templates/login/login_form.html:31 templates/login/register_form.html:31
 msgid "login"
 msgstr "Login"
 
-#: karteikarten/login.py:90
 msgid "registration-successful"
 msgstr "Registration Successful"
 
-#: karteikarten/login.py:90
 msgid "registered"
 msgstr "Registered"
 
-#: karteikarten/login.py:90 karteikarten/run.py:208
 msgid "back-to-centre"
 msgstr "Back to Centre"
 
-#: karteikarten/login.py:90 karteikarten/login.py:134
-#: karteikarten/login.py:161 karteikarten/run.py:208
 msgid "confirmation"
 msgstr "Confirmation"
 
-#: karteikarten/login.py:92
 msgid "email-matches-that-of-another-user"
 msgstr "Email matches that of another user."
 
-#: karteikarten/login.py:94
 msgid "username-matches-that-of-another-user"
 msgstr "Username matches that of another user."
 
-#: karteikarten/login.py:96 karteikarten/login.py:100
-#: templates/login/login_form.html:34
 msgid "register"
 msgstr "Register"
 
-#: karteikarten/login.py:132
 msgid "password-recovery"
 msgstr "Password Recovery"
 
-#: karteikarten/login.py:132
 msgid "reset-password-here"
 msgstr "Reset Password Here"
 
-#: karteikarten/login.py:134
 msgid "email-sent-with-reset-password-link"
 msgstr "An email was sent to you with a link to reset your password."
 
-#: karteikarten/login.py:134
 msgid "request-pending"
 msgstr "Request Pending"
 
-#: karteikarten/login.py:134 karteikarten/login.py:161
 msgid "back-to-login"
 msgstr "Back to Login"
 
-#: karteikarten/login.py:136
 msgid "username-and-email-do-not-match-valid-user"
 msgstr "Username and email address do not match a valid user."
 
-#: karteikarten/login.py:138 karteikarten/login.py:141
-#: karteikarten/login.py:165 karteikarten/login.py:174
 msgid "request-password-recovery-email"
 msgstr "Request Password Recovery Email"
 
-#: karteikarten/login.py:161
 msgid "password-changed"
 msgstr "Password Changed"
 
-#: karteikarten/login.py:161
 msgid "password-recovery-complete"
 msgstr "Password Recovery Complete"
 
-#: karteikarten/login.py:163
 msgid "doesnt-match-password-recovery-session"
-msgstr ""
-"Data provided does not match password recovery session information. Either "
-"your username is incorrect or you did not follow the correct URL."
+msgstr "Data provided does not match password recovery session information. Either your username is incorrect or you did not follow the correct URL."
 
-#: karteikarten/login.py:165 karteikarten/login.py:174
 msgid "reset-password"
 msgstr "Reset Password"
 
-#: karteikarten/login.py:167
 msgid "recovery-session-id-not-found"
-msgstr ""
-"An error occurred. Perhaps you did not provide a recovery session ID in the "
-"URL."
+msgstr "An error occurred. Perhaps you did not provide a recovery session ID in the URL."
 
-#: karteikarten/login.py:175
 msgid "recovery-session-id-invalid"
 msgstr "Recovery session ID invalid"
 
-#: karteikarten/run.py:77
 msgid "no-boxes-to-review"
 msgstr "No boxes to review."
 
-#: karteikarten/run.py:79 karteikarten/run.py:123 karteikarten/run.py:147
-#: karteikarten/run.py:186
 msgid "review-session-expired"
 msgstr "Review session has expired."
 
-#: karteikarten/run.py:116
 msgid "no-card-box-specified"
 msgstr "No card box specified."
 
-#: karteikarten/run.py:198
 msgid "cannot-move-to-first-box"
 msgstr "There are no cardboxes. Cannot move card to first box."
 
-#: karteikarten/run.py:208
 msgid "completed"
 msgstr "Completed"
 
-#: karteikarten/settings.py:27 templates/centre.html:45
 msgid "settings"
 msgstr "Settings"
 
-#: templates/centre.html:49
 msgid "exit"
 msgstr "Exit"
 
-#: templates/select_set.html:30 templates/edit/edit_set.html:30
-#: templates/run/run_options.html:67
 msgid "continue"
 msgstr "Continue"
 
-#: templates/edit/edit_box.html:36
 msgid "error-occurred-box-data-not-saved"
 msgstr "An error has occurred, Box data has not been saved."
 
-#: templates/edit/edit_box.html:37 templates/edit/edit_card.html:37
 msgid "message"
 msgstr "Message"
 
-#: templates/edit/edit_box.html:41 templates/edit/edit_card.html:41
 msgid "success"
 msgstr "Success"
 
-#: templates/edit/edit_box.html:50 templates/edit/edit_card.html:50
 msgid "create"
 msgstr "Create"
 
-#: templates/edit/edit_box.html:53 templates/edit/edit_card.html:53
 msgid "loading"
 msgstr "Loading"
 
-#: templates/edit/edit_card.html:36
 msgid "error-occurred-card-data-not-saved"
 msgstr "An error has occurred, Card data has not been saved."
 
-#: templates/edit/edit_set.html:36 templates/edit/list_cards.html:23
-#: templates/run/review.html:49
 msgid "cards"
 msgstr "Cards"
 
-#: templates/edit/edit_set.html:42 templates/edit/list_boxes.html:23
 msgid "boxes"
 msgstr "Boxes"
 
-#: templates/edit/list_cards.html:29
 msgid "previous"
 msgstr "Previous"
 
-#: templates/edit/list_cards.html:32
 msgid "next"
 msgstr "Next"
 
-#: templates/edit/list_cards.html:35 templates/edit/list_cards.html.py:40
 msgid "search"
 msgstr "Search"
 
-#: templates/edit/list_cards.html:38
 msgid "card-front"
 msgstr "Card Front"
 
-#: templates/edit/list_cards.html:39
 msgid "card-back"
 msgstr "Card Back"
 
-#: templates/login/login_form.html:23
 msgid "welcome"
 msgstr "Welcome"
 
-#: templates/login/login_form.html:35
 msgid "recover-password"
 msgstr "Recover Password"
 
-#: templates/login/recover_password_form.html:30
-#: templates/login/recover_reset_password_form.html:30
 msgid "request"
 msgstr "Request"
 
-#: templates/run/review.html:43
 msgid "study-mode"
 msgstr "Study Mode"
 
-#: templates/run/review.html:45
 msgid "current-set"
 msgstr "Current Set"
 
-#: templates/run/review.html:47
 msgid "current-box"
 msgstr "Current Box"
 
-#: templates/run/review.html:49
 msgid "in-this-box"
 msgstr "In This Box"
 
-#: templates/run/review.html:53
 msgid "finish"
 msgstr "Finish"
 
-#: templates/run/review.html:70
 msgid "click-to-flip-card"
 msgstr "Click here to flip card."
 
-#: templates/run/review.html:85
 msgid "correct"
 msgstr "Correct"
 
-#: templates/run/review.html:86
 msgid "incorrect"
 msgstr "Incorrect"
 
-#: templates/settings/settings.html:23
 msgid "currently-no-settings"
 msgstr "There are currently no settings."
 
