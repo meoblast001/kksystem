@@ -68,6 +68,18 @@ def EditSet(request, set_id):
 		return render_to_response('edit/edit_set.html', {'form' : EditSetForm({'name' : cardset.name}), 'already_exists' : True, 'id' : cardset.pk, 'title' : _('edit-set') + ': ' + cardset.name, 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit')], [_('centre'), _('edit')])}, context_instance = RequestContext(request))
 
 #
+# Delete set
+#
+@login_required
+def DeleteSet(request, set_id):
+	if request.method == 'POST':
+		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+		cardset.delete()
+		return render_to_response('confirmation.html', {'message' : _('deleted'), 'short_messsage' : _('deleted'), 'go_to' : reverse('centre'), 'go_to_name' : _('back-to-centre'), 'title' : _('confirmation'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+	else:
+		return render_to_response('error.html', {'message' : _('this-action-must-be-posted'), 'go_back_to' : reverse('edit-set', args = [set_id]), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+
+#
 # View boxes within a set.
 #
 @login_required
@@ -139,6 +151,18 @@ def NewBox(request, set_id):
 	else:
 		cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
 		return render_to_response('edit/edit_box.html', {'form' : EditBoxForm(), 'already_exists' : False, 'set_id' : set_id, 'title' : _('new-box'), 'site_link_chain' : zip([reverse('centre'), reverse('select-set-to-edit'), reverse('edit-set', args = [set_id])], [_('centre'), _('edit'), _('edit-set') + ': ' + cardset.name])}, context_instance = RequestContext(request))
+
+#
+# Delete card box
+#
+@login_required
+def DeleteBox(request, set_id, box_id):
+	if request.method == 'POST':
+		box = get_object_or_404(CardBox, pk = box_id)
+		box.delete()
+		return render_to_response('confirmation.html', {'message' : _('deleted'), 'short_messsage' : _('deleted'), 'go_to' : reverse('edit-set', args = [set_id]), 'go_to_name' : _('back-to-centre'), 'title' : _('confirmation'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+	else:
+		return render_to_response('error.html', {'message' : _('this-action-must-be-posted'), 'go_back_to' : reverse('edit-box', args = [set_id, box_id]), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 
 #
 # View cards within set.
@@ -241,6 +265,9 @@ def EditCard(request, set_id, card_id):
 #
 @login_required
 def DeleteCard(request, set_id, card_id):
-	card = get_object_or_404(Card, pk = card_id, owner = request.user)
-	card.delete()
-	return HttpResponseRedirect(reverse('edit-view-cards-by-set', args = [str(set_id)]))
+	if request.method == 'POST':
+		card = get_object_or_404(Card, pk = card_id, owner = request.user)
+		card.delete()
+		return render_to_response('confirmation.html', {'message' : _('deleted'), 'short_messsage' : _('deleted'), 'go_to' : reverse('edit-set', args = [set_id]), 'go_to_name' : _('back-to-centre'), 'title' : _('confirmation'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+	else:
+		return render_to_response('error.html', {'message' : _('this-action-must-be-posted'), 'go_back_to' : reverse('edit-card', args = [set_id, card_id]), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))

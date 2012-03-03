@@ -203,7 +203,7 @@ def Incorrect(request, card_id):
 		card_set = card.parent_card_set
 		cardboxes = CardBox.objects.filter(owner = request.user, parent_card_set = card_set).order_by('review_frequency')
 		if not len(cardboxes):
-			return render_to_response('error.html', {'message' : _('cannot-move-to-first-box'), 'go_back_to' : reverse('run-run') + url_append, 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+			return render_to_response('error.html', {'message' : _('cannot-move-to-first-box'), 'go_back_to' : reverse('run-run') + url_append, 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
 		card.current_box = cardboxes[0]
 		card.save()
 	return HttpResponseRedirect(reverse('run-run') + url_append)

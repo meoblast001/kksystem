@@ -423,3 +423,15 @@ msgstr "Nicht Korrekt"
 #: templates/settings/settings.html:23
 msgid "currently-no-settings"
 msgstr "Es gibt gerade keine Einstellung."
+
+msgid "delete"
+msgstr "Löschen"
+
+msgid "this-action-must-be-posted"
+msgstr "Diese Handlung muss gepostet werden."
+
+msgid "deleted"
+msgstr "Gelöscht."
+
+msgid "are-you-sure-delete"
+msgstr "Willst du das wirklich löschen?"
