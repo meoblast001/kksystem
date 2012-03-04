@@ -60,7 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</table>
 			<form action="{% url delete-set id %}" method="POST" class="box_delete_form" style="padding-top: 20px;">
 				{% csrf_token %}
-				<input id="delete" type="submit" value="Delete" />
+				<input id="delete" type="submit" value="{% trans "delete" %}" />
 			</form>
 		</div>
 	{% endif %}
