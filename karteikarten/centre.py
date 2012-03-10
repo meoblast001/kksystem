@@ -34,6 +34,12 @@ def Centre(request):
 	return render_to_response('centre.html', {}, context_instance = RequestContext(request))
 
 #
+# Documentation.
+#
+def Documentation(request):
+	return render_to_response('documentation.html', {'title' : _('documentation'), 'site_link_chain' : zip([reverse('centre')], [_('centre')])}, context_instance = RequestContext(request))
+
+#
 # Select card set to run.
 #
 @login_required

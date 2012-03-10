@@ -51,6 +51,14 @@ a img
 	width: 100%;
 }
 
+.page_container
+{
+	margin-left: auto;
+	margin-right: auto;
+	width: 430px;
+	text-align: center;
+}
+
 .page
 {
 	width: 350px;

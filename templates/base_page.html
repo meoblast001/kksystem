@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			<img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikartensystem" /><br />
 			Version 2.0
 		</div>
-		<div style="margin-left: auto; margin-right: auto; width: 430px; text-align: center;">
+		<div class="page_container" style="{% block page_container_style %}{% endblock %}">
 			<span class="tree">
 				{% for link in site_link_chain %}
 					<a href="{{ link.0 }}">{{ link.1 }}</a> &#x2192;
@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				{{ title }}
 			</span>
 			<hr style="border: none; height: 1px; background-color: #000000;" />
-			<div class="page">
+			<div class="page" style="{% block page_style %}{% endblock %}">
 				<div class="page_header">
 					{{ title }}
 				</div>

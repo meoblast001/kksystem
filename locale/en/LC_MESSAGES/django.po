@@ -290,3 +290,12 @@ msgstr "Deleted."
 
 msgid "are-you-sure-delete"
 msgstr "Are you sure you want to delete that?"
+
+msgid "documentation"
+msgstr "Documentation"
+
+msgid "documentation-p1"
+msgstr "Karteikartensystem is a digital, web-based flash card system. The user creates card sets, which is a category of cards. The user then creates card boxes and cards. The card boxes represent the level of understanding the user has of each card. Each card box has a name and interval at which to review the cards in the box. The user then adds cards to the set, and probably to a card box within that set. As the user studies, if he/she knows the answer, the card is moved to the next box with a higher interval (If boxes with intervals 1, 3, 5, and 7 exist, and the current card is in the box with interval 3, it will move to the box with interval 5). If the user does not know the answer, the card is moved to the box with the lowest interval. When a card has reached the box with the highest interval, and the user knows the correct answer, the card is moved out of the boxes, and the user should know the information."
+
+msgid "documentation-p2"
+msgstr "Study a card set that you created. Study modes are \"Normal\", \"Practice Single Box\", and \"Practice Cards Currently in No Box\". \"Normal\" mode follows the description above. \"Practice Single Box\" mode allows the user to study an individual box in a set. In this mode, cards are not moved between boxes. This mode allows the user to reinforce what he/she has learned. \"Practice Cards Currently in No Box\" mode allows the user to study cards that are not in a box. If the user knows the answer, nothing happens, but if the user does not know the answer, the card is moved to the box with the lowest frequency, like in \"Normal\" mode."
