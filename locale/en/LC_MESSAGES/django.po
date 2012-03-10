@@ -299,3 +299,27 @@ msgstr "Karteikartensystem is a digital, web-based flash card system. The user c
 
 msgid "documentation-p2"
 msgstr "Study a card set that you created. Study modes are \"Normal\", \"Practice Single Box\", and \"Practice Cards Currently in No Box\". \"Normal\" mode follows the description above. \"Practice Single Box\" mode allows the user to study an individual box in a set. In this mode, cards are not moved between boxes. This mode allows the user to reinforce what he/she has learned. \"Practice Cards Currently in No Box\" mode allows the user to study cards that are not in a box. If the user knows the answer, nothing happens, but if the user does not know the answer, the card is moved to the box with the lowest frequency, like in \"Normal\" mode."
+
+msgid "change-user-information"
+msgstr "Change User Information"
+
+msgid "current-password"
+msgstr "Current Password"
+
+msgid "new-password"
+msgstr "New Password"
+
+msgid "repeat-new-password"
+msgstr "Repeat New Password"
+
+msgid "submit"
+msgstr "Submit"
+
+msgid "current-password-incorrect"
+msgstr "Current password is incorrect."
+
+msgid "user-info-changed"
+msgstr "User Information Changed"
+
+msgid "back-to-settings"
+msgstr "Back to Settings"

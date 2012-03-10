@@ -15,6 +15,7 @@
 
 from django import forms
 from django.utils.translation import ugettext as _
+from django.conf import settings
 
 #
 # Form displayed on login page.
@@ -128,3 +129,17 @@ class EditCardForm(forms.Form):
 		card_box_names.append(['0', '[' + _('no-box') + ']'])
 		#Provide choices for card box choice field
 		self.fields['card_box'].choices = card_box_names
+
+#
+# Form displayed when changing user information in settings.
+#
+class SettingsChangeUserInfoForm(forms.Form):
+	email = forms.EmailField(label = _('email'))
+	current_password = forms.CharField(widget = forms.PasswordInput, required = False, label = _('current-password'))
+	new_password = forms.CharField(widget = forms.PasswordInput, required = False, label = _('new-password'))
+	repeat_new_password = forms.CharField(widget = forms.PasswordInput, required = False, label = _('repeat-new-password'))
+
+	def clean_repeat_new_password(self):
+		if self.cleaned_data['new_password'] != self.cleaned_data['repeat_new_password']:
+			raise forms.ValidationError(_('passwords-dont-match'))
+		return self.cleaned_data
