@@ -276,9 +276,6 @@ msgstr "Correct"
 msgid "incorrect"
 msgstr "Incorrect"
 
-msgid "currently-no-settings"
-msgstr "There are currently no settings."
-
 msgid "delete"
 msgstr "Delete"
 

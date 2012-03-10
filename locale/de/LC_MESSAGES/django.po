@@ -94,7 +94,7 @@ msgid "study-type-no-box"
 msgstr "Karten üben, die nicht in einem Kasten sind"
 
 msgid "study-type"
-msgstr "Studierenart"
+msgstr "Lernmodus"
 
 msgid "card-box"
 msgstr "Kartenkasten"
@@ -276,9 +276,6 @@ msgstr "Korrekt"
 msgid "incorrect"
 msgstr "Nicht Korrekt"
 
-msgid "currently-no-settings"
-msgstr "Es gibt gerade keine Einstellung."
-
 msgid "delete"
 msgstr "Löschen"
 
@@ -290,3 +287,27 @@ msgstr "Gelöscht."
 
 msgid "are-you-sure-delete"
 msgstr "Willst du das wirklich löschen?"
+
+msgid "change-user-information"
+msgstr "Benutzerinformation ändern"
+
+msgid "current-password"
+msgstr "Aktuelles Passwort"
+
+msgid "new-password"
+msgstr "Neues Passwort"
+
+msgid "repeat-new-password"
+msgstr "Neues Passwort wiederholen"
+
+msgid "submit"
+msgstr "Einreichen"
+
+msgid "current-password-incorrect"
+msgstr "Aktuelles Passwort ist nicht korrekt."
+
+msgid "user-info-changed"
+msgstr "Benutzerinformation geändert"
+
+msgid "back-to-settings"
+msgstr "Zurück zu den Einstellungen"
