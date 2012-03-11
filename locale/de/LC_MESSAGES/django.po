@@ -290,3 +290,12 @@ msgstr "Gelöscht."
 
 msgid "are-you-sure-delete"
 msgstr "Willst du das wirklich löschen?"
+
+msgid "documentation"
+msgstr "Dokumentation"
+
+msgid "documentation-p1"
+msgstr "Karteikartensystem ist ein digitales, webbasiertes Karteikartensystem. Der Benutzer erstellt Kartenzusammenstellungen, die Kategorien sind. Der Benutzer erstellt dann Kartenkästen und Karten. Die Kartenkästen zeigen, wie gut der Benutzer die Karte versteht. Jeder Kartenkasten hat einen Name und eine Zeitspanne, wie häufig die Karten überprüft werden. Der Benutzer fügt dann Karten zur Zusammenstellung hinzu, und wahrscheinlich zu einem Kartenkasten in jener Zusammenstellung. Während der Benutzer lernt, wird die Karte im nächsten Kasten mit einer höheren Zeitspanne verschoben, wenn er/sie die Antwort kennt. (Wenn Kästen mit Zeitspannen 1, 3, 5, und 7 existieren, und die aktuelle Karte im Kasten mit Zeitspanne 3 ist, wird sie in den Kasten mit Zeitspanne 5 verschoben). Wenn der Benutzer die Antwort nicht kennt, wird die Karte in den Kasten mit der niedrigsten Zeitspanne verschoben. Wenn eine Karte im Kasten mit der höchsten Zeitspanne ist, und der Benutzer die Antwort kennt, wird die Karte aus den Kästen entfernt, und der Benutzer sollte die Information kennen."
+
+msgid "documentation-p2"
+msgstr "Lernen Sie die Kartenzusammenstellung, die Sie gemacht haben. Lernmodi sind \"Normal\", \"Nur einen Kasten üben\", und \"Karten üben, die nicht in einem Kasten sind\". \"Normal\" folgt der oben erwähten Beschreibung. \"Nur einen Kasten üben\" erlaubt, dass der Benutzer einen einzelnen Kasten in einer Zusammenstellung lernt. In diesem Modus, wird die Karten nicht zwischen Kästen bewegt. Dieser Modus erlaubt, dass der Benutzer verstärkt, was er/sie gelernt hat. \"Karten üben, die nicht in einem Kasten sind\" erlaubt, dass der Benutzer Karten lernt, die nicht in einem Kasten sind. Wenn der Benutzer die Antwort kennt, passiert nichts, aber wenn der Benutzer die Antwort nicht kennt, wird die Karte in den Kasten mit der niedrigsten Zeitspanne bewegt, wie in \"Normal\"."
