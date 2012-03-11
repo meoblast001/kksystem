@@ -50,7 +50,7 @@ def ChangeUserInformation(request):
 
 			return render_to_response('confirmation.html', {'message' : _('user-info-changed'), 'short_messsage' : _('registered'), 'go_to' : reverse('settings'), 'go_to_name' : _('back-to-settings'), 'title' : _('confirmation'), 'site_link_chain' : zip([reverse('centre'), reverse('settings'), reverse('settings-change-user-information')], [_('centre'), _('settings'), _('change-user-information')])}, context_instance = RequestContext(request))
 		else:
-			return render_to_response('settings/change_user_information.html', {'title' : _('settings'), 'site_link_chain' : zip([reverse('centre')], [_('centre')]), 'change_user_info_form' : SettingsChangeUserInfoForm(request.POST)}, context_instance = RequestContext(request))
+			return render_to_response('settings/change_user_information.html', {'title' : _('change-user-information'), 'site_link_chain' : zip([reverse('centre'), reverse('settings')], [_('centre'), _('settings')]), 'change_user_info_form' : SettingsChangeUserInfoForm(request.POST)}, context_instance = RequestContext(request))
 	#Form
 	else:
-		return render_to_response('settings/change_user_information.html', {'title' : _('settings'), 'site_link_chain' : zip([reverse('centre')], [_('centre')]), 'change_user_info_form' : SettingsChangeUserInfoForm({'email' : request.user.email})}, context_instance = RequestContext(request))
+		return render_to_response('settings/change_user_information.html', {'title' : _('change-user-information'), 'site_link_chain' : zip([reverse('centre'), reverse('settings')], [_('centre'), _('settings')]), 'change_user_info_form' : SettingsChangeUserInfoForm({'email' : request.user.email})}, context_instance = RequestContext(request))
