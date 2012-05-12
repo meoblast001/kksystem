@@ -18,7 +18,7 @@ from forms import *
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
@@ -34,6 +34,11 @@ from django.utils.translation import ugettext as _
 # Login
 #
 def Login(request):
+	#AJAX
+	if 'HTTP_X_REQUESTED_WITH' in request.META and request.META['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest':
+		is_ajax = True
+	else:
+		is_ajax = False
 	#Submit
 	if request.method == 'POST':
 		form = LoginForm(request.POST)
@@ -42,20 +47,33 @@ def Login(request):
 			if user is not None:
 				if user.is_active:
 					login(request, user)
-					if 'next' in request.GET:
-						return HttpResponseRedirect(request.GET['next'])
+					if is_ajax:
+						return HttpResponse('{"status" : "success"}')
 					else:
-						return HttpResponseRedirect(reverse('centre'))
-			return render_to_response('error.html', {'message' : _('login-failed'), 'go_back_to' : reverse('login'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-		else:
-			if 'next' in request.GET:
-				url_append = '?next=' + request.GET['next']
+						if 'next' in request.GET:
+							return HttpResponseRedirect(request.GET['next'])
+						else:
+							return HttpResponseRedirect(reverse('centre'))
+			if is_ajax:
+				return HttpResponse('{"status" : "fail", "message" : "' + _('login-failed') + '"}')
 			else:
-				url_append = ''
-			return render_to_response('login/login_form.html', {'form' : LoginForm(request.POST), 'title' : _('login'), 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
+				return render_to_response('error.html', {'message' : _('login-failed'), 'go_back_to' : reverse('login'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+		else:
+			if is_ajax:
+				return HttpResponse('{"status" : "fail", "message" : "Required fields not filled."}')
+			else:
+				if 'next' in request.GET:
+					url_append = '?next=' + request.GET['next']
+				else:
+					url_append = ''
+				return render_to_response('login/login_form.html', {'form' : LoginForm(request.POST), 'title' : _('login'), 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
 
 	#Form
 	else:
+		#If user is mobile, go to mobile site
+		if request.META['HTTP_USER_AGENT'].upper().find('MOBILE') != -1:
+			return HttpResponseRedirect(reverse('mobile'))
+
 		if 'next' in request.GET:
 			url_append = '?next=' + request.GET['next']
 		else:

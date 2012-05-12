@@ -48,14 +48,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					<td>{% trans "cards" %}:</td>
 				</tr>
 				<tr>
-					<td><a href="{% url new-card id %}"><img src="{{ STATIC_URL }}new_card.png" alt="" />{% trans "new-card" %}</a></td>
-					<td><a href="{% url edit-view-cards-by-set id %}"><img src="{{ STATIC_URL }}edit_card.png" alt="" />{% trans "edit-card" %}</a></td>
+					<td><a href="{% url new-card id %}"><img src="{{ STATIC_URL }}default/new_card.png" alt="" />{% trans "new-card" %}</a></td>
+					<td><a href="{% url edit-view-cards-by-set id %}"><img src="{{ STATIC_URL }}default/edit_card.png" alt="" />{% trans "edit-card" %}</a></td>
 				<tr>
 					<td>{% trans "boxes" %}:</td>
 				</tr>
 				<tr>
-					<td><a href="{% url new-box id %}"><img src="{{ STATIC_URL }}new_box.png" alt="" />{% trans "new-box" %}</a></td>
-					<td><a href="{% url edit-view-boxes-by-set id %}"><img src="{{ STATIC_URL }}edit_box.png" alt="" />{% trans "edit-box" %}</a></td>
+					<td><a href="{% url new-box id %}"><img src="{{ STATIC_URL }}default/new_box.png" alt="" />{% trans "new-box" %}</a></td>
+					<td><a href="{% url edit-view-boxes-by-set id %}"><img src="{{ STATIC_URL }}default/edit_box.png" alt="" />{% trans "edit-box" %}</a></td>
 				</tr>
 			</table>
 			<form action="{% url delete-set id %}" method="POST" class="box_delete_form" style="padding-top: 20px;">

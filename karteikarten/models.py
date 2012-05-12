@@ -23,6 +23,12 @@ class CardSet(models.Model):
 	def __unicode__(self):
 		return self.name
 
+	#
+	# Get dictionary of object
+	#
+	def Serialize(self):
+		return {'id' : self.id, 'name' : self.name, 'owner' : self.owner.id}
+
 class CardBox(models.Model):
 	name = models.CharField(max_length = 60)
 	owner = models.ForeignKey(User)
@@ -46,6 +52,12 @@ class CardBox(models.Model):
 			output.update({cardset.pk : boxes})
 		return output
 
+	#
+	# Get dictionary of object
+	#
+	def Serialize(self):
+		return {'id' : self.id, 'name' : self.name, 'owner' : self.owner.id, 'parent_card_set' : self.parent_card_set.id, 'review_frequency' : self.review_frequency, 'last_reviewed' : str(self.last_reviewed)}
+
 class Card(models.Model):
 	front = models.TextField()
 	back = models.TextField()
@@ -55,3 +67,24 @@ class Card(models.Model):
 
 	def __unicode__(self):
 		return self.front
+
+	#
+	# Get dictionary of object
+	#
+	def Serialize(self):
+		return {'id' : self.id, 'front' : self.front, 'back' : self.back, 'owner' : self.owner.id, 'parent_card_set' : self.parent_card_set.id, 'current_box' : self.current_box.id}
+
+	#
+	# Modify object from dictionary.
+	#
+	def Modify(self, params):
+		if 'front' in params:
+			self.front = params['front']
+		if 'back' in params:
+			self.back = params['back']
+		if 'owner' in params:
+			self.owner_id = params['owner']
+		if 'parent_card_set' in params:
+			self.parent_card_set_id = params['parent_card_set']
+		if 'current_box' in params:
+			self.current_box_id = params['current_box']
