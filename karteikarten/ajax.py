@@ -55,6 +55,16 @@ def Ajax(request):
 			for card in Card.objects.filter(**params):
 				results.append(card.Serialize())
 			return HttpResponse(json.dumps({'status' : 'success', 'result' : results}))
+		#Modify card box
+		if request.POST['type'] == 'modify-cardbox':
+			params = json.loads(request.POST['params'])
+			try:
+				cardbox = CardBox.objects.get(pk = params['id'], owner = request.user)
+				cardbox.Modify(params)
+				cardbox.save()
+				return HttpResponse(json.dumps({'status' : 'success'}))
+			except ObjectDoesNotExist:
+				return HttpResponse(json.dumps({'status' : 'fail'}))
 		#Modify card
 		if request.POST['type'] == 'modify-card':
 			params = json.loads(request.POST['params'])

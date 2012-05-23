@@ -15,6 +15,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 class CardSet(models.Model):
 	name = models.CharField(max_length = 60)
@@ -57,6 +58,21 @@ class CardBox(models.Model):
 	#
 	def Serialize(self):
 		return {'id' : self.id, 'name' : self.name, 'owner' : self.owner.id, 'parent_card_set' : self.parent_card_set.id, 'review_frequency' : self.review_frequency, 'last_reviewed' : str(self.last_reviewed)}
+
+	#
+	# Modify object from dictionary.
+	#
+	def Modify(self, params):
+		if 'name' in params:
+			self.name = params['name']
+		if 'owner' in params:
+			self.owner_id = params['owner']
+		if 'parent_card_set' in params:
+			self.parent_card_set_id = params['parent_card_set']
+		if 'review_frequency' in params:
+			self.review_frequency = params['review_frequency']
+		if 'last_reviewed' in params:
+			self.last_reviewed = datetime.fromtimestamp(params['last_reviewed'])
 
 class Card(models.Model):
 	front = models.TextField()

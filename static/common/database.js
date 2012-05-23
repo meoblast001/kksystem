@@ -101,6 +101,23 @@ var Database = (function()
 	}
 
 	/**
+	Modifies the attributes of a box in the database.
+	@param id Primary key of box to modify.
+	@param attributes Object of attribute/value pairs containing the attributes that should be modified.
+	@param callback Function to call following modification. Takes one parameter: callback_params.
+	@param_params Parameters to pass to callback function.
+	*/
+	Database.prototype.ModifyBox = function(id, attributes, callback, callback_params)
+	{
+		if (this.is_online)
+		{
+			attributes['id'] = id;
+			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-cardbox', params : JSON.stringify(attributes)};
+			AJAX(post_data, callback, callback_params, false);
+		}
+	}
+
+	/**
 	Modifies the attributes of a card in the database.
 	@param id Primary key of card to modify.
 	@param attributes Object of attribute/value pairs containing the attributes that should be modified.

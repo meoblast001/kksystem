@@ -166,7 +166,7 @@ a img
 .card_not_visible
 {
 	position: relative;
-	background-image: url('card_not_visible.png');
+	background-image: url('../common/card_not_visible.png');
 	width: 400px;
 	height: 200px;
 	margin-left: 210px;

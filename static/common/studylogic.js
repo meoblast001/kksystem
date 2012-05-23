@@ -31,6 +31,7 @@ var StudyLogic = (function()
 		this.boxes = [];
 		this.study_type = study_options.study_type;
 		this.cards_reviewed = [];
+		this.cards_reviewed_this_box = [];
 
 		var _this = this;
 
@@ -80,13 +81,19 @@ var StudyLogic = (function()
 
 	/**
 	Gets the next card in random order.
-	@return Card object with attributes from database.
+	@return Card object with attributes from database. Null if study complete.
 	*/
 	StudyLogic.prototype.GetNextCard = function()
 	{
-		//Switch box if empty
-		while (this.current_box >= 0 && (this.boxes[this.current_box].cards.length == 0 || this.boxes[this.current_box].review == false))
+		//If empty, mark now as last review date...
+		if (this.boxes[this.current_box].cards.length == this.cards_reviewed_this_box.length)
+			this.database.ModifyBox(this.boxes[this.current_box].id, {last_reviewed : Math.round(new Date().getTime() / 1000)}, function() { /*Do nothing*/ }, null);
+		//Then switch boxes
+		while (this.current_box >= 0 && (this.boxes[this.current_box].cards.length == this.cards_reviewed_this_box.length || this.boxes[this.current_box].review == false))
+		{
 			--this.current_box;
+			this.cards_reivewed_this_box = [];
+		}
 		if (this.current_box < 0)
 			return null;
 
@@ -101,7 +108,6 @@ var StudyLogic = (function()
 				if (this.cards_reviewed[i] == card.id)
 				{
 					card = null;
-					this.boxes[this.current_box].cards.splice(cur_id, cur_id); //Remove
 					break;
 				}
 			}
@@ -112,30 +118,34 @@ var StudyLogic = (function()
 	/**
 	Performed if card information is correct. Given a card ID, it is marked as reviewed so it's not reviewed again during this session, and if the study type is 'normal', moves card to next box.
 	@param card_id ID of card that was correct.
+	@param callback Function to call when complete.
 	*/
-	StudyLogic.prototype.Correct = function(card_id)
+	StudyLogic.prototype.Correct = function(card_id, callback)
 	{
 		this.cards_reviewed.push(card_id);
+		this.cards_reviewed_this_box.push(card_id);
 		if (this.study_type == 'normal')
 		{
 			var box_id = null;
 			if (this.current_box < this.boxes.length - 1)
 				box_id = this.boxes[this.current_box + 1]['id'];
-			this.database.ModifyCard(card_id, {'current_box' : box_id}, function() {}, null);
+			this.database.ModifyCard(card_id, {'current_box' : box_id}, callback, null);
 		}
 	}
 
 	/**
 	Performed if card information is incorrect. Given a card ID, it is marked as reviewed so it's not reviewed again during this session, and if the study type is 'normal' or 'no_box', moves card to first box.
 	@param card_id ID of card that was incorrect.
+	@param callback Function to call when complete.
 	*/
-	StudyLogic.prototype.Incorrect = function(card_id)
+	StudyLogic.prototype.Incorrect = function(card_id, callback)
 	{
 		this.cards_reviewed.push(card_id);
-		if (this.study_type == 'normal')
+		this.cards_reviewed_this_box.push(card_id);
+		if (this.study_type == 'normal' || this.study_type == 'no_box')
 		{
 			if (this.current_box > 0)
-				this.database.ModifyCard(card_id, {'current_box' : this.boxes[this.current_box - 1]['id']}, function() {}, null);
+				this.database.ModifyCard(card_id, {'current_box' : this.boxes[this.current_box - 1]['id']}, callback, null);
 		}
 	}
 
