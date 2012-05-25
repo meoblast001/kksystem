@@ -70,9 +70,24 @@ var StudyLogic = (function()
 				_this.boxes = boxes;
 				database.GetCards({'current_box' : boxes[0]['id'] }, function(cards, params)
 				{
-					_boxes[0].cards = cards;
+					_this.boxes[0].cards = cards;
 					//Ready
 					_this.current_box = _this.boxes.length - 1;
+					callback();
+				}, {});
+			}, {});
+		}
+		else if (this.study_type == 'no_box')
+		{
+			//Create virtual box
+			_this.boxes.push({'name' : 'No Box', 'review' : true});
+			database.GetCards({'parent_card_set' : this.set_id, 'current_box' : null}, function(cards, params)
+			{
+				_this.boxes[0].cards = cards;
+				_this.current_box = _this.boxes.length - 1;
+				database.GetBoxes({'parent_card_set' : _this.set_id}, function(boxes, params)
+				{
+					_this.lowest_box = boxes[0];
 					callback();
 				}, {});
 			}, {});
@@ -85,14 +100,17 @@ var StudyLogic = (function()
 	*/
 	StudyLogic.prototype.GetNextCard = function()
 	{
-		//If empty, mark now as last review date...
-		if (this.boxes[this.current_box].cards.length == this.cards_reviewed_this_box.length)
-			this.database.ModifyBox(this.boxes[this.current_box].id, {last_reviewed : Math.round(new Date().getTime() / 1000)}, function() { /*Do nothing*/ }, null);
-		//Then switch boxes
+		if (this.study_type == 'normal')
+		{
+			//If empty, mark now as last review date
+			if (this.boxes[this.current_box].cards.length == this.cards_reviewed_this_box.length)
+				this.database.ModifyBox(this.boxes[this.current_box].id, {last_reviewed : Math.round(new Date().getTime() / 1000)}, function() { /*Do nothing*/ }, null);
+		}
+		//If empty, switch boxes
 		while (this.current_box >= 0 && (this.boxes[this.current_box].cards.length == this.cards_reviewed_this_box.length || this.boxes[this.current_box].review == false))
 		{
 			--this.current_box;
-			this.cards_reivewed_this_box = [];
+			this.cards_reviewed_this_box = [];
 		}
 		if (this.current_box < 0)
 			return null;
@@ -131,6 +149,8 @@ var StudyLogic = (function()
 				box_id = this.boxes[this.current_box + 1]['id'];
 			this.database.ModifyCard(card_id, {'current_box' : box_id}, callback, null);
 		}
+		else
+			callback(null);
 	}
 
 	/**
@@ -142,11 +162,17 @@ var StudyLogic = (function()
 	{
 		this.cards_reviewed.push(card_id);
 		this.cards_reviewed_this_box.push(card_id);
-		if (this.study_type == 'normal' || this.study_type == 'no_box')
+		if (this.study_type == 'normal')
 		{
 			if (this.current_box > 0)
 				this.database.ModifyCard(card_id, {'current_box' : this.boxes[this.current_box - 1]['id']}, callback, null);
+			else
+				callback(null);
 		}
+		else if (this.study_type == 'no_box')
+			this.database.ModifyCard(card_id, {'current_box' : this.lowest_box['id']}, callback, null);
+		else
+			callback(null);
 	}
 
 	return StudyLogic;
