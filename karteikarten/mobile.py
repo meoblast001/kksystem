@@ -21,13 +21,14 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.middleware import csrf
 import os
 
 #
 # Display mobile site
 #
 def Mobile(request):
-	return render_to_response('mobile.html', {'site_root' : settings.FORCE_SCRIPT_NAME if settings.FORCE_SCRIPT_NAME != None else '', 'csrf_token' : request.COOKIES['csrftoken']}, context_instance = RequestContext(request))
+	return render_to_response('mobile.html', {'site_root' : settings.FORCE_SCRIPT_NAME if settings.FORCE_SCRIPT_NAME != None else '', 'csrf_token' : csrf.get_token(request)}, context_instance = RequestContext(request))
 
 #
 # Generate cache manifest
