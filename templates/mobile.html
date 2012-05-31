@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <!DOCTYPE html>
-<html>
+<html manifest="{% url mobile-cache-manifest %}">
 	<head>
 		<title>Karteikarten System</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<script type="text/javascript" src="{{ STATIC_URL }}common/jquery-1.7.1.min.js"></script>
 		<script type="text/javascript">
 			var SITE_ROOT = '{{ site_root }}';
-			var SUPPORTS_WEB_SQL = (typeof(openDatabase) == 'function');
 			var CSRF_TOKEN = '{{ csrf_token }}';
 
 			$(document).ready(function()
@@ -34,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			});
 		</script>
 		<script type="text/javascript" src="{{ STATIC_URL }}common/database.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}common/migrationssystem.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}common/migrations.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}mobile/form.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}mobile/pages.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}mobile/study.js"></script>
