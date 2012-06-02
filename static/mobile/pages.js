@@ -140,7 +140,7 @@ var Pages =
 
 	EditSet : function(post_data)
 	{
-		Pages.database.GetSets({'id' : post_data.id}, {}, function(result, params)
+		Pages.database.GetSets({'id' : post_data.id}, function(result, params)
 		{
 			$('#content').html('<div id="form" /><div id="menu" />');
 
@@ -152,23 +152,53 @@ var Pages =
 				'<a href="javascript:Pages.NewCard()" class="menu_item">New Card</a>' +
 				'<a href="javascript:Pages.EditCard()" class="menu_item">Edit Card</a>' +
 				'<a href="javascript:Pages.NewBox()" class="menu_item">New Box</a>' +
-				'<a href="javascript:Pages.EditBox()" class="menu_item">Edit Box</a>';
+				'<a href="javascript:Pages.EditBox()" class="menu_item">Edit Box</a>' +
+				'<a href="javascript:Pages.database.CheckOut(' + post_data.id + ', Pages.CheckOutSuccess)" class="menu_item">Check Out Set</a>';
 			$('#menu').html(menu_content);
 			$('#header_text').html('Edit Set - ' + result[0].name);
 		}, {});
 	},
 
-	Start : function()
+	CheckOutSuccess : function()
 	{
-		if (!Pages.offline_mode)
+		$('#content').html('Success! Returning home...');
+		$('#header_text').html('Check Out Successful');
+		setTimeout(Pages.Centre, 3000);
+	},
+
+	//Settings
+
+	Settings : function()
+	{
+		var menu_content =
+			(Pages.database.is_online ?
+				'<a href="javascript:Pages.SwitchOnlineStatus(false)" class="menu_item">Switch Offline</a>' :
+				'<a href="javascript:Pages.SwitchOnlineStatus(true)" class="menu_item">Switch Online</a>');
+		$('#content').html(menu_content);
+		$('#header_text').html('Settings');
+	},
+
+	SwitchOnlineStatus : function(online)
+	{
+		if (online)
 		{
-			Pages.database = new Database(true);
-			Pages.Login();
+			Pages.database.is_online = true;
+			$('#content').html('Switched to online mode. Returning home...');
+			$('#header_text').html('Online Mode');
+			setTimeout(Pages.Centre, 3000);
 		}
 		else
 		{
-			Pages.database = new Database(false);
-			Pages.Centre();
+			Pages.database.is_online = false;
+			$('#content').html('Switched to offline mode. Returning home...');
+			$('#header_text').html('Offline Mode');
+			setTimeout(Pages.Centre, 3000);
 		}
+	},
+
+	Start : function()
+	{
+		Pages.database = new Database();
+		Pages.Login();
 	},
 }

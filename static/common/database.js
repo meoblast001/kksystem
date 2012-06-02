@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 var Database = (function()
 {
-	function Database(is_online)
+	function Database()
 	{
-		this.is_online = is_online;
+		this.is_online = true;
 		if (typeof(openDatabase) == 'function')
 		{
 			this.websql_db = openDatabase('karteikartensystem', '1.0', 'Karteikartensystem', 200000);
@@ -258,6 +258,8 @@ var Database = (function()
 			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cards', params : JSON.stringify(attributes)};
 			AJAX(post_data, callback, callback_params, true);
 		}
+		else
+			WebSQLSelect(this.websql_db, 'card', attributes, callback, callback_params);
 	}
 
 	/**
