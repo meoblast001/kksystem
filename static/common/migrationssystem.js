@@ -17,23 +17,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 var MigrationsSystem = (function()
 {
-	function MigrationsSystem(database, callback)
+	function MigrationsSystem(database, success_callback, error_callback)
 	{
 		this.database = database;
 		database.transaction(function(transaction)
 		{
 			//Create migration table if it does not already exist
-			transaction.executeSql('CREATE TABLE IF NOT EXISTS __migrations__ (migration_id VARCHAR(60));');
-			callback();
+			transaction.executeSql('CREATE TABLE IF NOT EXISTS __migrations__ (migration_id VARCHAR(60));', [], function(transaction, results)
+			{
+				success_callback();
+			},
+			function(transaction, results)
+			{
+				error_callback();
+			});
 		});
 	}
 
-	MigrationsSystem.prototype.MigrateUp = function(callback)
+	MigrationsSystem.prototype.MigrateUp = function(success_callback, error_callback)
 	{
 		var _this = this;
 		this.database.transaction(function(transaction)
 		{
 			var migrations_processed = 0;
+			var already_failed = false;
 			function GenerateMigrationFunction(i)
 			{
 				return function()
@@ -46,18 +53,25 @@ var MigrationsSystem = (function()
 						if (result.rows.length == 0)
 						{
 							MIGRATIONS[i].migrate(_this.database);
-								transaction.executeSql('INSERT INTO __migrations__ (migration_id) VALUES ("' + MIGRATIONS[i].id + '");');
+							transaction.executeSql('INSERT INTO __migrations__ (migration_id) VALUES ("' + MIGRATIONS[i].id + '");');
 							if (migrations_processed == MIGRATIONS.length)
-								callback();
+							{
+								//Do not call the success callback if a failure occurred
+								if (!already_failed)
+									success_callback();
+							}
 						}
+					},
+					function(transaction, message)
+					{
+						if (!already_failed)
+							error_callback('local-db', message);
+						already_failed = true;
 					});
 				}
 			}
 			for (var i = 0; i < MIGRATIONS.length; ++i)
-			{
-				var migration_function = GenerateMigrationFunction(i);
-				migration_function();
-			}
+				GenerateMigrationFunction(i)();
 		});
 	}
 

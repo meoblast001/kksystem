@@ -37,6 +37,10 @@ var Pages =
 					Pages.Centre();
 				else if (result['status'] == 'fail')
 					alert(result['message']);
+			},
+			error : function(jq_xhr, text_status, error_thrown)
+			{
+				alert('Error: ' + text_status);
 			}
 		});
 	},
@@ -81,7 +85,12 @@ var Pages =
 			$('#content').html(''); //Clear content area
 			study_options_form.Display($('#content'));
 			$('#header_text').html('Choose Study Options');
-		}, {});
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
+		});
 	},
 
 	StudyOptions2 : function(post_data)
@@ -105,7 +114,12 @@ var Pages =
 					$('#content').html(''); //Clear content area
 					study_options_form.Display($('#content'));
 					$('#header_text').html('Choose Box to Study');
-				}, {});
+				},
+				function(type, message)
+				{
+					if (type == 'network')
+						Pages.NetworkError(message);
+				});
 			}
 			else
 				Pages.Study({});
@@ -135,7 +149,12 @@ var Pages =
 			$('#content').html(''); //Clear content area
 			set_select_form.Display($('#content'));
 			$('#header_text').html('Select Set to Edit');
-		}, {});
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
+		});
 	},
 
 	EditSet : function(post_data)
@@ -156,7 +175,12 @@ var Pages =
 				'<a href="javascript:Pages.database.CheckOut(' + post_data.id + ', Pages.CheckOutSuccess)" class="menu_item">Check Out Set</a>';
 			$('#menu').html(menu_content);
 			$('#header_text').html('Edit Set - ' + result[0].name);
-		}, {});
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
+		});
 	},
 
 	CheckOutSuccess : function()
@@ -194,6 +218,17 @@ var Pages =
 			$('#header_text').html('Offline Mode');
 			setTimeout(Pages.Centre, 3000);
 		}
+	},
+
+	NetworkError : function(message)
+	{
+		var content =
+			'<p>A network error has occurred: ' + message + '<br />' +
+			'Would you like to switch to offline mode? (No will return you to Centre)</p>' +
+			'<a href="javascript:Pages.SwitchOnlineStatus(false)" class="menu_item">Yes</a>' +
+			'<a href="javascript:Pages.Centre();" class="menu_item">No</a>';
+		$('#content').html(content);
+		$('#header_text').html('Network Error');
 	},
 
 	Start : function()

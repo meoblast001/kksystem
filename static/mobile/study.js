@@ -44,6 +44,11 @@ var Study =
 			$('#header_text').html('Study');
 
 			Study.DisplayNextCard();
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
 		});
 	},
 
@@ -74,6 +79,11 @@ var Study =
 		Study.study_logic.Correct(Study.current_card['id'], function()
 		{
 			Study.DisplayNextCard();
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
 		});
 	},
 
@@ -82,6 +92,11 @@ var Study =
 		Study.study_logic.Incorrect(Study.current_card['id'], function()
 		{
 			Study.DisplayNextCard();
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
 		});
 	},
 };

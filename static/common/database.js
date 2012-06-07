@@ -33,11 +33,11 @@ var Database = (function()
 	/**
 	Makes AJAX POST request.
 	@param post_data Object containing data to POST.
-	@param callback Function to call following the request. Takes one or two parameters: results and callback_params or only callback_params.
-	@param callback_params Parameters to pass to callback function.
+	@param success_callback Function to call following the request. Takes zero or one parameters: results or none.
+	@param error_callback Function to call following an error. Takes two parameters: the error type (Possible values: 'network' or 'server') and the error message.
 	@param has_results If true, callback is called with results.
 	*/
-	function AJAX(post_data, callback, callback_params, has_results)
+	function AJAX(post_data, success_callback, error_callback, has_results)
 	{
 		$.ajax({
 			type : 'POST',
@@ -49,16 +49,16 @@ var Database = (function()
 				if (result['status'] == 'success')
 				{
 					if (has_results)
-						callback(result['result'], callback_params);
+						success_callback(result['result']);
 					else
-						callback(callback_params);
+						success_callback();
 				}
 				else if (result['status'] == 'fail')
-					alert(result['message']);
+					error_callback('server', result['message']);
 			},
 			error : function(jq_xhr, text_status, error_thrown)
 			{
-				alert('An error has occurred: ' + text_status);
+				error_callback('network', text_status);
 			},
 		});
 	}
@@ -68,10 +68,10 @@ var Database = (function()
 	@param websql_db WebSQL database.
 	@param table Name of table to query.
 	@param attributes Object of attribute/value pairs for WHERE clause.
-	@param callback Function to call following the request. Takes two parameters: results and callback_params.
-	@param callback_params Parameters to pass to callback function.
+	@param success_callback Function to call following the request. Takes one parameters: results.
+	@param error_callback Function to call following an error. Takes two parameters: the error type (Possible values: 'local-db') and the error message.
 	*/
-	function WebSQLSelect(websql_db, table, attributes, callback, callback_params)
+	function WebSQLSelect(websql_db, table, attributes, success_callback, error_callback)
 	{
 		//Determine amount of attributes
 		var num_attributes = 0;
@@ -95,7 +95,11 @@ var Database = (function()
 						object[attribute] = row[attribute];
 					result.push(object);
 				}
-				callback(result, callback_params);
+				success_callback(result);
+			},
+			function(transaction, error)
+			{
+				error_callback('local-db', error.message);
 			});
 		});
 	}
@@ -105,19 +109,25 @@ var Database = (function()
 	@param websql_db WebSQL database.
 	@param table Name of table to query.
 	@param attributes Object of attribute/value pairs for SET clause.
-	@param callback Function to call following the request. Takes two parameters: results and callback_params.
-	@param callback_params Parameters to pass to callback function.
+	@param success_callback Function to call following the request if successful. Takes one parameter: results.
+	@param error_callback Function to call following an error. Takes two parameters: the error type (Possible values: 'local-db') and the error message.
 	*/
-	function WebSQLUpdate(websql_db, table, id, attributes, callback, callback_params)
+	function WebSQLUpdate(websql_db, table, id, attributes, success_callback, error_callback)
 	{
-		var sql = 'UPDATE ' + table + ' SET modified=1 ';
+		var sql = 'UPDATE ' + table + ' SET modified=1, ';
 		for (attribute in attributes)
 			sql += attribute + '=' + attributes[attribute] + ',';
 		sql = sql.substring(0, sql.length - 1) + ' WHERE id=' + id + ';';
 		websql_db.transaction(function(transaction)
 		{
-			transaction.executeSql(sql);
-			callback(callback_params);
+			transaction.executeSql(sql, [], function(transaction, results)
+			{
+				success_callback();
+			},
+			function(transaction, error)
+			{
+				error_callback('local-db', error.message);
+			});
 		});
 	}
 
@@ -137,7 +147,7 @@ var Database = (function()
 
 		//Check out set
 		var set_post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardsets', params : JSON.stringify({id : set_id})};
-		AJAX(set_post_data, function(results, callback_params)
+		AJAX(set_post_data, function(results)
 		{
 			function GenerateSetTransactionFunction(i)
 			{
@@ -147,16 +157,15 @@ var Database = (function()
 					{
 						transaction.executeSql('INSERT INTO cardset (id, name, modified) VALUES (' + results[i]['id'] + ', "' + results[i]['name'] + '", 0);');
 					});
-				}
+				};
 			}
 			for (var i = 0; i < results.length; ++i)
 			{
-				var set_transaction_function = GenerateSetTransactionFunction(i);
-				set_transaction_function();
+				GenerateSetTransactionFunction(i)();
 
 				//Check out boxes
 				var box_post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardboxes', params : JSON.stringify({parent_card_set : results[i]['id']})};
-				AJAX(box_post_data, function(results, callback_params)
+				AJAX(box_post_data, function(results)
 				{
 					num_boxes_to_process = results.length;
 					function GenerateBoxTransactionFunction(i)
@@ -172,18 +181,15 @@ var Database = (function()
 										callback();
 								});
 							});
-						}
+						};
 					}
 					for (var i = 0; i < results.length; ++i)
-					{
-						var box_transaction_function = GenerateBoxTransactionFunction(i);
-						box_transaction_function();
-					}
+						GenerateBoxTransactionFunction(i)();
 				}, null, true);
 
 				//Check out cards
 				var card_post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cards', params : JSON.stringify({parent_card_set : results[i]['id']})};
-				AJAX(card_post_data, function(results, callback_params)
+				AJAX(card_post_data, function(results)
 				{
 					num_cards_to_process = results.length;
 					function GenerateCardTransactionFunction(i)
@@ -199,13 +205,10 @@ var Database = (function()
 										callback();
 								});
 							});
-						}
+						};
 					}
 					for (var i = 0; i < results.length; ++i)
-					{
-						var card_transaction_function = GenerateCardTransactionFunction(i);
-						card_transaction_function(i);
-					}
+						GenerateCardTransactionFunction(i)();
 				}, null, true);
 			}
 		}, null, true);
@@ -214,88 +217,90 @@ var Database = (function()
 	/**
 	Finds sets in the database with attributes matching the provided attributes.
 	@param attributes Object of attribute/value pairs to match.
-	@param callback Function to call with results. Takes two parameters: results and callback_params.
-	@param callback_params Parameters to pass to callback function.
+	@param success_callback Function called with results, if successful. Takes one parameter: results.
+	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
 	*/
-	Database.prototype.GetSets = function(attributes, callback, callback_params)
+	Database.prototype.GetSets = function(attributes, success_callback, error_callback)
 	{
 		if (this.is_online)
 		{
 			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardsets', params : JSON.stringify(attributes)};
-			AJAX(post_data, callback, callback_params, true);
+			AJAX(post_data, success_callback, error_callback, true);
 		}
 		else
-			WebSQLSelect(this.websql_db, 'cardset', attributes, callback, callback_params);
+			WebSQLSelect(this.websql_db, 'cardset', attributes, success_callback, error_callback);
 	}
 
 	/**
 	Finds boxes in the database with attributes matching the provided attributes.
 	@param attributes Object of attribute/value pairs to match.
-	@param callback Function to call with results. Takes two parameters: results and callback_params.
-	@param callback_params Parameters to pass to callback function.
+	@param success_callback Function called with results, if successful. Takes one parameter: results.
+	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
 	*/
-	Database.prototype.GetBoxes = function(attributes, callback, callback_params)
+	Database.prototype.GetBoxes = function(attributes, success_callback, error_callback)
 	{
 		if (this.is_online)
 		{
 			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardboxes', params : JSON.stringify(attributes)};
-			AJAX(post_data, callback, callback_params, true);
+			AJAX(post_data, success_callback, error_callback, true);
 		}
 		else
-			WebSQLSelect(this.websql_db, 'cardbox', attributes, callback, callback_params);
+			WebSQLSelect(this.websql_db, 'cardbox', attributes, success_callback, error_callback);
 	}
 
 	/**
 	Finds cards in the database with attributes matching the provided attributes.
 	@param attributes Object of attribute/value pairs to match.
-	@param callback Function to call with results. Takes two parameters: results and callback_params.
-	@param callback_params Parameters to pass to callback function.
+	@param success_callback Function called with results, if successful. Takes one parameter: results.
+	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
 	*/
-	Database.prototype.GetCards = function(attributes, callback, callback_params)
+	Database.prototype.GetCards = function(attributes, success_callback, error_callback)
 	{
 		if (this.is_online)
 		{
 			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cards', params : JSON.stringify(attributes)};
-			AJAX(post_data, callback, callback_params, true);
+			AJAX(post_data, success_callback, error_callback, true);
 		}
 		else
-			WebSQLSelect(this.websql_db, 'card', attributes, callback, callback_params);
+			WebSQLSelect(this.websql_db, 'card', attributes, success_callback, error_callback);
 	}
 
 	/**
 	Modifies the attributes of a box in the database.
 	@param id Primary key of box to modify.
 	@param attributes Object of attribute/value pairs containing the attributes that should be modified.
-	@param callback Function to call following modification. Takes one parameter: callback_params.
-	@param_params Parameters to pass to callback function.
+	@param success_callback Function called following modification, if successful. Takes no parameters.
+	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
 	*/
-	Database.prototype.ModifyBox = function(id, attributes, callback, callback_params)
+	Database.prototype.ModifyBox = function(id, attributes, success_callback, error_callback)
 	{
 		if (this.is_online)
 		{
 			attributes['id'] = id;
 			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-cardbox', params : JSON.stringify(attributes)};
-			AJAX(post_data, callback, callback_params, false);
+			AJAX(post_data, success_callback, error_callback, false);
 		}
 		else
-			WebSQLUpdate(this.websql_db, 'cardbox', id, attributes, callback, callback_params);
+			WebSQLUpdate(this.websql_db, 'cardbox', id, attributes, success_callback, error_callback);
 	}
 
 	/**
 	Modifies the attributes of a card in the database.
 	@param id Primary key of card to modify.
 	@param attributes Object of attribute/value pairs containing the attributes that should be modified.
-	@param callback Function to call following modification. Takes one parameter: callback_params.
-	@param_params Parameters to pass to callback function.
+	@param success_callback Function called following modification, if successful. Takes no parameters.
+	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
 	*/
-	Database.prototype.ModifyCard = function(id, attributes, callback, callback_params)
+	Database.prototype.ModifyCard = function(id, attributes, success_callback, error_callback)
 	{
 		if (this.is_online)
 		{
 			attributes['id'] = id;
 			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-card', params : JSON.stringify(attributes)};
-			AJAX(post_data, callback, callback_params, false);
+			AJAX(post_data, success_callback, error_callback, false);
 		}
+		else
+			WebSQLUpdate(this.websql_db, 'card', id, attributes, success_callback, error_callback);
 	}
 
 	return Database;
