@@ -30,7 +30,7 @@ var StudyLogic = (function()
 	function StudyLogic(study_options, database, success_callback, error_callback)
 	{
 		this.database = database;
-		this.set_id = study_options.set;
+		this.set_id = parseInt(study_options.set);
 		this.boxes = [];
 		this.study_type = study_options.study_type;
 		this.cards_reviewed = [];

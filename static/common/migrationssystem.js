@@ -37,29 +37,46 @@ var MigrationsSystem = (function()
 	MigrationsSystem.prototype.MigrateUp = function(success_callback, error_callback)
 	{
 		var _this = this;
-		this.database.transaction(function(transaction)
+		var migrations_processed = 0;
+		var already_failed = false;
+		function GenerateMigrationFunction(i)
 		{
-			var migrations_processed = 0;
-			var already_failed = false;
-			function GenerateMigrationFunction(i)
+			return function()
 			{
-				return function()
+				_this.database.transaction(function(transaction)
 				{
 					//Has this migration already been applied?
 					transaction.executeSql('SELECT * FROM __migrations__ WHERE migration_id = "' + MIGRATIONS[i].id + '";', [], function(transaction, result)
 					{
-						++migrations_processed;
 						//If migration was not applied, apply it and record this action in the __migrations__ table
 						if (result.rows.length == 0)
 						{
-							MIGRATIONS[i].migrate(_this.database);
-							transaction.executeSql('INSERT INTO __migrations__ (migration_id) VALUES ("' + MIGRATIONS[i].id + '");');
-							if (migrations_processed == MIGRATIONS.length)
+							MIGRATIONS[i].migrate(_this.database, function()
 							{
-								//Do not call the success callback if a failure occurred
-								if (!already_failed)
-									success_callback();
-							}
+								_this.database.transaction(function(transaction)
+								{
+									transaction.executeSql('INSERT INTO __migrations__ (migration_id) VALUES ("' + MIGRATIONS[i].id + '");', [], function(transaction, results)
+									{
+										++migrations_processed;
+										if (migrations_processed == MIGRATIONS.length)
+										{
+											//Do not call the success callback if a failure occurred
+											if (!already_failed)
+												success_callback();
+										}
+									});
+								});
+							},
+							function(message)
+							{
+								error_callback('migration', message);
+							});
+						}
+						else
+						{
+							++migrations_processed;
+							if (migrations_processed == MIGRATIONS.length && !already_failed)
+								success_callback();
 						}
 					},
 					function(transaction, message)
@@ -68,11 +85,11 @@ var MigrationsSystem = (function()
 							error_callback('local-db', message);
 						already_failed = true;
 					});
-				}
+				});
 			}
-			for (var i = 0; i < MIGRATIONS.length; ++i)
-				GenerateMigrationFunction(i)();
-		});
+		}
+		for (var i = 0; i < MIGRATIONS.length; ++i)
+			GenerateMigrationFunction(i)();
 	}
 
 	return MigrationsSystem;

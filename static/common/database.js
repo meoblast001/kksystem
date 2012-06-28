@@ -15,17 +15,26 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+Database which communicates with the remote and local database to submit and retrieve data.
+*/
 var Database = (function()
 {
-	function Database()
+	/**
+	Constructs database.
+	@param success_callback Function to call if successful.
+	@param error_callback Function to call if an error occurs.
+	*/
+	function Database(success_callback, error_callback)
 	{
 		this.is_online = true;
+		this.current_user = null;
 		if (typeof(openDatabase) == 'function')
 		{
 			this.websql_db = openDatabase('karteikartensystem', '1.0', 'Karteikartensystem', 200000);
 			var migrations_system = new MigrationsSystem(this.websql_db, function()
 			{
-				migrations_system.MigrateUp(function() { /*Do nothing*/ });
+				migrations_system.MigrateUp(success_callback, error_callback);
 			});
 		}
 	}
@@ -80,8 +89,15 @@ var Database = (function()
 
 		var sql = 'SELECT * FROM ' + table + (num_attributes != 0 ? ' WHERE ' : ' ');
 		for (attribute in attributes)
-			sql += attribute + '=' + attributes[attribute] + ',';
-		sql = sql.substring(0, sql.length - 1) + ';';
+		{
+			if (typeof(attributes[attribute]) == 'string')
+				sql += attribute + '="' + attributes[attribute] + '" AND ';
+			else if (typeof(attributes[attribute]) == 'boolean')
+				sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ' AND ';
+			else
+				sql += attribute + '=' + attributes[attribute] + ' AND ';
+		}
+		sql = sql.substring(0, sql.length - 5) + ';';
 		websql_db.transaction(function(transaction)
 		{
 			transaction.executeSql(sql, [], function(transaction, sql_result)
@@ -116,7 +132,14 @@ var Database = (function()
 	{
 		var sql = 'UPDATE ' + table + ' SET modified=1, ';
 		for (attribute in attributes)
-			sql += attribute + '=' + attributes[attribute] + ',';
+		{
+			if (typeof(attributes[attribute]) == 'string')
+				sql += attribute + '="' + attributes[attribute] + '",';
+			else if (typeof(attributes[attribute]) == 'boolean')
+				sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ',';
+			else
+				sql += attribute + '=' + attributes[attribute] + ',';
+		}
 		sql = sql.substring(0, sql.length - 1) + ' WHERE id=' + id + ';';
 		websql_db.transaction(function(transaction)
 		{
@@ -129,6 +152,142 @@ var Database = (function()
 				error_callback('local-db', error.message);
 			});
 		});
+	}
+
+	/**
+	Log a user into the system. This does not perform any networking; Uses only the local database.
+	@param username Name of user being logged into the system.
+	@param success_callback Function to call if successful.
+	@param error_callback Function to call if an error occurs. Takes two parameters: the error type (Possible values: 'local-db') and the error message.
+	*/
+	Database.prototype.LoginOnline = function(username, success_callback, error_callback)
+	{
+		if (typeof(openDatabase) != 'function')
+		{
+			this.current_user = {id : null, username : username};
+			success_callback();
+			return;
+		}
+
+		var _this = this;
+		this.websql_db.transaction(function(transaction)
+		{
+			transaction.executeSql('SELECT * FROM user WHERE username = "' + username + '";', [], function(transaction, results)
+			{
+				if (results.rows.length > 0)
+				{
+					var first_row = results.rows.item(0);
+					_this.current_user = {id : first_row['id'], username : first_row['username']};
+					_this.is_online = !first_row['is_offline'];
+					success_callback();
+				}
+				else
+				{
+					transaction.executeSql('INSERT INTO user (username, is_offline) VALUES ("' + username + '", 0);', [], function(transaction, results)
+					{
+						transaction.executeSql('SELECT MAX(id) FROM user;', [], function(trasnaction, results)
+						{
+							_this.current_user = {id : results.rows.item(0)['MAX(id)'], username : username};
+							_this.is_online = true;
+							success_callback();
+						},
+						function(transaction, error)
+						{
+							error_callback('local-db', error.message);
+						});
+					},
+					function(transaction, error)
+					{
+						error_callback('local-db', error.message);
+					});
+				}
+			},
+			function(transaction, error)
+			{
+				error_callback('local-db', error.message);
+			});
+		});
+	}
+
+	/**
+	Log an offline user into the system.
+	@param id User ID of the user.
+	@param success_callback Function to call if successful.
+	@param error_callback Function to call if an error occurs. Takes 2 parameters: The type of error (Possible values: 'no-local-db', 'local-db', or 'user-not-found') and the error message.
+	*/
+	Database.prototype.LoginOffline = function(id, success_callback, error_callback)
+	{
+		if (typeof(openDatabase) != 'function')
+		{
+			error_callback('no-local-db', 'No local database');
+			return;
+		}
+
+		var _this = this;
+		this.websql_db.transaction(function(transaction)
+		{
+			transaction.executeSql('SELECT * FROM user WHERE id = "' + id + '" AND is_offline = 1;', [], function(transaction, results)
+			{
+				if (results.rows.length > 0)
+				{
+					var user = results.rows.item(0);
+					_this.current_user = {id : user['id'], username : user['username']};
+					_this.is_online = false;
+					success_callback();
+				}
+				else
+					error_callback('user-not-found', 'User was not found');
+			},
+			function(transaction, error)
+			{
+				error_callback('local-db', 'Error querying user.');
+			});
+		});
+	}
+
+	/**
+	Toggles network status online or offline.
+	@param online True if toggling online; False if toggling offline.
+	@param success_callback Function to call if successful. Takes no parameters.
+	@param error_callback Function to call if an error occurs. Takes two parameters: the error type (Possible values: 'local-db', 'no-local-db') and the error message.
+	*/
+	Database.prototype.ToggleNetworkStatus = function(online, success_callback, error_callback)
+	{
+		if (typeof(openDatabase) != 'function')
+		{
+			error_callback('no-local-db', 'No local database');
+			return;
+		}
+
+		var _this = this;
+		this.websql_db.transaction(function(transaction)
+		{
+			transaction.executeSql('UPDATE user SET is_offline = ' + (online ? 0 : 1) + ' WHERE id = ' + _this.current_user.id + ';', [], function(transaction, results)
+			{
+				_this.is_online = online;
+				success_callback();
+			},
+			function(transaction, error)
+			{
+				error_callback('local-db', error.message);
+			})
+		});
+	}
+
+	/**
+	Get a list of users in the local database with a particular network status.
+	@param online True if query should look for online users, false if query should look for offline users.
+	@param Function to call if successful.
+	@param Function to call if an error occurs. Takes 2 parameters: The error type (Possible values: 'no-local-db' or 'local-db') and the error message.
+	*/
+	Database.prototype.GetUsersByNetworkStatus = function(online, success_callback, error_callback)
+	{
+		if (typeof(openDatabase) != 'function')
+		{
+			error_callback('no-local-db', 'No local database.');
+			return;
+		}
+		WebSQLSelect(this.websql_db, 'user', {is_offline : !online}, success_callback, error_callback);
 	}
 
 	/**
@@ -155,7 +314,7 @@ var Database = (function()
 				{
 					_this.websql_db.transaction(function(transaction)
 					{
-						transaction.executeSql('INSERT INTO cardset (id, name, modified) VALUES (' + results[i]['id'] + ', "' + results[i]['name'] + '", 0);');
+						transaction.executeSql('INSERT INTO cardset (id, owner, name, modified) VALUES (' + results[i]['id'] + ', ' + _this.current_user['id'] + ', "' + results[i]['name'] + '", 0);');
 					});
 				};
 			}
@@ -174,7 +333,7 @@ var Database = (function()
 						{
 							_this.websql_db.transaction(function(transaction)
 							{
-								transaction.executeSql('INSERT INTO cardbox (id, name, parent_card_set, review_frequency, last_reviewed, modified) VALUES (' + results[i]['id'] + ', "' + results[i]['name'] + '", ' + results[i]['parent_card_set'] + ', ' + results[i]['review_frequency'] + ', "' + results[i]['last_reviewed'] + '", 0);', [], function(transaction, results)
+								transaction.executeSql('INSERT INTO cardbox (id, owner, name, parent_card_set, review_frequency, last_reviewed, modified) VALUES (' + results[i]['id'] + ', ' + _this.current_user['id'] + ', "' + results[i]['name'] + '", ' + results[i]['parent_card_set'] + ', ' + results[i]['review_frequency'] + ', "' + results[i]['last_reviewed'] + '", 0);', [], function(transaction, results)
 								{
 									++num_boxes_processed;
 									if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process)
@@ -198,7 +357,7 @@ var Database = (function()
 						{
 							_this.websql_db.transaction(function(transaction)
 							{
-								transaction.executeSql('INSERT INTO card (id, front, back, parent_card_set, current_box, modified) VALUES (' + results[i]['id'] + ', "' + results[i]['front'] + '", "' + results[i]['back'] + '", ' + results[i]['parent_card_set'] + ', ' + results[i]['current_box'] + ', 0);', [], function(transaction, results)
+								transaction.executeSql('INSERT INTO card (id, owner, front, back, parent_card_set, current_box, modified) VALUES (' + results[i]['id'] + ', ' + _this.current_user['id'] + ', "' + results[i]['front'] + '", "' + results[i]['back'] + '", ' + results[i]['parent_card_set'] + ', ' + results[i]['current_box'] + ', 0);', [], function(transaction, results)
 								{
 									++num_cards_processed;
 									if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process)
@@ -228,7 +387,10 @@ var Database = (function()
 			AJAX(post_data, success_callback, error_callback, true);
 		}
 		else
+		{
+			attributes['owner'] = this.current_user['id'];
 			WebSQLSelect(this.websql_db, 'cardset', attributes, success_callback, error_callback);
+		}
 	}
 
 	/**
@@ -245,7 +407,10 @@ var Database = (function()
 			AJAX(post_data, success_callback, error_callback, true);
 		}
 		else
+		{
+			attributes['owner'] = this.current_user['id'];
 			WebSQLSelect(this.websql_db, 'cardbox', attributes, success_callback, error_callback);
+		}
 	}
 
 	/**
@@ -262,7 +427,10 @@ var Database = (function()
 			AJAX(post_data, success_callback, error_callback, true);
 		}
 		else
+		{
+			attributes['owner'] = this.current_user['id'];
 			WebSQLSelect(this.websql_db, 'card', attributes, success_callback, error_callback);
+		}
 	}
 
 	/**

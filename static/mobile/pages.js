@@ -23,7 +23,7 @@ var Pages =
 
 	//Login
 
-	LoginSubmit : function(post_data)
+	OnlineLoginSubmit : function(post_data)
 	{
 		post_data['csrfmiddlewaretoken'] = CSRF_TOKEN;
 		$.ajax({
@@ -34,7 +34,16 @@ var Pages =
 			success : function(result)
 			{
 				if (result['status'] == 'success')
-					Pages.Centre();
+				{
+					Pages.database.LoginOnline(post_data['username'], function()
+					{
+						Pages.Centre();
+					},
+					function(type, message)
+					{
+						Pages.FatalError(message);
+					});
+				}
 				else if (result['status'] == 'fail')
 					alert(result['message']);
 			},
@@ -45,14 +54,47 @@ var Pages =
 		});
 	},
 
+	OfflineLoginSubmit : function(post_data)
+	{
+		Pages.database.LoginOffline(post_data['user'], function()
+		{
+			Pages.Centre();
+		},
+		function(type, message)
+		{
+			Pages.FatalError(message);
+		});
+	},
+
 	Login : function()
 	{
-		var login_form = new Form(Pages.LoginSubmit, 'box_form', 'Login');
-		login_form.AddText('username', 'Username', null, 30);
-		login_form.AddPassword('password', 'Password');
-		$('#content').html(''); //Clear content area
-		login_form.Display($('#content'));
+		$('#content').html('<div id="online_login" /><div id="offline_login" />'); //Clear content area
 		$('#header_text').html('Welcome');
+
+		var online_login_form = new Form(Pages.OnlineLoginSubmit, 'box_form', 'Online Login');
+		online_login_form.AddText('username', 'Username', null, 30);
+		online_login_form.AddPassword('password', 'Password');
+		online_login_form.Display($('#online_login'));
+
+		Pages.database.GetUsersByNetworkStatus(false, function(results)
+		{
+			var offline_login_form = new Form(Pages.OfflineLoginSubmit, 'box_form', 'Offline Login');
+			var options = {};
+			for (var i = 0; i < results.length; ++i)
+			{
+				var cur_result = results[i];
+				options[cur_result['id']] = cur_result['username'];
+			}
+			offline_login_form.AddSelect('user', 'User', options, null);
+			offline_login_form.Display($('#offline_login'));
+		},
+		function(type, message)
+		{
+			if (type == 'no-local-db')
+				$('#offline_login').html('No offline mode supported.');
+			else
+				$('#offline_login').html('Offline mode error: ' + message);
+		});
 	},
 
 	//Centre
@@ -90,6 +132,8 @@ var Pages =
 		{
 			if (type == 'network')
 				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
 		});
 	},
 
@@ -119,6 +163,8 @@ var Pages =
 				{
 					if (type == 'network')
 						Pages.NetworkError(message);
+					else
+						Pages.FatalError(message);
 				});
 			}
 			else
@@ -154,6 +200,8 @@ var Pages =
 		{
 			if (type == 'network')
 				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
 		});
 	},
 
@@ -180,6 +228,8 @@ var Pages =
 		{
 			if (type == 'network')
 				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
 		});
 	},
 
@@ -206,18 +256,37 @@ var Pages =
 	{
 		if (online)
 		{
-			Pages.database.is_online = true;
-			$('#content').html('Switched to online mode. Returning home...');
-			$('#header_text').html('Online Mode');
-			setTimeout(Pages.Centre, 3000);
+			Pages.database.ToggleNetworkStatus(true, function()
+			{
+				$('#content').html('Switched to online mode. Returning home...');
+				$('#header_text').html('Online Mode');
+				setTimeout(Pages.Centre, 3000);
+			},
+			function(type, message)
+			{
+				Pages.FatalError(message);
+			});
 		}
 		else
 		{
-			Pages.database.is_online = false;
-			$('#content').html('Switched to offline mode. Returning home...');
-			$('#header_text').html('Offline Mode');
-			setTimeout(Pages.Centre, 3000);
+			Pages.database.ToggleNetworkStatus(false, function()
+			{
+				$('#content').html('Switched to offline mode. Returning home...');
+				$('#header_text').html('Offline Mode');
+				setTimeout(Pages.Centre, 3000);
+			},
+			function(type, message)
+			{
+				Pages.FatalError(message);
+			});
 		}
+	},
+
+	FatalError : function(message)
+	{
+		var content = '<p>A fatal error has occurred: ' + message + '</p>';
+		$('#content').html(content);
+		$('#header_text').html('Fatal Error');
 	},
 
 	NetworkError : function(message)
@@ -233,7 +302,13 @@ var Pages =
 
 	Start : function()
 	{
-		Pages.database = new Database();
-		Pages.Login();
+		Pages.database = new Database(function()
+		{
+			Pages.Login();
+		},
+		function(type, message)
+		{
+			Pages.FatalError(message + ' [Error type: ' + type + ']');
+		});
 	},
 }

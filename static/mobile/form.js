@@ -137,7 +137,7 @@ var Form = (function()
 
 		//Create submit action
 		var form_id = this.id;
-		base_element.submit(function()
+		$('#form_' + this.id).submit(function()
 		{
 			//Collect POST data
 			var post_data = {}
