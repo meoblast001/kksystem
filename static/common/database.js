@@ -293,84 +293,215 @@ var Database = (function()
 	/**
 	Download all information related to a cardset and store it in the local database.
 	@param set_id ID of set to download.
-	@param callback Function to call when complete.
+	@param success_callback Function to call if successful.
+	@param error_callback Funciton to call if an error occurs. Takes 2 parameters: The error type (Possible values: 'no-local-db', 'local-db', or 'network') and the error message.
 	*/
-	Database.prototype.CheckOut = function(set_id, callback)
+	Database.prototype.CheckOut = function(set_id, success_callback, error_callback)
 	{
 		if (typeof(openDatabase) != 'function')
+		{
+			error_callback('no-local-db', 'No local database.');
 			return;
+		}
 
 		var _this =  this;
+		var already_failed = false;
 		var num_boxes_processed = 0, num_boxes_to_process = 0;
 		var num_cards_processed = 0, num_cards_to_process = 0;
+
+		//Generates a function to insert set data from AJAX into the database
+		function GenerateSetTransactionFunction(ajax_data, i)
+		{
+			return function(success_callback, error_callback)
+			{
+				_this.websql_db.transaction(function(transaction)
+				{
+					transaction.executeSql('SELECT COUNT(*) AS count FROM cardset WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, count_results)
+					{
+						//Insert if does not already exist
+						if (count_results.rows.item(0)['count'] == 0)
+						{
+							transaction.executeSql('INSERT INTO cardset (id, owner, name, modified) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['name'] + '", 0);', [], function(transaction, results)
+							{
+								if (!already_failed)
+									success_callback(i);
+							},
+							function(transaction, error)
+							{
+								if (!already_failed)
+									error_callback('local-db', error.message);
+								already_failed = true;
+							});
+						}
+						//Update if exists
+						else
+						{
+							transaction.executeSql('UPDATE cardset SET name = "' + ajax_data[i]['name'] + '", modified = 0;', [], function(transaction, results)
+							{
+								if (!already_failed)
+									success_callback(i);
+							},
+							function(transaction, error)
+							{
+								if (!already_failed)
+									error_callback('local-db', error.message);
+								already_failed = true;
+							});
+						}
+					},
+					function(transaction, error)
+					{
+						if (!already_failed)
+							error_callback('local-db', error.message);
+						already_failed = true;
+					});
+				});
+			};
+		}
+
+		//Generates a function to insert box data from AJAX into the database
+		function GenerateBoxTransactionFunction(ajax_data, i)
+		{
+			return function()
+			{
+				_this.websql_db.transaction(function(transaction)
+				{
+					transaction.executeSql('SELECT COUNT(*) AS count FROM cardbox WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, count_results)
+					{
+						//Insert if does not already exist
+						if (count_results.rows.item(0)['count'] == 0)
+						{
+							transaction.executeSql('INSERT INTO cardbox (id, owner, name, parent_card_set, review_frequency, last_reviewed, modified) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['name'] + '", ' + ajax_data[i]['parent_card_set'] + ', ' + ajax_data[i]['review_frequency'] + ', "' + ajax_data[i]['last_reviewed'] + '", 0);', [], function(transaction, results)
+							{
+								++num_boxes_processed;
+								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+									success_callback();
+							},
+							function(transaction, error)
+							{
+								if (!already_failed)
+									error_callback('local-db', error.message);
+								already_failed = true;
+							});
+						}
+						//Update if exists
+						else
+						{
+							transaction.executeSql('UPDATE cardbox SET name = "' + ajax_data[i]['name'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', review_frequency = ' + ajax_data[i]['review_frequency'] + ', last_reviewed = "' + ajax_data[i]['last_reviewed'] + '", modified = 0;', [], function(transaction, results)
+							{
+								++num_boxes_processed;
+								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+									success_callback();
+							},
+							function(transaction, error)
+							{
+								if (!already_failed)
+									error_callback('local-db', error.message);
+								already_failed = true;
+							});
+						}
+					},
+					function(transcation, error)
+					{
+						if (!already_failed)
+							error_callback('local-db', error.message);
+						already_failed = true;
+					});
+				});
+			};
+		}
+
+		//Generates a function to insert card data from AJAX into the database
+		function GenerateCardTransactionFunction(ajax_data, i)
+		{
+			return function()
+			{
+				_this.websql_db.transaction(function(transaction)
+				{
+					transaction.executeSql('SELECT COUNT(*) AS count FROM card WHERE id = ' + results[i]['id'] + ';', [], function(transaction, count_results)
+					{
+						//Insert if does not already exist
+						if (count_results.rows.item(0)['count'] == 0)
+						{
+							transaction.executeSql('INSERT INTO card (id, owner, front, back, parent_card_set, current_box, modified) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['front'] + '", "' + ajax_data[i]['back'] + '", ' + ajax_data[i]['parent_card_set'] + ', ' + ajax_data[i]['current_box'] + ', 0);', [], function(transaction, results)
+							{
+								++num_cards_processed;
+								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+									success_callback();
+							},
+							function(transaction, error)
+							{
+								if (!already_failed)
+									error_callback('local-db', error.message);
+								already_failed = true;
+							});
+						}
+						else
+						{
+							transaction.executeSql('UPDATE card SET front = "' + ajax_data[i]['front'] + '", back = "' + ajax_data[i]['back'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', current_box = ' + ajax_data[i]['current_box'] + ', modified = 0;', [], function(transaction, results)
+							{
+								++num_cards_processed;
+								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+									success_callback();
+							},
+							function(transaction, error)
+							{
+								if (!already_failed)
+									error_callback('local-db', error.message);
+								already_failed = true;
+							});
+						}
+					},
+					function(transaction, error)
+					{
+						if (!already_failed)
+							error_callback('local-db', error.message);
+						already_failed = true;
+					});
+				});
+			};
+		}
 
 		//Check out set
 		var set_post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardsets', params : JSON.stringify({id : set_id})};
 		AJAX(set_post_data, function(results)
 		{
-			function GenerateSetTransactionFunction(i)
-			{
-				return function()
-				{
-					_this.websql_db.transaction(function(transaction)
-					{
-						transaction.executeSql('INSERT INTO cardset (id, owner, name, modified) VALUES (' + results[i]['id'] + ', ' + _this.current_user['id'] + ', "' + results[i]['name'] + '", 0);');
-					});
-				};
-			}
 			for (var i = 0; i < results.length; ++i)
 			{
-				GenerateSetTransactionFunction(i)();
-
-				//Check out boxes
-				var box_post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardboxes', params : JSON.stringify({parent_card_set : results[i]['id']})};
-				AJAX(box_post_data, function(results)
+				GenerateSetTransactionFunction(results, i)(function(i)
 				{
-					num_boxes_to_process = results.length;
-					function GenerateBoxTransactionFunction(i)
+					//Check out boxes
+					var box_post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardboxes', params : JSON.stringify({parent_card_set : results[i]['id']})};
+					AJAX(box_post_data, function(results)
 					{
-						return function()
-						{
-							_this.websql_db.transaction(function(transaction)
-							{
-								transaction.executeSql('INSERT INTO cardbox (id, owner, name, parent_card_set, review_frequency, last_reviewed, modified) VALUES (' + results[i]['id'] + ', ' + _this.current_user['id'] + ', "' + results[i]['name'] + '", ' + results[i]['parent_card_set'] + ', ' + results[i]['review_frequency'] + ', "' + results[i]['last_reviewed'] + '", 0);', [], function(transaction, results)
-								{
-									++num_boxes_processed;
-									if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process)
-										callback();
-								});
-							});
-						};
-					}
-					for (var i = 0; i < results.length; ++i)
-						GenerateBoxTransactionFunction(i)();
-				}, null, true);
+						num_boxes_to_process = results.length;
+						for (var i = 0; i < results.length; ++i)
+							GenerateBoxTransactionFunction(results, i)();
+					}, null, true);
 
-				//Check out cards
-				var card_post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cards', params : JSON.stringify({parent_card_set : results[i]['id']})};
-				AJAX(card_post_data, function(results)
-				{
-					num_cards_to_process = results.length;
-					function GenerateCardTransactionFunction(i)
+					//Check out cards
+					var card_post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cards', params : JSON.stringify({parent_card_set : results[i]['id']})};
+					AJAX(card_post_data, function(results)
 					{
-						return function()
-						{
-							_this.websql_db.transaction(function(transaction)
-							{
-								transaction.executeSql('INSERT INTO card (id, owner, front, back, parent_card_set, current_box, modified) VALUES (' + results[i]['id'] + ', ' + _this.current_user['id'] + ', "' + results[i]['front'] + '", "' + results[i]['back'] + '", ' + results[i]['parent_card_set'] + ', ' + results[i]['current_box'] + ', 0);', [], function(transaction, results)
-								{
-									++num_cards_processed;
-									if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process)
-										callback();
-								});
-							});
-						};
-					}
-					for (var i = 0; i < results.length; ++i)
-						GenerateCardTransactionFunction(i)();
-				}, null, true);
+						num_cards_to_process = results.length;
+						for (var i = 0; i < results.length; ++i)
+							GenerateCardTransactionFunction(results, i)();
+					},
+					function(type, message)
+					{
+						if (!already_failed)
+							error_callback(type, message);
+						already_failed = true;
+					}, true);
+				},
+				function(type, message)
+				{
+					if (!already_failed)
+						error_callback(type, message);
+					already_failed = true;
+				});
 			}
-		}, null, true);
+		}, error_callback, true);
 	}
 
 	/**

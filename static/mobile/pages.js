@@ -220,11 +220,22 @@ var Pages =
 				'<a href="javascript:Pages.EditCard()" class="menu_item">Edit Card</a>' +
 				'<a href="javascript:Pages.NewBox()" class="menu_item">New Box</a>' +
 				'<a href="javascript:Pages.EditBox()" class="menu_item">Edit Box</a>' +
-				'<a href="javascript:Pages.database.CheckOut(' + post_data.id + ', Pages.CheckOutSuccess)" class="menu_item">Check Out Set</a>';
+				'<a href="javascript:Pages.CheckOut(' + post_data.id + ', Pages.CheckOutSuccess)" class="menu_item">Check Out Set</a>';
 			$('#menu').html(menu_content);
 			$('#header_text').html('Edit Set - ' + result[0].name);
 		},
 		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
+		});
+	},
+
+	CheckOut : function(id)
+	{
+		Pages.database.CheckOut(id, Pages.CheckOutSuccess, function(type, message)
 		{
 			if (type == 'network')
 				Pages.NetworkError(message);
