@@ -418,7 +418,7 @@ var Database = (function()
 			{
 				_this.websql_db.transaction(function(transaction)
 				{
-					transaction.executeSql('SELECT COUNT(*) AS count FROM card WHERE id = ' + results[i]['id'] + ';', [], function(transaction, count_results)
+					transaction.executeSql('SELECT COUNT(*) AS count FROM card WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, count_results)
 					{
 						//Insert if does not already exist
 						if (count_results.rows.item(0)['count'] == 0)
@@ -562,6 +562,25 @@ var Database = (function()
 			attributes['owner'] = this.current_user['id'];
 			WebSQLSelect(this.websql_db, 'card', attributes, success_callback, error_callback);
 		}
+	}
+
+	/**
+	Modifies the attributes of a set in the database.
+	@param id Primary key of set to modify.
+	@param attributes Object of attribute/value pairs containing the attributes that should be modified.
+	@param success_callback Function called following modification, if successful. Takes no parameters.
+	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
+	*/
+	Database.prototype.ModifySet = function(id, attributes, success_callback, error_callback)
+	{
+		if (this.is_online)
+		{
+			attributes['id'] = id;
+			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-cardset', params : JSON.stringify(attributes)};
+			AJAX(post_data, success_callback, error_callback, false);
+		}
+		else
+			WebSQLUpdate(this.websql_db, 'cardset', id, attributes, success_callback, error_callback);
 	}
 
 	/**

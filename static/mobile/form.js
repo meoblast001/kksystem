@@ -87,6 +87,16 @@ var Form = (function()
 	};
 
 	/**
+	Adds a hidden input to the form.
+	@param name Name of the field.
+	@param initial_value Initial value of input. Null if no initial value.
+	*/
+	Form.prototype.AddHidden = function(name, initial_value)
+	{
+		this.inputs.push({type : 'hidden', name : name, attributes : {value : initial_value}});
+	};
+
+	/**
 	Creates the form in the document.
 	@param base_element JQuery object in which to place the item.
 	*/
@@ -98,9 +108,10 @@ var Form = (function()
 		{
 			var cur_input = this.inputs[i]
 
-			result += '<label for="id_' + cur_input.name + '">' + cur_input.label + '</label><br />';
+			if (cur_input.label !== undefined)
+				result += '<label for="id_' + cur_input.name + '">' + cur_input.label + '</label><br />';
 
-			if (cur_input.type == 'text' || cur_input.type == 'password')
+			if (cur_input.type == 'text' || cur_input.type == 'password' || cur_input.type == 'hidden')
 			{
 				result += '<input type="' + cur_input.type + '" name="' + cur_input.name + '" id="id_' + cur_input.name + '"';
 				//Get attributes
@@ -130,7 +141,8 @@ var Form = (function()
 				result += '</div>';
 			}
 
-			result += '<br />';
+			if (cur_input.type != 'hidden')
+				result += '<br />';
 		}
 		result += '<input type="submit" value="' + this.submit_button_name + '" /></form>';
 		base_element.append(result)
@@ -140,8 +152,8 @@ var Form = (function()
 		$('#form_' + this.id).submit(function()
 		{
 			//Collect POST data
-			var post_data = {}
-			$('#form_' + form_id).find('input:checked, input:text, input:hidden, div input:hidden, input:password, input:submit, option:selected, textarea').filter(':enabled').each(function ()
+			var post_data = {};
+			$('#form_' + form_id).find('input:checked, input:text, input:hidden, div input:hidden, input:password, option:selected, textarea').each(function()
 			{
 				post_data[this.name || this.id || this.parentNode.name || this.parentNode.id] = this.value;
 			});

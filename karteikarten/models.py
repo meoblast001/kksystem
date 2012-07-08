@@ -30,6 +30,15 @@ class CardSet(models.Model):
 	def Serialize(self):
 		return {'id' : self.id, 'name' : self.name, 'owner' : self.owner.id}
 
+	#
+	# Modify object from dictionary
+	#
+	def Modify(self, params):
+		if 'name' in params:
+			self.name = params['name']
+		if 'owner' in params:
+			self.owner_id = params['owner']
+
 class CardBox(models.Model):
 	name = models.CharField(max_length = 60)
 	owner = models.ForeignKey(User)
