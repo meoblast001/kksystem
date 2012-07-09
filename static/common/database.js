@@ -79,8 +79,10 @@ var Database = (function()
 	@param attributes Object of attribute/value pairs for WHERE clause.
 	@param success_callback Function to call following the request. Takes one parameters: results.
 	@param error_callback Function to call following an error. Takes two parameters: the error type (Possible values: 'local-db') and the error message.
+	@param start Index of result that should be the first element.
+	@param end Index following result that should be the last element.
 	*/
-	function WebSQLSelect(websql_db, table, attributes, success_callback, error_callback)
+	function WebSQLSelect(websql_db, table, attributes, success_callback, error_callback, start, end)
 	{
 		//Determine amount of attributes
 		var num_attributes = 0;
@@ -97,7 +99,7 @@ var Database = (function()
 			else
 				sql += attribute + '=' + attributes[attribute] + ' AND ';
 		}
-		sql = sql.substring(0, sql.length - 5) + ';';
+		sql = sql.substring(0, sql.length - 5) + (start !== undefined && end !== undefined ? ' LIMIT ' + start + ', ' + end : '') + ';';
 		websql_db.transaction(function(transaction)
 		{
 			transaction.executeSql(sql, [], function(transaction, sql_result)
@@ -509,18 +511,20 @@ var Database = (function()
 	@param attributes Object of attribute/value pairs to match.
 	@param success_callback Function called with results, if successful. Takes one parameter: results.
 	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
+	@param start Index of result that should be the first element.
+	@param end Index following result that should be the last element.
 	*/
-	Database.prototype.GetSets = function(attributes, success_callback, error_callback)
+	Database.prototype.GetSets = function(attributes, success_callback, error_callback, start, end)
 	{
 		if (this.is_online)
 		{
-			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardsets', params : JSON.stringify(attributes)};
+			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardsets', params : JSON.stringify(attributes), start : start, end : end};
 			AJAX(post_data, success_callback, error_callback, true);
 		}
 		else
 		{
 			attributes['owner'] = this.current_user['id'];
-			WebSQLSelect(this.websql_db, 'cardset', attributes, success_callback, error_callback);
+			WebSQLSelect(this.websql_db, 'cardset', attributes, success_callback, error_callback, start, end);
 		}
 	}
 
@@ -529,18 +533,20 @@ var Database = (function()
 	@param attributes Object of attribute/value pairs to match.
 	@param success_callback Function called with results, if successful. Takes one parameter: results.
 	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
+	@param start Index of result that should be the first element.
+	@param end Index following result that should be the last element.
 	*/
-	Database.prototype.GetBoxes = function(attributes, success_callback, error_callback)
+	Database.prototype.GetBoxes = function(attributes, success_callback, error_callback, start, end)
 	{
 		if (this.is_online)
 		{
-			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardboxes', params : JSON.stringify(attributes)};
+			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardboxes', params : JSON.stringify(attributes), start : start, end : end};
 			AJAX(post_data, success_callback, error_callback, true);
 		}
 		else
 		{
 			attributes['owner'] = this.current_user['id'];
-			WebSQLSelect(this.websql_db, 'cardbox', attributes, success_callback, error_callback);
+			WebSQLSelect(this.websql_db, 'cardbox', attributes, success_callback, error_callback, start, end);
 		}
 	}
 
@@ -549,18 +555,20 @@ var Database = (function()
 	@param attributes Object of attribute/value pairs to match.
 	@param success_callback Function called with results, if successful. Takes one parameter: results.
 	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
+	@param start Index of result that should be the first element.
+	@param end Index following result that should be the last element.
 	*/
-	Database.prototype.GetCards = function(attributes, success_callback, error_callback)
+	Database.prototype.GetCards = function(attributes, success_callback, error_callback, start, end)
 	{
 		if (this.is_online)
 		{
-			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cards', params : JSON.stringify(attributes)};
+			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cards', params : JSON.stringify(attributes), start : start, end : end};
 			AJAX(post_data, success_callback, error_callback, true);
 		}
 		else
 		{
 			attributes['owner'] = this.current_user['id'];
-			WebSQLSelect(this.websql_db, 'card', attributes, success_callback, error_callback);
+			WebSQLSelect(this.websql_db, 'card', attributes, success_callback, error_callback, start, end);
 		}
 	}
 

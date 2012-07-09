@@ -64,6 +64,17 @@ var Form = (function()
 	};
 
 	/**
+	Adds a textarea to the form.
+	@param name Name of the field.
+	@param label Field label.
+	@param initial_value Initial value of textarea. Null if no initial value.
+	*/
+	Form.prototype.AddTextarea = function(name, label, initial_value)
+	{
+		this.inputs.push({type : 'textarea', name : name, label : label, initial_value : initial_value});
+	}
+
+	/**
 	Adds a select drop-down field to the form.
 	@param name Name of the field.
 	@param label Field label.
@@ -120,6 +131,8 @@ var Form = (function()
 						result += ' ' + cur_attribute + '="' + cur_input.attributes[cur_attribute] + '"';
 				result += ' />';
 			}
+			else if (cur_input.type == 'textarea')
+				result += '<textarea name="' + cur_input.name + '" id="id_' + cur_input.name + '">' + cur_input.initial_value + '</textarea>';
 			else if (cur_input.type == 'select')
 			{
 				result += '<select name="' + cur_input.name + '" id="id_' + cur_input.name + '">';

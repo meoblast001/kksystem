@@ -218,10 +218,10 @@ var Pages =
 
 			var menu_content =
 				'<a href="javascript:Pages.NewCard()" class="menu_item">New Card</a>' +
-				'<a href="javascript:Pages.EditCard()" class="menu_item">Edit Card</a>' +
+				'<a href="javascript:Pages.ViewCardsBySet(' + post_data.cardset + ', 0)" class="menu_item">Edit Card</a>' +
 				'<a href="javascript:Pages.NewBox()" class="menu_item">New Box</a>' +
-				'<a href="javascript:Pages.EditBox()" class="menu_item">Edit Box</a>' +
-				'<a href="javascript:Pages.CheckOut(' + post_data.id + ', Pages.CheckOutSuccess)" class="menu_item">Check Out Set</a>';
+				'<a href="javascript:Pages.ViewBoxesBySet(' + post_data.cardset + ', 0)" class="menu_item">Edit Box</a>' +
+				'<a href="javascript:Pages.CheckOut(' + post_data.cardset + ', Pages.CheckOutSuccess)" class="menu_item">Check Out Set</a>';
 			$('#menu').html(menu_content);
 			$('#header_text').html('Edit Set - ' + result[0].name);
 		},
@@ -236,13 +236,103 @@ var Pages =
 
 	EditSetSubmit : function(post_data)
 	{
-		Pages.database.ModifySet(post_data['id'], post_data, function()
+		var id = post_data['id'];
+		delete post_data['id'];
+		Pages.database.ModifySet(id, post_data, function()
 		{
 			$('#content').html('Edited successfully. Returning to edit set page...');
 			$('#header_text').html('Success');
 			setTimeout(function()
 			{
-				Pages.EditSet({'cardset' : post_data['id']});
+				Pages.EditSet({'cardset' : id});
+			}, 3000);
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
+		});
+	},
+
+	ViewCardsBySet : function(cardset_id, start)
+	{
+		Pages.database.GetCards({'parent_card_set' : cardset_id}, function(results)
+		{
+			var menu_content = '';
+			for (var i = 0; i < results.length; ++i)
+				menu_content += '<a href="javascript:Pages.EditCard(' + results[i]['id'] + ')" class="menu_item">' + results[i]['front'] + '</a>';
+			$('#content').html(menu_content);
+			$('#header_text').html('Cards by Set');
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
+		}, start, start + 10);
+	},
+
+	EditCard : function(id)
+	{
+		Pages.database.GetCards({'id' : id}, function(card_results)
+		{
+			Pages.database.GetBoxes({'parent_card_set' : card_results[0]['parent_card_set']}, function(box_results)
+			{
+				//Get options
+				var options = {};
+				for (i = 0; i < box_results.length; ++i)
+					options[box_results[i].id] = box_results[i].name;
+
+				$('#content').html('');
+				var edit_card_form = new Form(Pages.EditCardSubmit, 'box_form', 'Edit');
+				edit_card_form.AddHidden('id', id);
+				edit_card_form.AddTextarea('front', 'Front', card_results[0]['front']);
+				edit_card_form.AddTextarea('back', 'Back', card_results[0]['back']);
+				edit_card_form.AddSelect('current_box', 'Current Box', options, card_results[0]['current_box']);
+				edit_card_form.Display($('#content'));
+				$('#header_text').html('Edit Card');
+			},
+			function(type, message)
+			{
+				if (type == 'network')
+					Pages.NetworkError(message);
+				else
+					Pages.FatalError(message);
+			});
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
+		});
+	},
+
+	EditCardSubmit : function(post_data)
+	{
+		var id = post_data['id'];
+		delete post_data['id'];
+		Pages.database.ModifyCard(id, post_data, function()
+		{
+			$('#content').html('Edited successfully. Returning to edit set page...');
+			$('#header_text').html('Success');
+			setTimeout(function()
+			{
+				Pages.database.GetCards({'id' : id}, function(results)
+				{
+					Pages.EditSet({'cardset' : results[0]['parent_card_set']});
+				},
+				function(type, message)
+				{
+					if (type == 'network')
+						Pages.NetworkError(message);
+					else
+						Pages.FatalError(message);
+				});
 			}, 3000);
 		},
 		function(type, message)

@@ -36,7 +36,10 @@ def Ajax(request):
 			params = json.loads(request.POST['params'])
 			params['owner'] = request.user
 			results = []
-			for cardset in CardSet.objects.filter(**params):
+			cardsets = CardSet.objects.filter(**params)
+			start = request.POST['start'] if 'start' in request.POST else 0
+			end = request.POST['end'] if 'end' in request.POST else len(cardsets)
+			for cardset in cardsets[start:end]:
 				results.append(cardset.Serialize())
 			return HttpResponse(json.dumps({'status' : 'success', 'result' : results}))
 		#Get card boxes by criteria
@@ -44,7 +47,10 @@ def Ajax(request):
 			params = json.loads(request.POST['params'])
 			params['owner'] = request.user
 			results = []
-			for cardbox in CardBox.objects.filter(**params):
+			cardboxes = CardBox.objects.filter(**params)
+			start = request.POST['start'] if 'start' in request.POST else 0
+			end = request.POST['end'] if 'end' in request.POST else len(cardboxes)
+			for cardbox in cardboxes[start:end]:
 				results.append(cardbox.Serialize())
 			return HttpResponse(json.dumps({'status' : 'success', 'result' : results}))
 		#Get cards by criteria
@@ -52,7 +58,10 @@ def Ajax(request):
 			params = json.loads(request.POST['params'])
 			params['owner'] = request.user
 			results = []
-			for card in Card.objects.filter(**params):
+			cards = Card.objects.filter(**params)
+			start = request.POST['start'] if 'start' in request.POST else 0
+			end = request.POST['end'] if 'end' in request.POST else len(cards)
+			for card in cards[start:end]:
 				results.append(card.Serialize())
 			return HttpResponse(json.dumps({'status' : 'success', 'result' : results}))
 		#Modify card set
