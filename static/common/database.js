@@ -386,7 +386,7 @@ var Database = (function()
 						//Update if exists
 						else
 						{
-							transaction.executeSql('UPDATE cardset SET name = "' + ajax_data[i]['name'] + '", modified = 0;', [], function(transaction, results)
+							transaction.executeSql('UPDATE cardset SET name = "' + ajax_data[i]['name'] + '", modified = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
 							{
 								if (!already_failed)
 									success_callback(i);
@@ -437,7 +437,7 @@ var Database = (function()
 						//Update if exists
 						else
 						{
-							transaction.executeSql('UPDATE cardbox SET name = "' + ajax_data[i]['name'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', review_frequency = ' + ajax_data[i]['review_frequency'] + ', last_reviewed = "' + ajax_data[i]['last_reviewed'] + '", modified = 0;', [], function(transaction, results)
+							transaction.executeSql('UPDATE cardbox SET name = "' + ajax_data[i]['name'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', review_frequency = ' + ajax_data[i]['review_frequency'] + ', last_reviewed = "' + ajax_data[i]['last_reviewed'] + '", modified = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
 							{
 								++num_boxes_processed;
 								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
@@ -488,7 +488,7 @@ var Database = (function()
 						}
 						else
 						{
-							transaction.executeSql('UPDATE card SET front = "' + ajax_data[i]['front'] + '", back = "' + ajax_data[i]['back'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', current_box = ' + ajax_data[i]['current_box'] + ', modified = 0;', [], function(transaction, results)
+							transaction.executeSql('UPDATE card SET front = "' + ajax_data[i]['front'] + '", back = "' + ajax_data[i]['back'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', current_box = ' + ajax_data[i]['current_box'] + ', modified = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
 							{
 								++num_cards_processed;
 								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
