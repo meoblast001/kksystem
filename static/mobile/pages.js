@@ -217,7 +217,7 @@ var Pages =
 			edit_set_form.Display($('#form'));
 
 			var menu_content =
-				'<a href="javascript:Pages.NewCard()" class="menu_item">New Card</a>' +
+				'<a href="javascript:Pages.EditCard(\'new\', ' + post_data.cardset + ')" class="menu_item">New Card</a>' +
 				'<a href="javascript:Pages.ViewCardsBySet(' + post_data.cardset + ', 0)" class="menu_item">Edit Card</a>' +
 				'<a href="javascript:Pages.NewBox()" class="menu_item">New Box</a>' +
 				'<a href="javascript:Pages.ViewBoxesBySet(' + post_data.cardset + ', 0)" class="menu_item">Edit Box</a>' +
@@ -262,7 +262,7 @@ var Pages =
 		{
 			var menu_content = '';
 			for (var i = 0; i < results.length; ++i)
-				menu_content += '<a href="javascript:Pages.EditCard(' + results[i]['id'] + ')" class="menu_item">' + results[i]['front'] + '</a>';
+				menu_content += '<a href="javascript:Pages.EditCard(\'edit\', ' + results[i]['id'] + ')" class="menu_item">' + results[i]['front'] + '</a>';
 			$('#content').html(menu_content);
 			$('#header_text').html('Cards by Set');
 		},
@@ -275,9 +275,9 @@ var Pages =
 		}, start, start + 10);
 	},
 
-	EditCard : function(id)
+	EditCard : function(type, id)
 	{
-		Pages.database.GetCards({'id' : id}, function(card_results)
+		function GenerateForm(card_results)
 		{
 			Pages.database.GetBoxes({'parent_card_set' : card_results[0]['parent_card_set']}, function(box_results)
 			{
@@ -288,6 +288,7 @@ var Pages =
 
 				$('#content').html('');
 				var edit_card_form = new Form(Pages.EditCardSubmit, 'box_form', 'Edit');
+				edit_card_form.AddHidden('type', type);
 				edit_card_form.AddHidden('id', id);
 				edit_card_form.AddTextarea('front', 'Front', card_results[0]['front']);
 				edit_card_form.AddTextarea('back', 'Back', card_results[0]['back']);
@@ -302,38 +303,63 @@ var Pages =
 				else
 					Pages.FatalError(message);
 			});
-		},
-		function(type, message)
+		}
+
+		if (type == 'new')
+			GenerateForm([{'front' : '', 'back' : '', 'current_box' : null}]);
+		else //type == 'edit'
 		{
-			if (type == 'network')
-				Pages.NetworkError(message);
-			else
-				Pages.FatalError(message);
-		});
+			Pages.database.GetCards({'id' : id}, function(card_results)
+			{
+				GenerateForm(card_results);
+			},
+			function(type, message)
+			{
+				if (type == 'network')
+					Pages.NetworkError(message);
+				else
+					Pages.FatalError(message);
+			});
+		}
 	},
 
 	EditCardSubmit : function(post_data)
 	{
-		var id = post_data['id'];
+		var id = post_data['id']; //If type == 'new', set ID; If type == 'edit', card ID
+		var type = post_data['type'];
 		delete post_data['id'];
-		Pages.database.ModifyCard(id, post_data, function()
+		delete post_data['type'];
+		if (type == 'new')
+			post_data['parent_card_set'] = id;
+		Pages.database.ModifyCard(type == 'edit' ? id : null, post_data, function()
 		{
-			$('#content').html('Edited successfully. Returning to edit set page...');
 			$('#header_text').html('Success');
-			setTimeout(function()
+			if (type == 'new')
 			{
-				Pages.database.GetCards({'id' : id}, function(results)
+				$('#content').html('Created successfully. Returning to edit set page...');
+				setTimeout(function()
 				{
-					Pages.EditSet({'cardset' : results[0]['parent_card_set']});
-				},
-				function(type, message)
+					Pages.EditSet({'cardset' : id});
+				}, 3000);
+			}
+			else if (type == 'edit')
+			{
+				$('#content').html('Edited successfully. Returning to edit set page...');
+				setTimeout(function()
 				{
-					if (type == 'network')
-						Pages.NetworkError(message);
-					else
-						Pages.FatalError(message);
-				});
-			}, 3000);
+					Pages.database.GetCards({'id' : id}, function(results)
+					{
+						Pages.EditSet({'cardset' : results[0]['parent_card_set']});
+					},
+					function(type, message)
+					{
+						if (type == 'network')
+							Pages.NetworkError(message);
+						else
+							Pages.FatalError(message);
+					});
+				}, 3000);
+			}
 		},
 		function(type, message)
 		{

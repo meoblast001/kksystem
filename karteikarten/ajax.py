@@ -68,30 +68,39 @@ def Ajax(request):
 		if request.POST['type'] == 'modify-cardset':
 			params = json.loads(request.POST['params'])
 			try:
-				cardset = CardSet.objects.get(pk = params['id'], owner = request.user)
+				if params['id'] == None:
+					cardset = CardSet(owner = request.user)
+				else:
+					cardset = CardSet.objects.get(pk = params['id'], owner = request.user)
 				cardset.Modify(params)
 				cardset.save()
-				return HttpResponse(json.dumps({'status' : 'success'}))
+				return HttpResponse(json.dumps({'status' : 'success', 'id' : cardset.pk}))
 			except ObjectDoesNotExist:
 				return HttpResponse(json.dumps({'status' : 'fail'}))
 		#Modify card box
 		if request.POST['type'] == 'modify-cardbox':
 			params = json.loads(request.POST['params'])
 			try:
-				cardbox = CardBox.objects.get(pk = params['id'], owner = request.user)
+				if params['id'] == None:
+					cardbox = CardBox(owner = request.user)
+				else:
+					cardbox = CardBox.objects.get(pk = params['id'], owner = request.user)
 				cardbox.Modify(params)
 				cardbox.save()
-				return HttpResponse(json.dumps({'status' : 'success'}))
+				return HttpResponse(json.dumps({'status' : 'success', 'id' : cardbox.pk}))
 			except ObjectDoesNotExist:
 				return HttpResponse(json.dumps({'status' : 'fail'}))
 		#Modify card
 		if request.POST['type'] == 'modify-card':
 			params = json.loads(request.POST['params'])
 			try:
-				card = Card.objects.get(pk = params['id'], owner = request.user)
+				if params['id'] == None:
+					card = Card(owner = request.user)
+				else:
+					card = Card.objects.get(pk = params['id'], owner = request.user)
 				card.Modify(params)
 				card.save()
-				return HttpResponse(json.dumps({'status' : 'success'}))
+				return HttpResponse(json.dumps({'status' : 'success', 'id' : card.pk}))
 			except ObjectDoesNotExist:
 				return HttpResponse(json.dumps({'status' : 'fail'}))
 	return HttpResponse('{"status" : "fail", "message" : "Invalid POST data"}')

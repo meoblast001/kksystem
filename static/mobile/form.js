@@ -113,7 +113,7 @@ var Form = (function()
 	*/
 	Form.prototype.Display = function(base_element)
 	{
-		var result = '<form id="form_' + this.id + '" action="' + this.submit_location + '"' + (this.html_class !== null ? ' class="' + this.html_class + '"' : '') + '>';
+		var result = '<form id="form_' + this.id + '" ' + (this.html_class !== null ? ' class="' + this.html_class + '"' : '') + '>';
 		//Get inputs
 		for (i = 0; i < this.inputs.length; ++i)
 		{

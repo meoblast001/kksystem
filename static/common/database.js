@@ -42,11 +42,11 @@ var Database = (function()
 	/**
 	Makes AJAX POST request.
 	@param post_data Object containing data to POST.
-	@param success_callback Function to call following the request. Takes zero or one parameters: results or none.
+	@param success_callback Function to call following the request. Takes one parameter: results or ID of item updated or created.
 	@param error_callback Function to call following an error. Takes two parameters: the error type (Possible values: 'network' or 'server') and the error message.
-	@param has_results If true, callback is called with results.
+	@param select If true, select; If false, update.
 	*/
-	function AJAX(post_data, success_callback, error_callback, has_results)
+	function AJAX(post_data, success_callback, error_callback, select)
 	{
 		$.ajax({
 			type : 'POST',
@@ -57,10 +57,10 @@ var Database = (function()
 			{
 				if (result['status'] == 'success')
 				{
-					if (has_results)
+					if (select)
 						success_callback(result['result']);
 					else
-						success_callback();
+						success_callback(result['id']);
 				}
 				else if (result['status'] == 'fail')
 					error_callback('server', result['message']);
@@ -92,6 +92,8 @@ var Database = (function()
 		var sql = 'SELECT * FROM ' + table + (num_attributes != 0 ? ' WHERE ' : ' ');
 		for (attribute in attributes)
 		{
+			if (attributes[attribute] === undefined)
+				continue;
 			if (typeof(attributes[attribute]) == 'string')
 				sql += attribute + '="' + attributes[attribute] + '" AND ';
 			else if (typeof(attributes[attribute]) == 'boolean')
@@ -124,35 +126,81 @@ var Database = (function()
 
 	/**
 	Update rows.
+	@param _this The Database object that calls this function.
 	@param websql_db WebSQL database.
 	@param table Name of table to query.
 	@param attributes Object of attribute/value pairs for SET clause.
-	@param success_callback Function to call following the request if successful. Takes one parameter: results.
+	@param success_callback Function to call following the request if successful. Takes one parameter: the ID of the item updated or created.
 	@param error_callback Function to call following an error. Takes two parameters: the error type (Possible values: 'local-db') and the error message.
 	*/
-	function WebSQLUpdate(websql_db, table, id, attributes, success_callback, error_callback)
+	function WebSQLUpdate(_this, websql_db, table, id, attributes, success_callback, error_callback)
 	{
-		var sql = 'UPDATE ' + table + ' SET modified=1, ';
-		for (attribute in attributes)
-		{
-			if (typeof(attributes[attribute]) == 'string')
-				sql += attribute + '="' + attributes[attribute] + '",';
-			else if (typeof(attributes[attribute]) == 'boolean')
-				sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ',';
-			else
-				sql += attribute + '=' + attributes[attribute] + ',';
-		}
-		sql = sql.substring(0, sql.length - 1) + ' WHERE id=' + id + ';';
 		websql_db.transaction(function(transaction)
 		{
-			transaction.executeSql(sql, [], function(transaction, results)
+			function Execute(sql)
 			{
-				success_callback();
-			},
-			function(transaction, error)
+				transaction.executeSql(sql, [], function(transaction, results)
+				{
+					transaction.executeSql('SELECT MAX(id) AS max FROM ' + table + ';', [], function(transaction, results)
+					{
+						success_callback(results.rows.item(0)['max']);
+					},
+					function(transaction, error)
+					{
+						error_callback('local-db', error.message);
+					});
+				},
+				function(transaction, error)
+				{
+					error_callback('local-db', error.message);
+				});
+			}
+
+			var sql = '';
+			if (id !== null)
 			{
-				error_callback('local-db', error.message);
-			});
+				sql = 'UPDATE ' + table + ' SET modified=1, ';
+				for (attribute in attributes)
+				{
+					if (attributes[attribute] === undefined)
+					{
+						if (typeof(attributes[attribute]) == 'string')
+							sql += attribute + '="' + attributes[attribute] + '",';
+						else if (typeof(attributes[attribute]) == 'boolean')
+							sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ',';
+						else
+							sql += attribute + '=' + attributes[attribute] + ',';
+					}
+				}
+				sql = sql.substring(0, sql.length - 1) + ' WHERE id=' + id + ';';
+				Execute(sql);
+			}
+			else
+			{
+				transaction.executeSql('SELECT (CASE WHEN COUNT(*) > 0 THEN MAX(id) ELSE 0 END) AS max FROM ' + table + ';', [], function(transaction, cur_max_results)
+				{
+					var fields = 'id,owner,modified,';
+					var values = (cur_max_results.rows.item(0)['max'] + 1) + ',' + _this.current_user['id'] + ',1,';
+					for (attribute in attributes)
+					{
+						if (attributes[attribute] === undefined)
+							continue;
+						fields += attribute + ',';
+						if (typeof(attributes[attribute]) == 'string')
+							values += '"' + attributes[attribute] + '",';
+						else if (typeof(attributes[attribute]) == 'boolean')
+							values += (attributes[attribute] ? 1 : 0) + ',';
+						else
+							values += attributes[attribute] + ',';
+					}
+					sql = 'INSERT INTO ' + table + ' (' + fields.substr(0, fields.length - 1) + ') VALUES (' + values.substr(0, values.length - 1) + ');';
+					Execute(sql);
+				},
+				function(transaction, error)
+				{
+					error_callback('local-db', error.message);
+				});
+			}
 		});
 	}
 
@@ -588,7 +636,7 @@ var Database = (function()
 			AJAX(post_data, success_callback, error_callback, false);
 		}
 		else
-			WebSQLUpdate(this.websql_db, 'cardset', id, attributes, success_callback, error_callback);
+			WebSQLUpdate(this, this.websql_db, 'cardset', id, attributes, success_callback, error_callback);
 	}
 
 	/**
@@ -607,7 +655,7 @@ var Database = (function()
 			AJAX(post_data, success_callback, error_callback, false);
 		}
 		else
-			WebSQLUpdate(this.websql_db, 'cardbox', id, attributes, success_callback, error_callback);
+			WebSQLUpdate(this, this.websql_db, 'cardbox', id, attributes, success_callback, error_callback);
 	}
 
 	/**
@@ -626,7 +674,7 @@ var Database = (function()
 			AJAX(post_data, success_callback, error_callback, false);
 		}
 		else
-			WebSQLUpdate(this.websql_db, 'card', id, attributes, success_callback, error_callback);
+			WebSQLUpdate(this, this.websql_db, 'card', id, attributes, success_callback, error_callback);
 	}
 
 	return Database;
