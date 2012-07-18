@@ -159,18 +159,17 @@ var Database = (function()
 			var sql = '';
 			if (id !== null)
 			{
-				sql = 'UPDATE ' + table + ' SET modified=1, ';
+				sql = 'UPDATE ' + table + ' SET modified=1, new=0, ';
 				for (attribute in attributes)
 				{
 					if (attributes[attribute] === undefined)
-					{
-						if (typeof(attributes[attribute]) == 'string')
-							sql += attribute + '="' + attributes[attribute] + '",';
-						else if (typeof(attributes[attribute]) == 'boolean')
-							sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ',';
-						else
-							sql += attribute + '=' + attributes[attribute] + ',';
-					}
+						continue;
+					if (typeof(attributes[attribute]) == 'string')
+						sql += attribute + '="' + attributes[attribute] + '",';
+					else if (typeof(attributes[attribute]) == 'boolean')
+						sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ',';
+					else
+						sql += attribute + '=' + attributes[attribute] + ',';
 				}
 				sql = sql.substring(0, sql.length - 1) + ' WHERE id=' + id + ';';
 				Execute(sql);
@@ -179,8 +178,8 @@ var Database = (function()
 			{
 				transaction.executeSql('SELECT (CASE WHEN COUNT(*) > 0 THEN MAX(id) ELSE 0 END) AS max FROM ' + table + ';', [], function(transaction, cur_max_results)
 				{
-					var fields = 'id,owner,modified,';
-					var values = (cur_max_results.rows.item(0)['max'] + 1) + ',' + _this.current_user['id'] + ',1,';
+					var fields = 'id,owner,modified,new,';
+					var values = (cur_max_results.rows.item(0)['max'] + 1) + ',' + _this.current_user['id'] + ',1,1,';
 					for (attribute in attributes)
 					{
 						if (attributes[attribute] === undefined)
@@ -371,7 +370,7 @@ var Database = (function()
 						//Insert if does not already exist
 						if (count_results.rows.item(0)['count'] == 0)
 						{
-							transaction.executeSql('INSERT INTO cardset (id, owner, name, modified) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['name'] + '", 0);', [], function(transaction, results)
+							transaction.executeSql('INSERT INTO cardset (id, owner, name, modified, new) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['name'] + '", 0, 0);', [], function(transaction, results)
 							{
 								if (!already_failed)
 									success_callback(i);
@@ -386,7 +385,7 @@ var Database = (function()
 						//Update if exists
 						else
 						{
-							transaction.executeSql('UPDATE cardset SET name = "' + ajax_data[i]['name'] + '", modified = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
+							transaction.executeSql('UPDATE cardset SET name = "' + ajax_data[i]['name'] + '", modified = 0, new = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
 							{
 								if (!already_failed)
 									success_callback(i);
@@ -421,7 +420,7 @@ var Database = (function()
 						//Insert if does not already exist
 						if (count_results.rows.item(0)['count'] == 0)
 						{
-							transaction.executeSql('INSERT INTO cardbox (id, owner, name, parent_card_set, review_frequency, last_reviewed, modified) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['name'] + '", ' + ajax_data[i]['parent_card_set'] + ', ' + ajax_data[i]['review_frequency'] + ', "' + ajax_data[i]['last_reviewed'] + '", 0);', [], function(transaction, results)
+							transaction.executeSql('INSERT INTO cardbox (id, owner, name, parent_card_set, review_frequency, last_reviewed, modified, new) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['name'] + '", ' + ajax_data[i]['parent_card_set'] + ', ' + ajax_data[i]['review_frequency'] + ', "' + ajax_data[i]['last_reviewed'] + '", 0, 0);', [], function(transaction, results)
 							{
 								++num_boxes_processed;
 								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
@@ -437,7 +436,7 @@ var Database = (function()
 						//Update if exists
 						else
 						{
-							transaction.executeSql('UPDATE cardbox SET name = "' + ajax_data[i]['name'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', review_frequency = ' + ajax_data[i]['review_frequency'] + ', last_reviewed = "' + ajax_data[i]['last_reviewed'] + '", modified = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
+							transaction.executeSql('UPDATE cardbox SET name = "' + ajax_data[i]['name'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', review_frequency = ' + ajax_data[i]['review_frequency'] + ', last_reviewed = "' + ajax_data[i]['last_reviewed'] + '", modified = 0, new = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
 							{
 								++num_boxes_processed;
 								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
@@ -473,7 +472,7 @@ var Database = (function()
 						//Insert if does not already exist
 						if (count_results.rows.item(0)['count'] == 0)
 						{
-							transaction.executeSql('INSERT INTO card (id, owner, front, back, parent_card_set, current_box, modified) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['front'] + '", "' + ajax_data[i]['back'] + '", ' + ajax_data[i]['parent_card_set'] + ', ' + ajax_data[i]['current_box'] + ', 0);', [], function(transaction, results)
+							transaction.executeSql('INSERT INTO card (id, owner, front, back, parent_card_set, current_box, modified, new) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['front'] + '", "' + ajax_data[i]['back'] + '", ' + ajax_data[i]['parent_card_set'] + ', ' + ajax_data[i]['current_box'] + ', 0, 0);', [], function(transaction, results)
 							{
 								++num_cards_processed;
 								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
@@ -488,7 +487,7 @@ var Database = (function()
 						}
 						else
 						{
-							transaction.executeSql('UPDATE card SET front = "' + ajax_data[i]['front'] + '", back = "' + ajax_data[i]['back'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', current_box = ' + ajax_data[i]['current_box'] + ', modified = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
+							transaction.executeSql('UPDATE card SET front = "' + ajax_data[i]['front'] + '", back = "' + ajax_data[i]['back'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', current_box = ' + ajax_data[i]['current_box'] + ', modified = 0, new = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
 							{
 								++num_cards_processed;
 								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
@@ -552,6 +551,194 @@ var Database = (function()
 				});
 			}
 		}, error_callback, true);
+	}
+
+	/**
+	Upload all information related to a cardset from the local database.
+	@param set_id ID of set to upload.
+	@param success_callback Function to call if successful.
+	@param error_callback Funciton to call if an error occurs. Takes 2 parameters: The error type (Possible values: 'no-local-db', 'local-db', or 'network') and the error message.
+	*/
+	Database.prototype.CheckIn = function(set_id, success_callback, error_callback)
+	{
+		if (typeof(openDatabase) != 'function')
+		{
+			error_callback('no-local-db', 'No local database.');
+			return;
+		}
+
+		var _this = this;
+		var already_failed = false;
+		var num_boxes_processed = 0, num_boxes_to_process = 0;
+		var num_cards_processed = 0, num_cards_to_process = 0;
+
+		//Generates a function to submit set data from the database into AJAX
+		function GenerateSetAJAXFunction(local_db_data, i)
+		{
+			return function(callback)
+			{
+				var cur_local_db_item = local_db_data.rows.item(i);
+				var attributes = {
+					name : cur_local_db_item['name'],
+					id : cur_local_db_item['new'] == 1 ? null /*New*/ : cur_local_db_item['id'] /*Existing*/,
+				};
+				var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-cardset', params : JSON.stringify(attributes)};
+				AJAX(post_data, function(id)
+				{
+					_this.websql_db.transaction(function(transaction)
+					{
+						transaction.executeSql('UPDATE cardset SET id = ' + id + ', modified = 0, new = 0;', [], function(transaction, results)
+						{
+							if (!already_failed)
+								callback(i);
+						},
+						function(transaction, error)
+						{
+							if (!already_failed)
+								error_callback('local-db', error.message);
+							already_failed = true;
+						});
+					});
+				},
+				function(type, message)
+				{
+					if (!already_failed)
+						error_callback(type, message);
+					already_failed = true;
+				}, false);
+			}
+		}
+
+		//Generates a function to submit box data from the database into AJAX
+		function GenerateBoxAJAXFunction(local_db_data, i)
+		{
+			return function()
+			{
+				var cur_local_db_item = local_db_data.rows.item(i);
+				var attributes = {
+					name : cur_local_db_item['name'],
+					parent_card_set : cur_local_db_item['parent_card_set'],
+					review_frequency : cur_local_db_item['review_frequency'],
+					last_reviewed : cur_local_db_item['last_reviewed'],
+					id : cur_local_db_item['new'] == 1 ? null /*New*/ : cur_local_db_item['id'] /*Existing*/,
+				};
+				var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-cardbox', params : JSON.stringify(attributes)};
+				AJAX(post_data, function(id)
+				{
+					_this.websql_db.transaction(function(transaction)
+					{
+						transaction.executeSql('UPDATE cardbox SET id = ' + id + ', modified = 0, new = 0;', [], function(transaction, results)
+						{
+							++num_boxes_processed;
+							if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+								success_callback();
+						},
+						function(transaction, error)
+						{
+							if (!already_failed)
+								error_callback('local-db', error.message);
+							already_failed = true;
+						});
+					});
+				},
+				function(type, message)
+				{
+					if (!already_failed)
+						error_callback(type, message);
+					already_failed = true;
+				}, false);
+			}
+		}
+
+		//Generates a function to submit card data from the database into AJAX
+		function GenerateCardAJAXFunction(local_db_data, i)
+		{
+			return function()
+			{
+				var cur_local_db_item = local_db_data.rows.item(i);
+				var attributes = {
+					front : cur_local_db_item['front'],
+					back : cur_local_db_item['back'],
+					parent_card_set : cur_local_db_item['parent_card_set'],
+					current_box : cur_local_db_item['current_box'],
+					last_reviewed : cur_local_db_item['last_reviewed'],
+					id : cur_local_db_item['new'] == 1 ? null /*New*/ : cur_local_db_item['id'] /*Existing*/,
+				};
+				var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-card', params : JSON.stringify(attributes)};
+				AJAX(post_data, function(id)
+				{
+					_this.websql_db.transaction(function(transaction)
+					{
+						transaction.executeSql('UPDATE card SET id = ' + id + ', modified = 0, new = 0;', [], function(transaction, results)
+						{
+							++num_cards_processed;
+							if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+								success_callback();
+						},
+						function(transaction, error)
+						{
+							if (!already_failed)
+								error_callback('local-db', error.message);
+							already_failed = true;
+						});
+					});
+				},
+				function(type, message)
+				{
+					if (!already_failed)
+						error_callback(type, message);
+					already_failed = true;
+				}, false);
+			}
+		}
+
+		//Check in set
+		_this.websql_db.transaction(function(transaction)
+		{
+			transaction.executeSql('SELECT * FROM cardset WHERE id = ' + set_id + ';', [], function(transaction, cardset_results)
+			{
+				for (var i = 0; i < cardset_results.rows.length; ++i)
+				{
+					GenerateSetAJAXFunction(cardset_results, i)(function(i)
+					{
+						_this.websql_db.transaction(function(transaction)
+						{
+							//Check in boxes
+							transaction.executeSql('SELECT * FROM cardbox WHERE modified = 1;', [], function(transaction, cardbox_results)
+							{
+								num_boxes_to_process = cardbox_results.rows.length;
+								for (var i = 0; i < cardbox_results.rows.length; ++i)
+									GenerateBoxAJAXFunction(cardbox_results, i)();
+							},
+							function(transaction, error)
+							{
+								if (!already_failed)
+									error_callback('local-db', error.message);
+								already_failed = true;
+							});
+
+							//Check in cards
+							transaction.executeSql('SELECT * FROM card WHERE modified = 1;', [], function(transaction, card_results)
+							{
+								num_cards_to_process = card_results.rows.length;
+								for (var i = 0; i < card_results.rows.length; ++i)
+									GenerateCardAJAXFunction(card_results, i)();
+							},
+							function(transaction, error)
+							{
+								if (!already_failed)
+									error_callback('local-db', error.message);
+								already_failed = true;
+							});
+						});
+					});
+				}
+			},
+			function(transaction, error)
+			{
+				error_callback('local-db', error.message);
+			});
+		});
 	}
 
 	/**

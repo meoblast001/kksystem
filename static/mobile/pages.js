@@ -221,7 +221,8 @@ var Pages =
 				'<a href="javascript:Pages.ViewCardsBySet(' + post_data.cardset + ', 0)" class="menu_item">Edit Card</a>' +
 				'<a href="javascript:Pages.NewBox()" class="menu_item">New Box</a>' +
 				'<a href="javascript:Pages.ViewBoxesBySet(' + post_data.cardset + ', 0)" class="menu_item">Edit Box</a>' +
-				'<a href="javascript:Pages.CheckOut(' + post_data.cardset + ', Pages.CheckOutSuccess)" class="menu_item">Check Out Set</a>';
+				'<a href="javascript:Pages.CheckOut(' + post_data.cardset + ', Pages.CheckOutSuccess)" class="menu_item">Check Out Set</a>' +
+				'<a href="javascript:Pages.CheckIn(' + post_data.cardset + ', Pages.CheckInSuccess)" class="menu_item">Check In Set</a>';
 			$('#menu').html(menu_content);
 			$('#header_text').html('Edit Set - ' + result[0].name);
 		},
@@ -385,6 +386,24 @@ var Pages =
 	{
 		$('#content').html('Success! Returning home...');
 		$('#header_text').html('Check Out Successful');
+		setTimeout(Pages.Centre, 3000);
+	},
+
+	CheckIn : function(id)
+	{
+		Pages.database.CheckIn(id, Pages.CheckInSuccess, function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
+		});
+	},
+
+	CheckInSuccess : function()
+	{
+		$('#content').html('Success! Returning home...');
+		$('#header_text').html('Check In Successful');
 		setTimeout(Pages.Centre, 3000);
 	},
 
