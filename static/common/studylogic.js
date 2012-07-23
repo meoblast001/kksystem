@@ -71,7 +71,7 @@ var StudyLogic = (function()
 				}
 				for (i = 0; i < _this.boxes.length; ++i)
 				{
-					var hours_since_last_review = Math.round((new Date(/*Now*/) - new Date(_this.boxes[i]['last_reviewed'])) / (1000 /*Miliseconds to seconds*/ * 60 /*Seconds to minutes*/ * 60 /*Minutes to hours*/));
+					var hours_since_last_review = Math.round((new Date(/*Now*/) - new Date(_this.boxes[i]['last_reviewed']) * 1000 /*Seconds to milliseconds*/) / (1000 /*Milliseconds to seconds*/ * 60 /*Seconds to minutes*/ * 60 /*Minutes to hours*/));
 					if (hours_since_last_review > _this.boxes[i]['review_frequency'] * 24 - 6)
 						_this.boxes[i].review = true;
 					else
@@ -140,43 +140,51 @@ var StudyLogic = (function()
 
 	/**
 	Gets the next card in random order.
-	@param success_callback Function to call if successful.
+	@param success_callback Function to call if successful. Takes 1 parameter: Card object with attributes from database. Null if study complete.
 	@param error_callback Function to call if an error occurs. Takes 2 parameters: type of error (Possible values: "network", "server", or "local-db") and message.
-	@return Card object with attributes from database. Null if study complete.
 	*/
 	StudyLogic.prototype.GetNextCard = function(success_callback, error_callback)
 	{
+		var _this = this;
+		function PostUpdateBox()
+		{
+			//If empty, switch boxes
+			while (_this.current_box >= 0 && (_this.boxes[_this.current_box].cards.length == _this.cards_reviewed_this_box.length || _this.boxes[_this.current_box].review == false))
+			{
+				--_this.current_box;
+				_this.cards_reviewed_this_box = [];
+			}
+			if (_this.current_box < 0)
+			{
+				success_callback(null);
+				return;
+			}
+
+			var card = null;
+			while (card == null)
+			{
+				var cur_id = Math.floor(Math.random() * _this.boxes[_this.current_box].cards.length);
+				card = _this.boxes[_this.current_box].cards[cur_id];
+				//Check that this card was not already reviewed
+				for (var i = 0; i < _this.cards_reviewed.length; ++i)
+				{
+					if (_this.cards_reviewed[i] == card.id)
+					{
+						card = null;
+						break;
+					}
+				}
+			}
+			success_callback(card);
+		}
+
 		if (this.study_type == 'normal')
 		{
 			//If empty, mark now as last review date
 			if (this.boxes[this.current_box].cards.length == this.cards_reviewed_this_box.length)
-				this.database.ModifyBox(this.boxes[this.current_box].id, {last_reviewed : Math.round(new Date().getTime() / 1000)}, success_callback, error_callback);
+				this.database.ModifyBox(this.boxes[this.current_box].id, {last_reviewed : Math.round(new Date().getTime() / 1000)}, PostUpdateBox, error_callback);
 		}
-		//If empty, switch boxes
-		while (this.current_box >= 0 && (this.boxes[this.current_box].cards.length == this.cards_reviewed_this_box.length || this.boxes[this.current_box].review == false))
-		{
-			--this.current_box;
-			this.cards_reviewed_this_box = [];
-		}
-		if (this.current_box < 0)
-			return null;
-
-		var card = null;
-		while (card == null)
-		{
-			var cur_id = Math.floor(Math.random() * this.boxes[this.current_box].cards.length);
-			card = this.boxes[this.current_box].cards[cur_id];
-			//Check that this card was not already reviewed
-			for (var i = 0; i < this.cards_reviewed.length; ++i)
-			{
-				if (this.cards_reviewed[i] == card.id)
-				{
-					card = null;
-					break;
-				}
-			}
-		}
-		return card;
+		PostUpdateBox();
 	}
 
 	/**
@@ -206,7 +214,7 @@ var StudyLogic = (function()
 	@param success_callback Function to call if successful.
 	@param error_callback Function to call if an error occurs. Takes 2 parameters: type of error (Possible values: "network", "server", or "local-db") and message.
 	*/
-	StudyLogic.prototype.Incorrect = function(card_id, callback)
+	StudyLogic.prototype.Incorrect = function(card_id, success_callback, error_callback)
 	{
 		this.cards_reviewed.push(card_id);
 		this.cards_reviewed_this_box.push(card_id);

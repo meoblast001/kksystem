@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-MIGRATIONS = [
+MIGRATIONS_WEBSQL = [
 	//Initial migration
 	{
 		id : 'init',
@@ -43,7 +43,7 @@ MIGRATIONS = [
 					'owner INTEGER,' +
 					'name VARCHAR(60),' +
 					'modified BOOLEAN,' +
-					'new BOOLEAN,' +
+					'is_new BOOLEAN,' +
 					'FOREIGN KEY (owner) REFERENCES user(id));', [], function(transaction, results)
 					{
 						++completed_queries;
@@ -62,7 +62,7 @@ MIGRATIONS = [
 					'review_frequency INTEGER,' +
 					'last_reviewed TIMESTAMP,' +
 					'modified BOOLEAN,' +
-					'new BOOLEAN,' +
+					'is_new BOOLEAN,' +
 					'FOREIGN KEY (owner) REFERENCES user(id),' +
 					'FOREIGN KEY (parent_card_set) REFERENCES cardset(id));', [], function(transaction, results)
 					{
@@ -82,7 +82,7 @@ MIGRATIONS = [
 					'parent_card_set INTEGER,' +
 					'current_box INTEGER,' +
 					'modified BOOLEAN,' +
-					'new BOOLEAN,' +
+					'is_new BOOLEAN,' +
 					'FOREIGN KEY (owner) REFERENCES user(id),' +
 					'FOREIGN KEY (parent_card_set) REFERENCES cardset(id),' +
 					'FOREIGN KEY (current_box) REFERENCES cardset(id));', [], function(transaction, results)

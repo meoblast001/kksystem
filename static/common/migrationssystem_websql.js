@@ -15,9 +15,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var MigrationsSystem = (function()
+var MigrationsSystemWebSQL = (function()
 {
-	function MigrationsSystem(database, success_callback, error_callback)
+	function MigrationsSystemWebSQL(database, success_callback, error_callback)
 	{
 		this.database = database;
 		database.transaction(function(transaction)
@@ -34,7 +34,7 @@ var MigrationsSystem = (function()
 		});
 	}
 
-	MigrationsSystem.prototype.MigrateUp = function(success_callback, error_callback)
+	MigrationsSystemWebSQL.prototype.MigrateUp = function(success_callback, error_callback)
 	{
 		var _this = this;
 		var migrations_processed = 0;
@@ -46,19 +46,19 @@ var MigrationsSystem = (function()
 				_this.database.transaction(function(transaction)
 				{
 					//Has this migration already been applied?
-					transaction.executeSql('SELECT * FROM __migrations__ WHERE migration_id = "' + MIGRATIONS[i].id + '";', [], function(transaction, result)
+					transaction.executeSql('SELECT * FROM __migrations__ WHERE migration_id = "' + MIGRATIONS_WEBSQL[i].id + '";', [], function(transaction, result)
 					{
 						//If migration was not applied, apply it and record this action in the __migrations__ table
 						if (result.rows.length == 0)
 						{
-							MIGRATIONS[i].migrate(_this.database, function()
+							MIGRATIONS_WEBSQL[i].migrate(_this.database, function()
 							{
 								_this.database.transaction(function(transaction)
 								{
-									transaction.executeSql('INSERT INTO __migrations__ (migration_id) VALUES ("' + MIGRATIONS[i].id + '");', [], function(transaction, results)
+									transaction.executeSql('INSERT INTO __migrations__ (migration_id) VALUES ("' + MIGRATIONS_WEBSQL[i].id + '");', [], function(transaction, results)
 									{
 										++migrations_processed;
-										if (migrations_processed == MIGRATIONS.length)
+										if (migrations_processed == MIGRATIONS_WEBSQL.length)
 										{
 											//Do not call the success callback if a failure occurred
 											if (!already_failed)
@@ -75,7 +75,7 @@ var MigrationsSystem = (function()
 						else
 						{
 							++migrations_processed;
-							if (migrations_processed == MIGRATIONS.length && !already_failed)
+							if (migrations_processed == MIGRATIONS_WEBSQL.length && !already_failed)
 								success_callback();
 						}
 					},
@@ -88,9 +88,9 @@ var MigrationsSystem = (function()
 				});
 			}
 		}
-		for (var i = 0; i < MIGRATIONS.length; ++i)
+		for (var i = 0; i < MIGRATIONS_WEBSQL.length; ++i)
 			GenerateMigrationFunction(i)();
 	}
 
-	return MigrationsSystem;
+	return MigrationsSystemWebSQL;
 })();

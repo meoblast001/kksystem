@@ -58,14 +58,24 @@ var Study =
 		$('#back_content').hide();
 		$('#buttons').hide();
 
-		Study.current_card = Study.study_logic.GetNextCard();
-		if (Study.current_card !== null)
+		Study.study_logic.GetNextCard(function(card)
 		{
-			$('#front_text').html(Study.current_card['front']);
-			$('#back_text').html(Study.current_card['back']);
-		}
-		else
-			Pages.Centre();
+			Study.current_card = card;
+			if (Study.current_card !== null)
+			{
+				$('#front_text').html(Study.current_card['front']);
+				$('#back_text').html(Study.current_card['back']);
+			}
+			else
+				Pages.Centre();
+		},
+		function(type, message)
+		{
+			if (type == 'network')
+				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
+		});
 	},
 
 	Show : function()
@@ -84,6 +94,8 @@ var Study =
 		{
 			if (type == 'network')
 				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
 		});
 	},
 
@@ -97,6 +109,8 @@ var Study =
 		{
 			if (type == 'network')
 				Pages.NetworkError(message);
+			else
+				Pages.FatalError(message);
 		});
 	},
 };

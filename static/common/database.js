@@ -29,14 +29,15 @@ var Database = (function()
 	{
 		this.is_online = true;
 		this.current_user = null;
-		if (typeof(openDatabase) == 'function')
+		var _this = this;
+		this.local_db = new LocalDatabaseWebSQL('karteikartensystem', '1.0', 'Karteikartensystem', 200000, success_callback,
+		function(type, message)
 		{
-			this.websql_db = openDatabase('karteikartensystem', '1.0', 'Karteikartensystem', 200000);
-			var migrations_system = new MigrationsSystem(this.websql_db, function()
-			{
-				migrations_system.MigrateUp(success_callback, error_callback);
-			});
-		}
+			if (type == 'not-supported')
+				_this.local_db = null;
+			else
+				error_callback(type, message);
+		});
 	}
 
 	/**
@@ -73,137 +74,6 @@ var Database = (function()
 	}
 
 	/**
-	Select rows and return an array of objects containing the row data.
-	@param websql_db WebSQL database.
-	@param table Name of table to query.
-	@param attributes Object of attribute/value pairs for WHERE clause.
-	@param success_callback Function to call following the request. Takes one parameters: results.
-	@param error_callback Function to call following an error. Takes two parameters: the error type (Possible values: 'local-db') and the error message.
-	@param start Index of result that should be the first element.
-	@param end Index following result that should be the last element.
-	*/
-	function WebSQLSelect(websql_db, table, attributes, success_callback, error_callback, start, end)
-	{
-		//Determine amount of attributes
-		var num_attributes = 0;
-		for (attribute in attributes)
-			++num_attributes;
-
-		var sql = 'SELECT * FROM ' + table + (num_attributes != 0 ? ' WHERE ' : ' ');
-		for (attribute in attributes)
-		{
-			if (attributes[attribute] === undefined)
-				continue;
-			if (typeof(attributes[attribute]) == 'string')
-				sql += attribute + '="' + attributes[attribute] + '" AND ';
-			else if (typeof(attributes[attribute]) == 'boolean')
-				sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ' AND ';
-			else
-				sql += attribute + '=' + attributes[attribute] + ' AND ';
-		}
-		sql = sql.substring(0, sql.length - 5) + (start !== undefined && end !== undefined ? ' LIMIT ' + start + ', ' + end : '') + ';';
-		websql_db.transaction(function(transaction)
-		{
-			transaction.executeSql(sql, [], function(transaction, sql_result)
-			{
-				var result = [];
-				for (var i = 0; i < sql_result.rows.length; ++i)
-				{
-					var row = sql_result.rows.item(i);
-					var object = {};
-					for (attribute in row)
-						object[attribute] = row[attribute];
-					result.push(object);
-				}
-				success_callback(result);
-			},
-			function(transaction, error)
-			{
-				error_callback('local-db', error.message);
-			});
-		});
-	}
-
-	/**
-	Update rows.
-	@param _this The Database object that calls this function.
-	@param websql_db WebSQL database.
-	@param table Name of table to query.
-	@param attributes Object of attribute/value pairs for SET clause.
-	@param success_callback Function to call following the request if successful. Takes one parameter: the ID of the item updated or created.
-	@param error_callback Function to call following an error. Takes two parameters: the error type (Possible values: 'local-db') and the error message.
-	*/
-	function WebSQLUpdate(_this, websql_db, table, id, attributes, success_callback, error_callback)
-	{
-		websql_db.transaction(function(transaction)
-		{
-			function Execute(sql)
-			{
-				transaction.executeSql(sql, [], function(transaction, results)
-				{
-					transaction.executeSql('SELECT MAX(id) AS max FROM ' + table + ';', [], function(transaction, results)
-					{
-						success_callback(results.rows.item(0)['max']);
-					},
-					function(transaction, error)
-					{
-						error_callback('local-db', error.message);
-					});
-				},
-				function(transaction, error)
-				{
-					error_callback('local-db', error.message);
-				});
-			}
-
-			var sql = '';
-			if (id !== null)
-			{
-				sql = 'UPDATE ' + table + ' SET modified=1, new=0, ';
-				for (attribute in attributes)
-				{
-					if (attributes[attribute] === undefined)
-						continue;
-					if (typeof(attributes[attribute]) == 'string')
-						sql += attribute + '="' + attributes[attribute] + '",';
-					else if (typeof(attributes[attribute]) == 'boolean')
-						sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ',';
-					else
-						sql += attribute + '=' + attributes[attribute] + ',';
-				}
-				sql = sql.substring(0, sql.length - 1) + ' WHERE id=' + id + ';';
-				Execute(sql);
-			}
-			else
-			{
-				transaction.executeSql('SELECT (CASE WHEN COUNT(*) > 0 THEN MAX(id) ELSE 0 END) AS max FROM ' + table + ';', [], function(transaction, cur_max_results)
-				{
-					var fields = 'id,owner,modified,new,';
-					var values = (cur_max_results.rows.item(0)['max'] + 1) + ',' + _this.current_user['id'] + ',1,1,';
-					for (attribute in attributes)
-					{
-						if (attributes[attribute] === undefined)
-							continue;
-						fields += attribute + ',';
-						if (typeof(attributes[attribute]) == 'string')
-							values += '"' + attributes[attribute] + '",';
-						else if (typeof(attributes[attribute]) == 'boolean')
-							values += (attributes[attribute] ? 1 : 0) + ',';
-						else
-							values += attributes[attribute] + ',';
-					}
-					sql = 'INSERT INTO ' + table + ' (' + fields.substr(0, fields.length - 1) + ') VALUES (' + values.substr(0, values.length - 1) + ');';
-					Execute(sql);
-				},
-				function(transaction, error)
-				{
-					error_callback('local-db', error.message);
-				});
-			}
-		});
-	}
-
-	/**
 	Log a user into the system. This does not perform any networking; Uses only the local database.
 	@param username Name of user being logged into the system.
 	@param success_callback Function to call if successful.
@@ -211,7 +81,7 @@ var Database = (function()
 	*/
 	Database.prototype.LoginOnline = function(username, success_callback, error_callback)
 	{
-		if (typeof(openDatabase) != 'function')
+		if (this.local_db === null)
 		{
 			this.current_user = {id : null, username : username};
 			success_callback();
@@ -219,43 +89,28 @@ var Database = (function()
 		}
 
 		var _this = this;
-		this.websql_db.transaction(function(transaction)
+		this.local_db.Select('user', {username : username}, null, null, function(results)
 		{
-			transaction.executeSql('SELECT * FROM user WHERE username = "' + username + '";', [], function(transaction, results)
+			if (results.length > 0)
 			{
-				if (results.rows.length > 0)
-				{
-					var first_row = results.rows.item(0);
-					_this.current_user = {id : first_row['id'], username : first_row['username']};
-					_this.is_online = !first_row['is_offline'];
-					success_callback();
-				}
-				else
-				{
-					transaction.executeSql('INSERT INTO user (username, is_offline) VALUES ("' + username + '", 0);', [], function(transaction, results)
-					{
-						transaction.executeSql('SELECT MAX(id) FROM user;', [], function(trasnaction, results)
-						{
-							_this.current_user = {id : results.rows.item(0)['MAX(id)'], username : username};
-							_this.is_online = true;
-							success_callback();
-						},
-						function(transaction, error)
-						{
-							error_callback('local-db', error.message);
-						});
-					},
-					function(transaction, error)
-					{
-						error_callback('local-db', error.message);
-					});
-				}
-			},
-			function(transaction, error)
+				var first_row = results[0];
+				_this.current_user = {id : first_row['id'], username : first_row['username']};
+				_this.is_online = !first_row['is_offline'];
+				success_callback();
+			}
+			else
 			{
-				error_callback('local-db', error.message);
-			});
-		});
+				_this.local_db.Insert('user', {username : username, is_offline : false}, function(id)
+				{
+					_this.local_db.Max('user', 'id', function(max)
+					{
+						_this.current_user = {id : max, username : username};
+						_this.is_online = true;
+						success_callback();
+					}, error_callback);
+				}, error_callback);
+			}
+		}, error_callback);
 	}
 
 	/**
@@ -266,32 +121,25 @@ var Database = (function()
 	*/
 	Database.prototype.LoginOffline = function(id, success_callback, error_callback)
 	{
-		if (typeof(openDatabase) != 'function')
+		if (this.local_db === null)
 		{
 			error_callback('no-local-db', 'No local database');
 			return;
 		}
 
 		var _this = this;
-		this.websql_db.transaction(function(transaction)
+		this.local_db.Select('user', {id : id, is_offline : true}, null, null, function(results)
 		{
-			transaction.executeSql('SELECT * FROM user WHERE id = "' + id + '" AND is_offline = 1;', [], function(transaction, results)
+			if (results.length > 0)
 			{
-				if (results.rows.length > 0)
-				{
-					var user = results.rows.item(0);
-					_this.current_user = {id : user['id'], username : user['username']};
-					_this.is_online = false;
-					success_callback();
-				}
-				else
-					error_callback('user-not-found', 'User was not found');
-			},
-			function(transaction, error)
-			{
-				error_callback('local-db', 'Error querying user.');
-			});
-		});
+				var user = results[0];
+				_this.current_user = {id : user['id'], username : user['username']};
+				_this.is_online = false;
+				success_callback();
+			}
+			else
+				error_callback('user-not-found', 'User was not found');
+		}, error_callback);
 	}
 
 	/**
@@ -302,41 +150,34 @@ var Database = (function()
 	*/
 	Database.prototype.ToggleNetworkStatus = function(online, success_callback, error_callback)
 	{
-		if (typeof(openDatabase) != 'function')
+		if (this.local_db === null)
 		{
 			error_callback('no-local-db', 'No local database');
 			return;
 		}
 
 		var _this = this;
-		this.websql_db.transaction(function(transaction)
+		this.local_db.Update('user', this.current_user.id, {is_offline : online ? 0 : 1}, function()
 		{
-			transaction.executeSql('UPDATE user SET is_offline = ' + (online ? 0 : 1) + ' WHERE id = ' + _this.current_user.id + ';', [], function(transaction, results)
-			{
-				_this.is_online = online;
-				success_callback();
-			},
-			function(transaction, error)
-			{
-				error_callback('local-db', error.message);
-			})
-		});
+			_this.is_online = online;
+			success_callback();
+		}, error_callback);
 	}
 
 	/**
 	Get a list of users in the local database with a particular network status.
 	@param online True if query should look for online users, false if query should look for offline users.
-	@param Function to call if successful.
+	@param Function to call if successful. Takes 1 parameter: An array of objects containing results.
 	@param Function to call if an error occurs. Takes 2 parameters: The error type (Possible values: 'no-local-db' or 'local-db') and the error message.
 	*/
 	Database.prototype.GetUsersByNetworkStatus = function(online, success_callback, error_callback)
 	{
-		if (typeof(openDatabase) != 'function')
+		if (this.local_db === null)
 		{
 			error_callback('no-local-db', 'No local database.');
 			return;
 		}
-		WebSQLSelect(this.websql_db, 'user', {is_offline : !online}, success_callback, error_callback);
+		this.local_db.Select('user', {is_offline : !online}, null, null, success_callback, error_callback);
 	}
 
 	/**
@@ -347,7 +188,7 @@ var Database = (function()
 	*/
 	Database.prototype.CheckOut = function(set_id, success_callback, error_callback)
 	{
-		if (typeof(openDatabase) != 'function')
+		if (this.local_db === null)
 		{
 			error_callback('no-local-db', 'No local database.');
 			return;
@@ -363,47 +204,56 @@ var Database = (function()
 		{
 			return function(success_callback, error_callback)
 			{
-				_this.websql_db.transaction(function(transaction)
+				_this.local_db.Count('cardset', {id : ajax_data[i]['id']}, function(count)
 				{
-					transaction.executeSql('SELECT COUNT(*) AS count FROM cardset WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, count_results)
+					//Insert if does not already exist
+					if (count == 0)
 					{
-						//Insert if does not already exist
-						if (count_results.rows.item(0)['count'] == 0)
+						var attr = {
+							id : ajax_data[i]['id'],
+							owner : _this.current_user['id'],
+							name : ajax_data[i]['name'],
+							modified : false,
+							is_new : false,
+						};
+						_this.local_db.Insert('cardset', attr, function()
 						{
-							transaction.executeSql('INSERT INTO cardset (id, owner, name, modified, new) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['name'] + '", 0, 0);', [], function(transaction, results)
-							{
-								if (!already_failed)
-									success_callback(i);
-							},
-							function(transaction, error)
-							{
-								if (!already_failed)
-									error_callback('local-db', error.message);
-								already_failed = true;
-							});
-						}
-						//Update if exists
-						else
+							if (!already_failed)
+								success_callback(i);
+						},
+						function(type, message)
 						{
-							transaction.executeSql('UPDATE cardset SET name = "' + ajax_data[i]['name'] + '", modified = 0, new = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
-							{
-								if (!already_failed)
-									success_callback(i);
-							},
-							function(transaction, error)
-							{
-								if (!already_failed)
-									error_callback('local-db', error.message);
-								already_failed = true;
-							});
-						}
-					},
-					function(transaction, error)
+							if (!already_failed)
+								error_callback(type, message);
+							already_failed = true;
+						});
+					}
+					//Update if exists
+					else
 					{
-						if (!already_failed)
-							error_callback('local-db', error.message);
-						already_failed = true;
-					});
+						var attr = {
+							name: ajax_data[i]['name'],
+							modified : false,
+							is_new : false,
+						};
+						_this.local_db.Update('cardset', ajax_data[i]['id'], attr, function()
+						{
+							if (!already_failed)
+								success_callback(i);
+						},
+						function(type, message)
+						{
+							if (!already_failed)
+								error_callback(type, message);
+							already_failed = true;
+						});
+					}
+				},
+				function(type, message)
+				{
+					if (!already_failed)
+						error_callback(type, message);
+					already_failed = true;
 				});
 			};
 		}
@@ -413,49 +263,64 @@ var Database = (function()
 		{
 			return function()
 			{
-				_this.websql_db.transaction(function(transaction)
+				_this.local_db.Count('cardbox', {id : ajax_data[i]['id']}, function(count)
 				{
-					transaction.executeSql('SELECT COUNT(*) AS count FROM cardbox WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, count_results)
+					//Insert if does not already exist
+					if (count == 0)
 					{
-						//Insert if does not already exist
-						if (count_results.rows.item(0)['count'] == 0)
+						var attr = {
+							id : ajax_data[i]['id'],
+							owner : _this.current_user['id'],
+							name : ajax_data[i]['name'],
+							parent_card_set : ajax_data[i]['parent_card_set'],
+							review_frequency : ajax_data[i]['review_frequency'],
+							last_reviewed : ajax_data[i]['last_reviewed'],
+							modified : false,
+							is_new : false,
+						};
+						_this.local_db.Insert('cardbox', attr, function()
 						{
-							transaction.executeSql('INSERT INTO cardbox (id, owner, name, parent_card_set, review_frequency, last_reviewed, modified, new) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['name'] + '", ' + ajax_data[i]['parent_card_set'] + ', ' + ajax_data[i]['review_frequency'] + ', "' + ajax_data[i]['last_reviewed'] + '", 0, 0);', [], function(transaction, results)
-							{
-								++num_boxes_processed;
-								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
-									success_callback();
-							},
-							function(transaction, error)
-							{
-								if (!already_failed)
-									error_callback('local-db', error.message);
-								already_failed = true;
-							});
-						}
-						//Update if exists
-						else
+							++num_boxes_processed;
+							if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+								success_callback();
+						},
+						function(type, message)
 						{
-							transaction.executeSql('UPDATE cardbox SET name = "' + ajax_data[i]['name'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', review_frequency = ' + ajax_data[i]['review_frequency'] + ', last_reviewed = "' + ajax_data[i]['last_reviewed'] + '", modified = 0, new = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
-							{
-								++num_boxes_processed;
-								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
-									success_callback();
-							},
-							function(transaction, error)
-							{
-								if (!already_failed)
-									error_callback('local-db', error.message);
-								already_failed = true;
-							});
-						}
-					},
-					function(transcation, error)
+							if (!already_failed)
+								error_callback(type, message);
+							already_failed = true;
+						});
+					}
+					//Update if exists
+					else
 					{
-						if (!already_failed)
-							error_callback('local-db', error.message);
-						already_failed = true;
-					});
+						var attr = {
+							name : ajax_data[i]['name'],
+							parent_card_set : ajax_data[i]['parent_card_set'],
+							review_frequency : ajax_data[i]['review_frequency'],
+							last_reviewed : ajax_data[i]['last_reviewed'],
+							modified : false,
+							is_new : false,
+						};
+						_this.local_db.Update('cardbox', ajax_data[i]['id'], attr, function()
+						{
+							++num_boxes_processed;
+							if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+								success_callback();
+						},
+						function(type, message)
+						{
+							if (!already_failed)
+								error_callback(type, message);
+							already_failed = true;
+						});
+					}
+				},
+				function(type, message)
+				{
+					if (!already_failed)
+						error_callback(type, message);
+					already_failed = true;
 				});
 			};
 		}
@@ -465,48 +330,63 @@ var Database = (function()
 		{
 			return function()
 			{
-				_this.websql_db.transaction(function(transaction)
+				_this.local_db.Count('card', {id : ajax_data[i]['id']}, function(count)
 				{
-					transaction.executeSql('SELECT COUNT(*) AS count FROM card WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, count_results)
+					//Insert if does not already exist
+					if (count == 0)
 					{
-						//Insert if does not already exist
-						if (count_results.rows.item(0)['count'] == 0)
+						var attr = {
+							id : ajax_data[i]['id'],
+							owner : _this.current_user['id'],
+							front : ajax_data[i]['front'],
+							back : ajax_data[i]['back'],
+							parent_card_set : ajax_data[i]['parent_card_set'],
+							current_box : ajax_data[i]['current_box'],
+							modified : false,
+							is_new : false,
+						};
+						_this.local_db.Insert('card', attr, function()
 						{
-							transaction.executeSql('INSERT INTO card (id, owner, front, back, parent_card_set, current_box, modified, new) VALUES (' + ajax_data[i]['id'] + ', ' + _this.current_user['id'] + ', "' + ajax_data[i]['front'] + '", "' + ajax_data[i]['back'] + '", ' + ajax_data[i]['parent_card_set'] + ', ' + ajax_data[i]['current_box'] + ', 0, 0);', [], function(transaction, results)
-							{
-								++num_cards_processed;
-								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
-									success_callback();
-							},
-							function(transaction, error)
-							{
-								if (!already_failed)
-									error_callback('local-db', error.message);
-								already_failed = true;
-							});
-						}
-						else
+							++num_cards_processed;
+							if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+								success_callback();
+						},
+						function(type, message)
 						{
-							transaction.executeSql('UPDATE card SET front = "' + ajax_data[i]['front'] + '", back = "' + ajax_data[i]['back'] + '", parent_card_set = ' + ajax_data[i]['parent_card_set'] + ', current_box = ' + ajax_data[i]['current_box'] + ', modified = 0, new = 0 WHERE id = ' + ajax_data[i]['id'] + ';', [], function(transaction, results)
-							{
-								++num_cards_processed;
-								if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
-									success_callback();
-							},
-							function(transaction, error)
-							{
-								if (!already_failed)
-									error_callback('local-db', error.message);
-								already_failed = true;
-							});
-						}
-					},
-					function(transaction, error)
+							if (!already_failed)
+								error_callback(type, message);
+							already_failed = true;
+						});
+					}
+					else
 					{
-						if (!already_failed)
-							error_callback('local-db', error.message);
-						already_failed = true;
-					});
+						var attr = {
+							front : ajax_data[i]['front'],
+							back : ajax_data[i]['back'],
+							parent_card_set : ajax_data[i]['parent_card_set'],
+							current_box : ajax_data[i]['current_box'],
+							modified : false,
+							is_new : false,
+						};
+						_this.local_db.Update('card', ajax_data[i]['id'], attr, function()
+						{
+							++num_cards_processed;
+							if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+								success_callback();
+						},
+						function(type, message)
+						{
+							if (!already_failed)
+								error_callback(type, message);
+							already_failed = true;
+						});
+					}
+				},
+				function(type, message)
+				{
+					if (!already_failed)
+						error_callback(type, message);
+					already_failed = true;
 				});
 			};
 		}
@@ -561,7 +441,7 @@ var Database = (function()
 	*/
 	Database.prototype.CheckIn = function(set_id, success_callback, error_callback)
 	{
-		if (typeof(openDatabase) != 'function')
+		if (this.local_db === null)
 		{
 			error_callback('no-local-db', 'No local database.');
 			return;
@@ -577,27 +457,23 @@ var Database = (function()
 		{
 			return function(callback)
 			{
-				var cur_local_db_item = local_db_data.rows.item(i);
 				var attributes = {
-					name : cur_local_db_item['name'],
-					id : cur_local_db_item['new'] == 1 ? null /*New*/ : cur_local_db_item['id'] /*Existing*/,
+					name : local_db_data[i]['name'],
+					id : local_db_data[i]['is_new'] == 1 ? null /*New*/ : local_db_data[i]['id'] /*Existing*/,
 				};
 				var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-cardset', params : JSON.stringify(attributes)};
 				AJAX(post_data, function(id)
 				{
-					_this.websql_db.transaction(function(transaction)
+					_this.local_db.Update('cardset', id, {modified : false, is_new : false}, function()
 					{
-						transaction.executeSql('UPDATE cardset SET id = ' + id + ', modified = 0, new = 0;', [], function(transaction, results)
-						{
-							if (!already_failed)
-								callback(i);
-						},
-						function(transaction, error)
-						{
-							if (!already_failed)
-								error_callback('local-db', error.message);
-							already_failed = true;
-						});
+						if (!already_failed)
+							callback(i);
+					},
+					function(type, message)
+					{
+						if (!already_failed)
+							error_callback(type, message);
+						already_failed = true;
 					});
 				},
 				function(type, message)
@@ -614,31 +490,27 @@ var Database = (function()
 		{
 			return function()
 			{
-				var cur_local_db_item = local_db_data.rows.item(i);
 				var attributes = {
-					name : cur_local_db_item['name'],
-					parent_card_set : cur_local_db_item['parent_card_set'],
-					review_frequency : cur_local_db_item['review_frequency'],
-					last_reviewed : cur_local_db_item['last_reviewed'],
-					id : cur_local_db_item['new'] == 1 ? null /*New*/ : cur_local_db_item['id'] /*Existing*/,
+					name : local_db_data[i]['name'],
+					parent_card_set : local_db_data[i]['parent_card_set'],
+					review_frequency : local_db_data[i]['review_frequency'],
+					last_reviewed : local_db_data[i]['last_reviewed'],
+					id : local_db_data[i]['is_new'] == 1 ? null /*New*/ : local_db_data[i]['id'] /*Existing*/,
 				};
 				var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-cardbox', params : JSON.stringify(attributes)};
 				AJAX(post_data, function(id)
 				{
-					_this.websql_db.transaction(function(transaction)
+					_this.local_db.Update('cardbox', id, {modified : false, is_new : false}, function()
 					{
-						transaction.executeSql('UPDATE cardbox SET id = ' + id + ', modified = 0, new = 0;', [], function(transaction, results)
-						{
-							++num_boxes_processed;
-							if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
-								success_callback();
-						},
-						function(transaction, error)
-						{
-							if (!already_failed)
-								error_callback('local-db', error.message);
-							already_failed = true;
-						});
+						++num_boxes_processed;
+						if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+							success_callback();
+					},
+					function(type, message)
+					{
+						if (!already_failed)
+							error_callback(type, message);
+						already_failed = true;
 					});
 				},
 				function(type, message)
@@ -655,32 +527,28 @@ var Database = (function()
 		{
 			return function()
 			{
-				var cur_local_db_item = local_db_data.rows.item(i);
 				var attributes = {
-					front : cur_local_db_item['front'],
-					back : cur_local_db_item['back'],
-					parent_card_set : cur_local_db_item['parent_card_set'],
-					current_box : cur_local_db_item['current_box'],
-					last_reviewed : cur_local_db_item['last_reviewed'],
-					id : cur_local_db_item['new'] == 1 ? null /*New*/ : cur_local_db_item['id'] /*Existing*/,
+					front : local_db_data[i]['front'],
+					back : local_db_data[i]['back'],
+					parent_card_set : local_db_data[i]['parent_card_set'],
+					current_box : local_db_data[i]['current_box'],
+					last_reviewed : local_db_data[i]['last_reviewed'],
+					id : local_db_data[i]['is_new'] == 1 ? null /*New*/ : local_db_data[i]['id'] /*Existing*/,
 				};
 				var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-card', params : JSON.stringify(attributes)};
 				AJAX(post_data, function(id)
 				{
-					_this.websql_db.transaction(function(transaction)
+					_this.local_db.Update('card', id, {modified : false, is_new : false}, function()
 					{
-						transaction.executeSql('UPDATE card SET id = ' + id + ', modified = 0, new = 0;', [], function(transaction, results)
-						{
-							++num_cards_processed;
-							if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
-								success_callback();
-						},
-						function(transaction, error)
-						{
-							if (!already_failed)
-								error_callback('local-db', error.message);
-							already_failed = true;
-						});
+						++num_cards_processed;
+						if (num_boxes_processed == num_boxes_to_process && num_cards_processed == num_cards_to_process && !already_failed)
+							success_callback();
+					},
+					function(type, message)
+					{
+						if (!already_failed)
+							error_callback(type, message);
+						already_failed = true;
 					});
 				},
 				function(type, message)
@@ -693,52 +561,42 @@ var Database = (function()
 		}
 
 		//Check in set
-		_this.websql_db.transaction(function(transaction)
+		_this.local_db.Select('cardset', {id : set_id}, null, null, function(cardset_results)
 		{
-			transaction.executeSql('SELECT * FROM cardset WHERE id = ' + set_id + ';', [], function(transaction, cardset_results)
+			for (var i = 0; i < cardset_results.length; ++i)
 			{
-				for (var i = 0; i < cardset_results.rows.length; ++i)
+				GenerateSetAJAXFunction(cardset_results, i)(function(i)
 				{
-					GenerateSetAJAXFunction(cardset_results, i)(function(i)
+					//Check in boxes
+					_this.local_db.Select('cardbox', {parent_card_set : set_id, modified : true}, null, null, function(cardbox_results)
 					{
-						_this.websql_db.transaction(function(transaction)
-						{
-							//Check in boxes
-							transaction.executeSql('SELECT * FROM cardbox WHERE modified = 1;', [], function(transaction, cardbox_results)
-							{
-								num_boxes_to_process = cardbox_results.rows.length;
-								for (var i = 0; i < cardbox_results.rows.length; ++i)
-									GenerateBoxAJAXFunction(cardbox_results, i)();
-							},
-							function(transaction, error)
-							{
-								if (!already_failed)
-									error_callback('local-db', error.message);
-								already_failed = true;
-							});
-
-							//Check in cards
-							transaction.executeSql('SELECT * FROM card WHERE modified = 1;', [], function(transaction, card_results)
-							{
-								num_cards_to_process = card_results.rows.length;
-								for (var i = 0; i < card_results.rows.length; ++i)
-									GenerateCardAJAXFunction(card_results, i)();
-							},
-							function(transaction, error)
-							{
-								if (!already_failed)
-									error_callback('local-db', error.message);
-								already_failed = true;
-							});
-						});
+						num_boxes_to_process = cardbox_results.length;
+						for (var i = 0; i < cardbox_results.length; ++i)
+							GenerateBoxAJAXFunction(cardbox_results, i)();
+					},
+					function(type, message)
+					{
+						if (!already_failed)
+							error_callback(type, message);
+						already_failed = true;
 					});
-				}
-			},
-			function(transaction, error)
-			{
-				error_callback('local-db', error.message);
-			});
-		});
+
+					//Check in cards
+					_this.local_db.Select('card', {parent_card_set : set_id, modified : true}, null, null, function(card_results)
+					{
+						num_cards_to_process = card_results.length;
+						for (var i = 0; i < card_results.length; ++i)
+							GenerateCardAJAXFunction(card_results, i)();
+					},
+					function(type, message)
+					{
+						if (!already_failed)
+							error_callback(type, message);
+						already_failed = true;
+					});
+				});
+			}
+		}, error_callback);
 	}
 
 	/**
@@ -759,7 +617,7 @@ var Database = (function()
 		else
 		{
 			attributes['owner'] = this.current_user['id'];
-			WebSQLSelect(this.websql_db, 'cardset', attributes, success_callback, error_callback, start, end);
+			this.local_db.Select('cardset', attributes, start !== undefined ? start : null, end !== undefined ? end : null, success_callback, error_callback, start, end);
 		}
 	}
 
@@ -781,7 +639,7 @@ var Database = (function()
 		else
 		{
 			attributes['owner'] = this.current_user['id'];
-			WebSQLSelect(this.websql_db, 'cardbox', attributes, success_callback, error_callback, start, end);
+			this.local_db.Select('cardbox', attributes, start !== undefined ? start : null, end !== undefined ? end : null, success_callback, error_callback);
 		}
 	}
 
@@ -803,15 +661,15 @@ var Database = (function()
 		else
 		{
 			attributes['owner'] = this.current_user['id'];
-			WebSQLSelect(this.websql_db, 'card', attributes, success_callback, error_callback, start, end);
+			this.local_db.Select('card', attributes, start !== undefined ? start : null, end !== undefined ? end : null, success_callback, error_callback);
 		}
 	}
 
 	/**
 	Modifies the attributes of a set in the database.
-	@param id Primary key of set to modify.
+	@param id Primary key of set to modify. If null, create new.
 	@param attributes Object of attribute/value pairs containing the attributes that should be modified.
-	@param success_callback Function called following modification, if successful. Takes no parameters.
+	@param success_callback Function called following modification, if successful. Takes 1 or no parameters: If new entry, the ID of this entry, else none.
 	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
 	*/
 	Database.prototype.ModifySet = function(id, attributes, success_callback, error_callback)
@@ -823,14 +681,28 @@ var Database = (function()
 			AJAX(post_data, success_callback, error_callback, false);
 		}
 		else
-			WebSQLUpdate(this, this.websql_db, 'cardset', id, attributes, success_callback, error_callback);
+		{
+			attributes['modified'] = true;
+			if (id === null)
+			{
+				this.local_db.Max('cardset', 'id', function(max)
+				{
+					attributes['id'] = max !== null ? max + 1 : 1;
+					attributes['owner'] = _this.current_user['id'];
+					attributes['is_new'] = true;
+					_this.local_db.Insert('cardset', attributes, success_callback, error_callback);
+				}, error_callback);
+			}
+			else
+				this.local_db.Update('cardset', id, attributes, success_callback, error_callback);
+		}
 	}
 
 	/**
 	Modifies the attributes of a box in the database.
-	@param id Primary key of box to modify.
+	@param id Primary key of box to modify. If null, create new.
 	@param attributes Object of attribute/value pairs containing the attributes that should be modified.
-	@param success_callback Function called following modification, if successful. Takes no parameters.
+	@param success_callback Function called following modification, if successful. Takes 1 or no parameters: If new entry, the ID of this entry, else none.
 	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
 	*/
 	Database.prototype.ModifyBox = function(id, attributes, success_callback, error_callback)
@@ -842,14 +714,28 @@ var Database = (function()
 			AJAX(post_data, success_callback, error_callback, false);
 		}
 		else
-			WebSQLUpdate(this, this.websql_db, 'cardbox', id, attributes, success_callback, error_callback);
+		{
+			attributes['modified'] = true;
+			if (id === null)
+			{
+				this.local_db.Max('cardbox', 'id', function(max)
+				{
+					attributes['id'] = max !== null ? max + 1 : 1;
+					attributes['owner'] = _this.current_user['id'];
+					attributes['is_new'] = true;
+					_this.local_db.Insert('cardbox', attributes, success_callback, error_callback);
+				}, error_callback);
+			}
+			else
+				this.local_db.Update('cardbox', id, attributes, success_callback, error_callback);
+		}
 	}
 
 	/**
 	Modifies the attributes of a card in the database.
-	@param id Primary key of card to modify.
+	@param id Primary key of card to modify. If null, create new.
 	@param attributes Object of attribute/value pairs containing the attributes that should be modified.
-	@param success_callback Function called following modification, if successful. Takes no parameters.
+	@param success_callback Function called following modification, if successful. Takes 1 or no parameters: If new entry, the ID of this entry, else none.
 	@param error_callback Function called if error occurs. Takes two parameters: the error type (Possible values: 'network', 'server', or 'local-db') and message.
 	*/
 	Database.prototype.ModifyCard = function(id, attributes, success_callback, error_callback)
@@ -861,7 +747,22 @@ var Database = (function()
 			AJAX(post_data, success_callback, error_callback, false);
 		}
 		else
-			WebSQLUpdate(this, this.websql_db, 'card', id, attributes, success_callback, error_callback);
+		{
+			attributes['modified'] = true;
+			if (id === null)
+			{
+				var _this = this;
+				this.local_db.Max('card', 'id', function(max)
+				{
+					attributes['id'] = max !== null ? max + 1 : 1;
+					attributes['owner'] = _this.current_user['id'];
+					attributes['is_new'] = true;
+					_this.local_db.Insert('card', attributes, success_callback, error_callback);
+				}, error_callback);
+			}
+			else
+				this.local_db.Update('card', id, attributes, success_callback, error_callback);
+		}
 	}
 
 	return Database;
