@@ -97,6 +97,34 @@ var Pages =
 		});
 	},
 
+	Logout : function()
+	{
+		function LocalLogout()
+		{
+			Pages.database.Logout();
+			Pages.Login();
+		}
+
+		if (Pages.database.is_online)
+		{
+			$.ajax({
+				type : 'GET',
+				url : SITE_ROOT + '/accounts/logout/',
+				dataType : 'json',
+				success : function(result)
+				{
+					LocalLogout();
+				},
+				error : function(jq_xhr, text_status, error_thrown)
+				{
+					alert('Error: ' + text_status);
+				}
+			});
+		}
+		else
+			LocalLogout();
+	},
+
 	//Centre
 
 	Centre : function()
@@ -105,7 +133,7 @@ var Pages =
 			'<a href="javascript:Pages.StudyOptions()" class="menu_item">Study</a>' +
 			'<a href="javascript:Pages.EditSetSelect()" class="menu_item">Edit</a>' +
 			'<a href="javascript:Pages.Settings()" class="menu_item">Settings</a>' +
-			'<a href="javascript:Pages.Exit()" class="menu_item">Exit</a>';
+			'<a href="javascript:Pages.Logout()" class="menu_item">Exit</a>';
 		$('#content').html(content);
 		$('#header_text').html('Centre');
 	},

@@ -143,6 +143,14 @@ var Database = (function()
 	}
 
 	/**
+	Logs the current user out of the system. This does not perform any networking; Uses only the local database.
+	*/
+	Database.prototype.Logout = function()
+	{
+		this.current_user = null;
+	}
+
+	/**
 	Toggles network status online or offline.
 	@param online True if toggling online; False if toggling offline.
 	@param success_callback Function to call if successful. Takes no parameters.

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<meta name="viewport" content="width=320" />
 		<script type="text/javascript" src="{{ STATIC_URL }}common/jquery-1.7.1.min.js"></script>
 		<script type="text/javascript">
+			//<![CDATA[
 			var SITE_ROOT = '{{ site_root }}';
 			var CSRF_TOKEN = '{{ csrf_token }}';
 
@@ -31,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			{
 				Pages.Start();
 			});
+			//]]>
 		</script>
 		<script type="text/javascript" src="{{ STATIC_URL }}common/database.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}common/localdb_websql.js"></script>

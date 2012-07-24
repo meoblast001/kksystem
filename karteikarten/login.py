@@ -86,7 +86,10 @@ def Login(request):
 @login_required
 def Logout(request):
 	logout(request)
-	return HttpResponseRedirect(reverse('centre'))
+	if 'HTTP_X_REQUESTED_WITH' in request.META and request.META['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest':
+		return HttpResponse()
+	else:
+		return HttpResponseRedirect(reverse('centre'))
 
 #
 # Register
