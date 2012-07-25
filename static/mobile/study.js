@@ -36,7 +36,7 @@ var Study =
 						'<tr><td id="back_text" /></tr>' +
 					'</table>' +
 				'</div>' +
-				'<div id="buttons" class="study_button_container" style="height: auto; display: none;">' +
+				'<div id="buttons" class="study_button_container" style="display: none;">' +
 					'<a href="javascript:Study.Correct();" class="study_button_correct">Correct</a>' +
 					'<a href="javascript:Study.Incorrect();" class="study_button_incorrect">Incorrect</a>' +
 				'</div>';

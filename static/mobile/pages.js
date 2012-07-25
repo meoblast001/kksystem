@@ -21,6 +21,19 @@ var Pages =
 	websql_database : null,
 	offline_mode : false,
 
+	SetBackButtonFunction : function(callback)
+	{
+		var back_button = $('#back_button');
+		if (callback !== null)
+		{
+			back_button.unbind('click');
+			back_button.bind('click', callback);
+			back_button.show();
+		}
+		else
+			back_button.hide();
+	},
+
 	//Login
 
 	OnlineLoginSubmit : function(post_data)
@@ -70,6 +83,7 @@ var Pages =
 	{
 		$('#content').html('<div id="online_login" /><div id="offline_login" />'); //Clear content area
 		$('#header_text').html('Welcome');
+		Pages.SetBackButtonFunction(null);
 
 		var online_login_form = new Form(Pages.OnlineLoginSubmit, 'box_form', 'Online Login');
 		online_login_form.AddText('username', 'Username', null, 30);
@@ -136,6 +150,7 @@ var Pages =
 			'<a href="javascript:Pages.Logout()" class="menu_item">Exit</a>';
 		$('#content').html(content);
 		$('#header_text').html('Centre');
+		Pages.SetBackButtonFunction(null);
 	},
 
 	//Study
@@ -155,6 +170,7 @@ var Pages =
 			$('#content').html(''); //Clear content area
 			study_options_form.Display($('#content'));
 			$('#header_text').html('Choose Study Options');
+			Pages.SetBackButtonFunction(Pages.Centre);
 		},
 		function(type, message)
 		{
@@ -186,6 +202,7 @@ var Pages =
 					$('#content').html(''); //Clear content area
 					study_options_form.Display($('#content'));
 					$('#header_text').html('Choose Box to Study');
+					Pages.SetBackButtonFunction(Pages.StudyOptions);
 				},
 				function(type, message)
 				{
@@ -202,6 +219,7 @@ var Pages =
 
 	Study : function(post_data)
 	{
+		Pages.SetBackButtonFunction(null);
 		for (attr in post_data)
 			Pages.study_options[attr] = post_data[attr];
 		Study.Begin(Pages.study_options, Pages.database);
@@ -223,6 +241,7 @@ var Pages =
 			$('#content').html(''); //Clear content area
 			set_select_form.Display($('#content'));
 			$('#header_text').html('Select Set to Edit');
+			Pages.SetBackButtonFunction(Pages.Centre);
 		},
 		function(type, message)
 		{
@@ -253,6 +272,7 @@ var Pages =
 				'<a href="javascript:Pages.CheckIn(' + post_data.cardset + ', Pages.CheckInSuccess)" class="menu_item">Check In Set</a>';
 			$('#menu').html(menu_content);
 			$('#header_text').html('Edit Set - ' + result[0].name);
+			Pages.SetBackButtonFunction(Pages.EditSetSelect);
 		},
 		function(type, message)
 		{
@@ -294,6 +314,10 @@ var Pages =
 				menu_content += '<a href="javascript:Pages.EditCard(\'edit\', ' + results[i]['id'] + ')" class="menu_item">' + results[i]['front'] + '</a>';
 			$('#content').html(menu_content);
 			$('#header_text').html('Cards by Set');
+			Pages.SetBackButtonFunction(function()
+			{
+				Pages.EditSet({cardset : cardset_id});
+			});
 		},
 		function(type, message)
 		{
@@ -324,6 +348,10 @@ var Pages =
 				edit_card_form.AddSelect('current_box', 'Current Box', options, card_results[0]['current_box']);
 				edit_card_form.Display($('#content'));
 				$('#header_text').html('Edit Card');
+				Pages.SetBackButtonFunction(function()
+				{
+					Pages.EditSet({cardset : card_results[0]['parent_card_set']});
+				});
 			},
 			function(type, message)
 			{
@@ -445,6 +473,7 @@ var Pages =
 				'<a href="javascript:Pages.SwitchOnlineStatus(true)" class="menu_item">Switch Online</a>');
 		$('#content').html(menu_content);
 		$('#header_text').html('Settings');
+		Pages.SetBackButtonFunction(Pages.Centre);
 	},
 
 	SwitchOnlineStatus : function(online)
@@ -482,6 +511,7 @@ var Pages =
 		var content = '<p>A fatal error has occurred: ' + message + '</p>';
 		$('#content').html(content);
 		$('#header_text').html('Fatal Error');
+		Pages.SetBackButtonFunction(null);
 	},
 
 	NetworkError : function(message)
@@ -493,6 +523,7 @@ var Pages =
 			'<a href="javascript:Pages.Centre();" class="menu_item">No</a>';
 		$('#content').html(content);
 		$('#header_text').html('Network Error');
+		Pages.SetBackButtonFunction(null);
 	},
 
 	Start : function()

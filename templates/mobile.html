@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<title>Karteikarten System</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}mobile/style.css" />
-		<meta name="viewport" content="width=320" />
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
 		<script type="text/javascript" src="{{ STATIC_URL }}common/jquery-1.7.1.min.js"></script>
 		<script type="text/javascript">
 			//<![CDATA[
@@ -45,10 +45,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</head>
 	<body>
 		<div id="header">
-			<span id="header_text">No JS</span>
+			<div id="header_text">Loading...</div>
+			<a href="#" id="back_button" style="display: none;">Back</a>
 		</div>
 		<div id="content">
-			Please enable Javascript to view this site.
+			Loading... If the page does not load, you may need to enable Javascript.
 		</div>
 	</body>
 </html>
