@@ -310,8 +310,16 @@ var Pages =
 		Pages.database.GetCards({'parent_card_set' : cardset_id}, function(results)
 		{
 			var menu_content = '';
-			for (var i = 0; i < results.length; ++i)
+			var has_next = results.length > 10;
+			var has_previous = start > 0;
+			var len = has_next ? 10 : results.length;
+			for (var i = 0; i < len; ++i)
 				menu_content += '<a href="javascript:Pages.EditCard(\'edit\', ' + results[i]['id'] + ')" class="menu_item">' + results[i]['front'] + '</a>';
+			if (has_previous)
+				menu_content += '<a href="javascript:Pages.ViewCardsBySet(' + cardset_id + ', ' + (start > 10 ? start - 10 : 0) + ')">&lt;Previous&gt;</a> ';
+			if (has_next)
+				menu_content += '<a href="javascript:Pages.ViewCardsBySet(' + cardset_id + ', ' + (start + 10) + ')">&lt;Next&gt;</a>';
+
 			$('#content').html(menu_content);
 			$('#header_text').html('Cards by Set');
 			Pages.SetBackButtonFunction(function()
@@ -325,7 +333,7 @@ var Pages =
 				Pages.NetworkError(message);
 			else
 				Pages.FatalError(message);
-		}, start, start + 10);
+		}, start, start + 10 + 1);
 	},
 
 	EditCard : function(type, id)
