@@ -81,7 +81,7 @@ class CardBox(models.Model):
 		if 'review_frequency' in params:
 			self.review_frequency = params['review_frequency']
 		if 'last_reviewed' in params:
-			self.last_reviewed = datetime.fromtimestamp(params['last_reviewed'])
+			self.last_reviewed = datetime.fromtimestamp(float(params['last_reviewed']))
 
 class Card(models.Model):
 	front = models.TextField()
