@@ -60,7 +60,7 @@ MIGRATIONS_WEBSQL = [
 					'name VARCHAR(60),' +
 					'parent_card_set INTEGER,' +
 					'review_frequency INTEGER,' +
-					'last_reviewed TIMESTAMP,' +
+					'last_reviewed DATETIME,' +
 					'modified BOOLEAN,' +
 					'is_new BOOLEAN,' +
 					'FOREIGN KEY (owner) REFERENCES user(id),' +
@@ -99,3 +99,38 @@ MIGRATIONS_WEBSQL = [
 		}
 	},
 ];
+
+SCHEMA_WEBSQL = {
+	user : {
+		id : 'integer',
+		username : 'string',
+		is_offline : 'boolean'
+	},
+	cardset : {
+		id : 'integer',
+		owner : 'integer',
+		name : 'string',
+		modified : 'boolean',
+		is_new : 'boolean',
+	},
+	cardbox : {
+		id : 'integer',
+		owner : 'integer',
+		name : 'string',
+		parent_card_set : 'integer',
+		review_frequency : 'integer',
+		last_reviewed : 'datetime',
+		modified : 'boolean',
+		is_new : 'boolean'
+	},
+	card : {
+		id : 'integer',
+		owner : 'integer',
+		front : 'string',
+		back : 'string',
+		parent_card_set : 'integer',
+		current_box : 'integer',
+		modified : 'boolean',
+		is_new : 'boolean'
+	}
+};

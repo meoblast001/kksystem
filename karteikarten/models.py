@@ -16,6 +16,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+import time
 
 class CardSet(models.Model):
 	name = models.CharField(max_length = 60)
@@ -36,8 +37,6 @@ class CardSet(models.Model):
 	def Modify(self, params):
 		if 'name' in params:
 			self.name = params['name']
-		if 'owner' in params:
-			self.owner_id = params['owner']
 
 class CardBox(models.Model):
 	name = models.CharField(max_length = 60)
@@ -66,7 +65,7 @@ class CardBox(models.Model):
 	# Get dictionary of object
 	#
 	def Serialize(self):
-		return {'id' : self.id, 'name' : self.name, 'owner' : self.owner_id, 'parent_card_set' : self.parent_card_set_id, 'review_frequency' : self.review_frequency, 'last_reviewed' : str(self.last_reviewed)}
+		return {'id' : self.id, 'name' : self.name, 'owner' : self.owner_id, 'parent_card_set' : self.parent_card_set_id, 'review_frequency' : self.review_frequency, 'last_reviewed' : time.mktime(self.last_reviewed.timetuple())}
 
 	#
 	# Modify object from dictionary.
@@ -74,8 +73,6 @@ class CardBox(models.Model):
 	def Modify(self, params):
 		if 'name' in params:
 			self.name = params['name']
-		if 'owner' in params:
-			self.owner_id = params['owner']
 		if 'parent_card_set' in params:
 			self.parent_card_set_id = params['parent_card_set']
 		if 'review_frequency' in params:
@@ -107,8 +104,6 @@ class Card(models.Model):
 			self.front = params['front']
 		if 'back' in params:
 			self.back = params['back']
-		if 'owner' in params:
-			self.owner_id = params['owner']
 		if 'parent_card_set' in params:
 			self.parent_card_set_id = params['parent_card_set']
 		if 'current_box' in params:

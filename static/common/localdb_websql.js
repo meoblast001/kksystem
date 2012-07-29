@@ -55,10 +55,12 @@ var LocalDatabaseWebSQL = (function()
 		{
 			if (attributes[attribute] === undefined)
 				continue;
-			if (typeof(attributes[attribute]) == 'string')
+			if (SCHEMA_WEBSQL[table][attribute] == 'string')
 				sql += attribute + '="' + attributes[attribute] + '" AND ';
-			else if (typeof(attributes[attribute]) == 'boolean')
+			else if (SCHEMA_WEBSQL[table][attribute] == 'boolean')
 				sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ' AND ';
+			else if (SCHEMA_WEBSQL[table][attribute] == 'datetime')
+				sql += attribute + '=' + Math.round(attributes[attribute].getTime() / 1000) + ' AND ';
 			else
 				sql += attribute + '=' + attributes[attribute] + ' AND ';
 		}
@@ -74,7 +76,12 @@ var LocalDatabaseWebSQL = (function()
 					var row = sql_result.rows.item(i);
 					var object = {};
 					for (attribute in row)
-						object[attribute] = row[attribute];
+					{
+						if (SCHEMA_WEBSQL[table][attribute] == 'datetime')
+							object[attribute] = new Date(row[attribute]);
+						else
+							object[attribute] = row[attribute];
+					}
 					result.push(object);
 				}
 				success_callback(result);
@@ -103,10 +110,12 @@ var LocalDatabaseWebSQL = (function()
 			{
 				if (attributes[attribute] === undefined)
 					continue;
-				if (typeof(attributes[attribute]) == 'string')
+				if (SCHEMA_WEBSQL[table][attribute] == 'string')
 					sql += attribute + '="' + attributes[attribute] + '",';
-				else if (typeof(attributes[attribute]) == 'boolean')
+				else if (SCHEMA_WEBSQL[table][attribute] == 'boolean')
 					sql += attribute + '=' + (attributes[attribute] ? 1 : 0) + ',';
+				else if (SCHEMA_WEBSQL[table][attribute] == 'datetime')
+					sql += attribute + '=' + Math.round(attributes[attribute].getTime() / 1000) + ',';
 				else
 					sql += attribute + '=' + attributes[attribute] + ',';
 			}
@@ -149,10 +158,12 @@ var LocalDatabaseWebSQL = (function()
 				if (attributes[attribute] === undefined)
 					continue;
 				fields += attribute + ',';
-				if (typeof(attributes[attribute]) == 'string')
+				if (SCHEMA_WEBSQL[table][attribute] == 'string')
 					values += '"' + attributes[attribute] + '",';
-				else if (typeof(attributes[attribute]) == 'boolean')
+				else if (SCHEMA_WEBSQL[table][attribute] == 'boolean')
 					values += (attributes[attribute] ? 1 : 0) + ',';
+				else if (SCHEMA_WEBSQL[table][attribute] == 'datetime')
+					values += Math.round(attributes[attribute].getTime() / 1000) + ',';
 				else
 					values += attributes[attribute] + ',';
 			}
@@ -205,10 +216,12 @@ var LocalDatabaseWebSQL = (function()
 		{
 			if (attributes[attribute] === undefined)
 				continue;
-			if (typeof(attributes[attribute]) == 'string')
+			if (SCHEMA_WEBSQL[table][attribute] == 'string')
 				where += attribute + '="' + attributes[attribute] + '" AND ';
-			else if (typeof(attributes[attribute]) == 'boolean')
+			else if (SCHEMA_WEBSQL[table][attribute] == 'boolean')
 				where += attribute + '=' + (attributes[attribute] ? 1 : 0) + ' AND ';
+			else if (SCHEMA_WEBSQL[table][attribute] == 'datetime')
+				where += attribute + '=' + Math.round(attributes[attribute].getTime() / 1000) + ' AND ';
 			else
 				where += attribute + '=' + attributes[attribute] + ' AND ';
 		}

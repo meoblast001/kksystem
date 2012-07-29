@@ -282,7 +282,7 @@ var Database = (function()
 							name : ajax_data[i]['name'],
 							parent_card_set : ajax_data[i]['parent_card_set'],
 							review_frequency : ajax_data[i]['review_frequency'],
-							last_reviewed : ajax_data[i]['last_reviewed'],
+							last_reviewed : new Date(ajax_data[i]['last_reviewed'] * 1000),
 							modified : false,
 							is_new : false,
 						};
@@ -306,7 +306,7 @@ var Database = (function()
 							name : ajax_data[i]['name'],
 							parent_card_set : ajax_data[i]['parent_card_set'],
 							review_frequency : ajax_data[i]['review_frequency'],
-							last_reviewed : ajax_data[i]['last_reviewed'],
+							last_reviewed : new Date(ajax_data[i]['last_reviewed'] * 1000),
 							modified : false,
 							is_new : false,
 						};
@@ -502,7 +502,7 @@ var Database = (function()
 					name : local_db_data[i]['name'],
 					parent_card_set : local_db_data[i]['parent_card_set'],
 					review_frequency : local_db_data[i]['review_frequency'],
-					last_reviewed : local_db_data[i]['last_reviewed'],
+					last_reviewed : Math.round(local_db_data[i]['last_reviewed'].getTime() / 1000),
 					id : local_db_data[i]['is_new'] == 1 ? null /*New*/ : local_db_data[i]['id'] /*Existing*/,
 				};
 				var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-cardbox', params : JSON.stringify(attributes)};
@@ -540,7 +540,6 @@ var Database = (function()
 					back : local_db_data[i]['back'],
 					parent_card_set : local_db_data[i]['parent_card_set'],
 					current_box : local_db_data[i]['current_box'],
-					last_reviewed : local_db_data[i]['last_reviewed'],
 					id : local_db_data[i]['is_new'] == 1 ? null /*New*/ : local_db_data[i]['id'] /*Existing*/,
 				};
 				var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-card', params : JSON.stringify(attributes)};
@@ -641,8 +640,16 @@ var Database = (function()
 	{
 		if (this.is_online)
 		{
+			if (attributes['last_reviewed'] !== undefined)
+				attributes['last_reviewed'] = Math.round(attributes['last_reviewed'].getTime() / 1000);
 			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'get-cardboxes', params : JSON.stringify(attributes), start : start, end : end};
-			AJAX(post_data, success_callback, error_callback, true);
+			AJAX(post_data, function(results)
+			{
+				for (var i = 0; i < results.length; ++i)
+					if (results[i]['last_reviewed'] !== undefined)
+						results[i]['last_reviewed'] = new Date(results[i]['last_reviewed'] * 1000);
+				success_callback(results);
+			}, error_callback, true);
 		}
 		else
 		{
@@ -718,6 +725,8 @@ var Database = (function()
 		if (this.is_online)
 		{
 			attributes['id'] = id;
+			if (attributes['last_reviewed'] !== undefined)
+				attributes['last_reviewed'] = Math.round(attributes['last_reviewed'].getTime() / 1000);
 			var post_data = {csrfmiddlewaretoken : CSRF_TOKEN, type : 'modify-cardbox', params : JSON.stringify(attributes)};
 			AJAX(post_data, success_callback, error_callback, false);
 		}

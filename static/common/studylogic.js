@@ -71,7 +71,7 @@ var StudyLogic = (function()
 				}
 				for (i = 0; i < _this.boxes.length; ++i)
 				{
-					var hours_since_last_review = Math.round((new Date(/*Now*/) - new Date(_this.boxes[i]['last_reviewed']) * 1000 /*Seconds to milliseconds*/) / (1000 /*Milliseconds to seconds*/ * 60 /*Seconds to minutes*/ * 60 /*Minutes to hours*/));
+					var hours_since_last_review = Math.round((new Date(/*Now*/) - _this.boxes[i]['last_reviewed']) / (1000 /*Milliseconds to seconds*/ * 60 /*Seconds to minutes*/ * 60 /*Minutes to hours*/));
 					if (hours_since_last_review > _this.boxes[i]['review_frequency'] * 24 - 6)
 						_this.boxes[i].review = true;
 					else
@@ -182,7 +182,7 @@ var StudyLogic = (function()
 		{
 			//If empty, mark now as last review date
 			if (this.boxes[this.current_box].cards.length == this.cards_reviewed_this_box.length)
-				this.database.ModifyBox(this.boxes[this.current_box].id, {last_reviewed : Math.round(new Date().getTime() / 1000)}, PostUpdateBox, error_callback);
+				this.database.ModifyBox(this.boxes[this.current_box].id, {last_reviewed : new Date()}, PostUpdateBox, error_callback);
 		}
 		PostUpdateBox();
 	}
