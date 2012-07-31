@@ -481,7 +481,7 @@ var Pages =
 			edit_box_form.AddHidden('id', id);
 			edit_box_form.AddText('name', 'Name', box_results[0]['name'], 60);
 			edit_box_form.AddText('review_frequency', 'Review Frequency', box_results[0]['review_frequency'], 10);
-			edit_box_form.AddHidden('last_reviewed', box_results[0]['last_reviewed']);
+			edit_box_form.AddHidden('last_reviewed', Math.round(box_results[0]['last_reviewed'].getTime() / 1000));
 			edit_box_form.Display($('#content'));
 			$('#header_text').html('Edit Box');
 			Pages.SetBackButtonFunction(function()
@@ -491,7 +491,7 @@ var Pages =
 		}
 
 		if (type == 'new')
-			GenerateForm([{'name' : '', 'review_frequency' : '', 'last_reviewed' : Math.round(new Date().getTime() / 1000)}]);
+			GenerateForm([{'name' : '', 'review_frequency' : '', 'last_reviewed' : new Date()}]);
 		else //type == 'edit'
 		{
 			Pages.database.GetBoxes({'id' : id}, function(box_results)
@@ -514,6 +514,7 @@ var Pages =
 		var type = post_data['type'];
 		delete post_data['id'];
 		delete post_data['type'];
+		post_data['last_reviewed'] = new Date(post_data['last_reviewed'] * 1000);
 		if (type == 'new')
 			post_data['parent_card_set'] = id;
 		Pages.database.ModifyBox(type == 'edit' ? id : null, post_data, function()

@@ -700,6 +700,7 @@ var Database = (function()
 			attributes['modified'] = true;
 			if (id === null)
 			{
+				var _this = this;
 				this.local_db.Max('cardset', 'id', function(max)
 				{
 					attributes['id'] = max !== null ? max + 1 : 1;
@@ -735,6 +736,7 @@ var Database = (function()
 			attributes['modified'] = true;
 			if (id === null)
 			{
+				var _this = this;
 				this.local_db.Max('cardbox', 'id', function(max)
 				{
 					attributes['id'] = max !== null ? max + 1 : 1;

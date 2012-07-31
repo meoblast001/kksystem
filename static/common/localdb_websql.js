@@ -83,7 +83,7 @@ var LocalDatabaseWebSQL = (function()
 					for (attribute in row)
 					{
 						if (SCHEMA_WEBSQL[table][attribute] == 'datetime')
-							object[attribute] = new Date(row[attribute]);
+							object[attribute] = new Date(row[attribute] * 1000);
 						else
 							object[attribute] = row[attribute];
 					}
