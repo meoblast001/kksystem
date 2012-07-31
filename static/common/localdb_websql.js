@@ -55,6 +55,11 @@ var LocalDatabaseWebSQL = (function()
 		{
 			if (attributes[attribute] === undefined)
 				continue;
+			if (attributes[attribute] === null)
+			{
+				sql += attribute + ' IS NULL AND ';
+				continue;
+			}
 			if (SCHEMA_WEBSQL[table][attribute] == 'string')
 				sql += attribute + '="' + attributes[attribute] + '" AND ';
 			else if (SCHEMA_WEBSQL[table][attribute] == 'boolean')
@@ -216,6 +221,11 @@ var LocalDatabaseWebSQL = (function()
 		{
 			if (attributes[attribute] === undefined)
 				continue;
+			if (attributes[attribute] === null)
+			{
+				where += attribute + ' IS NULL AND ';
+				continue;
+			}
 			if (SCHEMA_WEBSQL[table][attribute] == 'string')
 				where += attribute + '="' + attributes[attribute] + '" AND ';
 			else if (SCHEMA_WEBSQL[table][attribute] == 'boolean')

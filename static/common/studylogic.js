@@ -39,11 +39,32 @@ var StudyLogic = (function()
 		var _this = this;
 		var already_failed = false;
 
+		/**
+		Bubble sort boxes by review frequency ascending.
+		@param boxes Array of boxes to sort.
+		*/
+		function BoxSortByReviewFrequency(boxes)
+		{
+			for (var i = 0; i < boxes.length - 1; ++i)
+			{
+				for (var j = 0; j < boxes.length - 1 - i; ++j)
+				{
+					if (boxes[j]['review_frequency'] > boxes[j + 1]['review_frequency'])
+					{
+						var tmp = boxes[j];
+						boxes[j] = boxes[j + 1];
+						boxes[j + 1] = tmp;
+					}
+				}
+			}
+		}
+
 		if (this.study_type == 'normal')
 		{
 			database.GetBoxes({'parent_card_set' : this.set_id}, function(boxes, params)
 			{
 				_this.boxes = boxes;
+				BoxSortByReviewFrequency(_this.boxes);
 				var boxes_processed = 0;
 				function GenerateGetCardsFunction(i)
 				{
@@ -221,7 +242,7 @@ var StudyLogic = (function()
 		if (this.study_type == 'normal')
 		{
 			if (this.current_box > 0)
-				this.database.ModifyCard(card_id, {'current_box' : this.boxes[this.current_box - 1]['id']}, success_callback, error_callback);
+				this.database.ModifyCard(card_id, {'current_box' : this.boxes[0]['id']}, success_callback, error_callback);
 			else
 				success_callback(null);
 		}
