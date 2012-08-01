@@ -21,6 +21,8 @@ var Study =
 	{
 		$('#content').html('');
 		$('#header_text').html('Loading...');
+		$('#back_button').hide();
+		$('#study_finish_button').show();
 
 		Study.study_logic = new StudyLogic(study_options, database, function()
 		{
@@ -52,6 +54,14 @@ var Study =
 		});
 	},
 
+	Finish : function()
+	{
+		$('#content').html('Finished studying. Returning to Centre...');
+		$('#header_text').html('Finished');
+		$('#study_finish_button').hide();
+		setTimeout(Pages.Centre, 3000);
+	},
+
 	DisplayNextCard : function()
 	{
 		//Hide
@@ -67,7 +77,7 @@ var Study =
 				$('#back_text').html(Study.current_card['back']);
 			}
 			else
-				Pages.Centre();
+				Study.Finish();
 		},
 		function(type, message)
 		{

@@ -22,7 +22,7 @@ body
 	right: 5px;
 }
 
-#back_button
+.top_left_button
 {
 	display: block;
 	font-size: 10px;
