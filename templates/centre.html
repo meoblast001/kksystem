@@ -22,30 +22,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<head>
 		<title>Karteikarten System - {% trans "centre" %}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css" />
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}default/style.css" />
 	</head>
 	<body>
 		<div style="position: absolute; top: 5px; left: 5px; text-align: center; font-size: 10px;">
-			<img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikartensystem" /><br />
+			<img src="{{ STATIC_URL }}common/karteikarten.png" alt="Karteikartensystem" /><br />
 			Version 2.1.0
 		</div>
 		<div style="margin-left: auto; margin-right: auto; width: 430px; text-align: center;">
 			<span class="tree">{% trans "centre" %}</span>
 			<hr style="border: none; height: 1px; background-color: #000000;" />
 			<a href="{% url select-run-options %}" class="main_menu_item">
-				<img src="{{ STATIC_URL }}study.png" alt="Study" />
+				<img src="{{ STATIC_URL }}default/study.png" alt="Study" />
 				<div class="main_menu_item_text">{% trans "study" %}</div>
 			</a>
 			<a href="{% url select-set-to-edit %}" class="main_menu_item">
-				<img src="{{ STATIC_URL }}edit.png" alt="Edit" />
+				<img src="{{ STATIC_URL }}default/edit.png" alt="Edit" />
 				<div class="main_menu_item_text">{% trans "edit" %}</div>
 			</a>
 			<a href="{% url settings %}" class="main_menu_item">
-				<img src="{{ STATIC_URL }}settings.png" alt="Settings" />
+				<img src="{{ STATIC_URL }}default/settings.png" alt="Settings" />
 				<div class="main_menu_item_text">{% trans "settings" %}</div>
 			</a>
 			<a href="{% url logout %}" class="main_menu_item">
-				<img src="{{ STATIC_URL }}exit.png" alt="Exit" />
+				<img src="{{ STATIC_URL }}default/exit.png" alt="Exit" />
 				<div class="main_menu_item_text">{% trans "exit" %}</div>
 			</a>
 		</div>

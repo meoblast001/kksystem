@@ -15,6 +15,8 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
+import time
 
 class CardSet(models.Model):
 	name = models.CharField(max_length = 60)
@@ -22,6 +24,19 @@ class CardSet(models.Model):
 
 	def __unicode__(self):
 		return self.name
+
+	#
+	# Get dictionary of object
+	#
+	def Serialize(self):
+		return {'id' : self.id, 'name' : self.name, 'owner' : self.owner.id}
+
+	#
+	# Modify object from dictionary
+	#
+	def Modify(self, params):
+		if 'name' in params:
+			self.name = params['name']
 
 class CardBox(models.Model):
 	name = models.CharField(max_length = 60)
@@ -46,6 +61,25 @@ class CardBox(models.Model):
 			output.update({cardset.pk : boxes})
 		return output
 
+	#
+	# Get dictionary of object
+	#
+	def Serialize(self):
+		return {'id' : self.id, 'name' : self.name, 'owner' : self.owner_id, 'parent_card_set' : self.parent_card_set_id, 'review_frequency' : self.review_frequency, 'last_reviewed' : time.mktime(self.last_reviewed.timetuple())}
+
+	#
+	# Modify object from dictionary.
+	#
+	def Modify(self, params):
+		if 'name' in params:
+			self.name = params['name']
+		if 'parent_card_set' in params:
+			self.parent_card_set_id = params['parent_card_set']
+		if 'review_frequency' in params:
+			self.review_frequency = params['review_frequency']
+		if 'last_reviewed' in params:
+			self.last_reviewed = datetime.fromtimestamp(float(params['last_reviewed']))
+
 class Card(models.Model):
 	front = models.TextField()
 	back = models.TextField()
@@ -55,3 +89,22 @@ class Card(models.Model):
 
 	def __unicode__(self):
 		return self.front
+
+	#
+	# Get dictionary of object
+	#
+	def Serialize(self):
+		return {'id' : self.id, 'front' : self.front, 'back' : self.back, 'owner' : self.owner_id, 'parent_card_set' : self.parent_card_set_id, 'current_box' : self.current_box_id}
+
+	#
+	# Modify object from dictionary.
+	#
+	def Modify(self, params):
+		if 'front' in params:
+			self.front = params['front']
+		if 'back' in params:
+			self.back = params['back']
+		if 'parent_card_set' in params:
+			self.parent_card_set_id = params['parent_card_set']
+		if 'current_box' in params:
+			self.current_box_id = params['current_box']

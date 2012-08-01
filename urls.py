@@ -28,4 +28,7 @@ urlpatterns = patterns('',
 	url(r'^edit/(?P<set_id>\d+)/cards/(?P<card_id>\d+)/delete/$', 'karteikarten.edit.DeleteCard', name = 'delete-card'),
 	url(r'^settings/$', 'karteikarten.settings.Settings', name = 'settings'),
 	url(r'^settings/user_info/$', 'karteikarten.settings.ChangeUserInformation', name = 'settings-change-user-information'),
+	url(r'^ajax/$', 'karteikarten.ajax.Ajax', name = 'ajax'),
+	url(r'^mobile/$', 'karteikarten.mobile.Mobile', name = 'mobile'),
+	url(r'^mobile/cache_manifest/$', 'karteikarten.mobile.CacheManifest', name = 'mobile-cache-manifest'),
 )
