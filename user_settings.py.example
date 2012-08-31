@@ -1,5 +1,7 @@
 # User-defined settings for karteikartensystem project.
 
+DEBUG = True
+
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.', #Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.

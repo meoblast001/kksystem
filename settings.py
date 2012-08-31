@@ -6,7 +6,6 @@ ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 from user_settings import *
 
-DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

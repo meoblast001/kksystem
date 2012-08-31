@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<body>
 		<div style="position: absolute; top: 5px; left: 5px; text-align: center; font-size: 10px;">
 			<img src="{{ STATIC_URL }}common/karteikarten.png" alt="Karteikartensystem" /><br />
-			Version 2.1.0
+			{% include "version.html" %}
 		</div>
 		<div style="margin-left: auto; margin-right: auto; width: 430px; text-align: center;">
 			<span class="tree">{% trans "centre" %}</span>
