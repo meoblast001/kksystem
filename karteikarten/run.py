@@ -80,7 +80,7 @@ def start(request, set_id):
 @login_required
 def run(request):
   if 'box' in request.GET:
-    return RunSpecificBox(request)
+    return runSpecificBox(request)
 
   try:
     cardset = request.session['cardset']
