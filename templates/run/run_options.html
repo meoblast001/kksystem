@@ -38,19 +38,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             else
               $('#card_box_field').hide();
           });
-        $('#id_card_set').change(function(event)
+
+        /**
+        Updates card box list to include card boxes in the current card set.
+        */
+        function UpdateCardBoxList()
+        {
+          var id_card_box = $('#id_card_box');
+          id_card_box.html('');
+          var boxes_in_this_set =
+            boxes_in_sets[$('#id_card_set option:selected').val()]
+          for (var i in boxes_in_this_set)
           {
-            var id_card_box = $('#id_card_box');
-            id_card_box.html('');
-            var boxes_in_this_set =
-              boxes_in_sets[$('#id_card_set option:selected').val()]
-            for (var i in boxes_in_this_set)
-            {
-              id_card_box.append('<option value="' + boxes_in_this_set[i].id +
-                                 '">' + boxes_in_this_set[i].name +
-                                 '</option>');
-            }
-          });
+            id_card_box.append('<option value="' + boxes_in_this_set[i].id +
+                               '">' + boxes_in_this_set[i].name +
+                               '</option>');
+          }
+        }
+        //Bind update function to "change" trigger on card set select and
+        //update with boxes from the initially selected card set
+        $('#id_card_set').change(UpdateCardBoxList);
+        UpdateCardBoxList();
       });
   </script>
 
