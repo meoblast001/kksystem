@@ -20,18 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% load i18n %}
 
 {% block body %}
-	<h2>{% trans "welcome" %}</h2>
-	<form action="{% url login %}{{ url_append }}" method="post" class="box_form">
-		{% csrf_token %}
-		{% for field in form %}
-			{{ field.label_tag }}: {{ field }}
-			{{ field.errors }}
-		{% endfor %}
-		<br /><br />
-		<input type="submit" value="{% trans "login" %}" class="box"/>
-	</form>
-	<br />
-	<a href="{% url documentation %}">{% trans "documentation" %}</a><br />
-	<a href="{% url register %}">{% trans "register" %}</a><br />
-	<a href="{% url recover-password %}">{% trans "recover-password" %}</a>
+  <h2>{% trans "welcome" %}</h2>
+  <form action="{% url login %}{{ url_append }}" method="post" class="box_form">
+    {% csrf_token %}
+    {% for field in form %}
+      {{ field.label_tag }}: {{ field }}
+      {{ field.errors }}
+    {% endfor %}
+    <br /><br />
+    <input type="submit" value="{% trans "login" %}" class="box"/>
+  </form>
+  <br />
+  <a href="{% url documentation %}">{% trans "documentation" %}</a><br />
+  <a href="{% url register %}">{% trans "register" %}</a><br />
+  <a href="{% url recover-password %}">{% trans "recover-password" %}</a>
 {% endblock %}

@@ -17,80 +17,91 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 var MigrationsSystemWebSQL = (function()
 {
-	function MigrationsSystemWebSQL(database, success_callback, error_callback)
-	{
-		this.database = database;
-		database.transaction(function(transaction)
-		{
-			//Create migration table if it does not already exist
-			transaction.executeSql('CREATE TABLE IF NOT EXISTS __migrations__ (migration_id VARCHAR(60));', [], function(transaction, results)
-			{
-				success_callback();
-			},
-			function(transaction, results)
-			{
-				error_callback();
-			});
-		});
-	}
+  function MigrationsSystemWebSQL(database, success_callback, error_callback)
+  {
+    this.database = database;
+    database.transaction(function(transaction)
+      {
+        //Create migration table if it does not already exist
+        transaction.executeSql('CREATE TABLE IF NOT EXISTS __migrations__ ' +
+          '(migration_id VARCHAR(60));', [], function(transaction, results)
+          {
+            success_callback();
+          },
+          function(transaction, results)
+          {
+            error_callback();
+          });
+      });
+  }
 
-	MigrationsSystemWebSQL.prototype.MigrateUp = function(success_callback, error_callback)
-	{
-		var _this = this;
-		var migrations_processed = 0;
-		var already_failed = false;
-		function GenerateMigrationFunction(i)
-		{
-			return function()
-			{
-				_this.database.transaction(function(transaction)
-				{
-					//Has this migration already been applied?
-					transaction.executeSql('SELECT * FROM __migrations__ WHERE migration_id = "' + MIGRATIONS_WEBSQL[i].id + '";', [], function(transaction, result)
-					{
-						//If migration was not applied, apply it and record this action in the __migrations__ table
-						if (result.rows.length == 0)
-						{
-							MIGRATIONS_WEBSQL[i].migrate(_this.database, function()
-							{
-								_this.database.transaction(function(transaction)
-								{
-									transaction.executeSql('INSERT INTO __migrations__ (migration_id) VALUES ("' + MIGRATIONS_WEBSQL[i].id + '");', [], function(transaction, results)
-									{
-										++migrations_processed;
-										if (migrations_processed == MIGRATIONS_WEBSQL.length)
-										{
-											//Do not call the success callback if a failure occurred
-											if (!already_failed)
-												success_callback();
-										}
-									});
-								});
-							},
-							function(message)
-							{
-								error_callback('migration', message);
-							});
-						}
-						else
-						{
-							++migrations_processed;
-							if (migrations_processed == MIGRATIONS_WEBSQL.length && !already_failed)
-								success_callback();
-						}
-					},
-					function(transaction, message)
-					{
-						if (!already_failed)
-							error_callback('local-db', message);
-						already_failed = true;
-					});
-				});
-			}
-		}
-		for (var i = 0; i < MIGRATIONS_WEBSQL.length; ++i)
-			GenerateMigrationFunction(i)();
-	}
+  MigrationsSystemWebSQL.prototype.MigrateUp =
+    function(success_callback, error_callback)
+  {
+    var _this = this;
+    var migrations_processed = 0;
+    var already_failed = false;
+    function GenerateMigrationFunction(i)
+    {
+      return function()
+        {
+          _this.database.transaction(function(transaction)
+            {
+              //Has this migration already been applied?
+              transaction.executeSql('SELECT * FROM __migrations__ WHERE ' +
+                'migration_id = "' + MIGRATIONS_WEBSQL[i].id + '";', [],
+                function(transaction, result)
+                {
+                  //If migration was not applied, apply it and record this action
+                  //in the __migrations__ table
+                  if (result.rows.length == 0)
+                  {
+                    MIGRATIONS_WEBSQL[i].migrate(_this.database, function()
+                      {
+                        _this.database.transaction(function(transaction)
+                          {
+                            transaction.executeSql(
+                              'INSERT INTO __migrations__ (migration_id) ' +
+                              'VALUES ("' + MIGRATIONS_WEBSQL[i].id + '");', [],
+                              function(transaction, results)
+                              {
+                                ++migrations_processed;
+                                if (migrations_processed ==
+                                    MIGRATIONS_WEBSQL.length)
+                                {
+                                  //Do not call the success callback if a
+                                  //failure occurred
+                                  if (!already_failed)
+                                    success_callback();
+                                }
+                              });
+                          });
+                      },
+                      function(message)
+                      {
+                        error_callback('migration', message);
+                      });
+                  }
+                  else
+                  {
+                    ++migrations_processed;
+                    if (migrations_processed == MIGRATIONS_WEBSQL.length &&
+                        !already_failed)
+                      success_callback();
+                  }
+                },
+                function(transaction, message)
+                {
+                  if (!already_failed)
+                    error_callback('local-db', message);
+                  already_failed = true;
+                });
+            });
+        };
+    }
+    for (var i = 0; i < MIGRATIONS_WEBSQL.length; ++i)
+      GenerateMigrationFunction(i)();
+  }
 
-	return MigrationsSystemWebSQL;
+  return MigrationsSystemWebSQL;
 })();

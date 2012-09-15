@@ -20,13 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% load i18n %}
 
 {% block body %}
-	<form action="{% url settings-change-user-information %}" method="post" class="box_form">
-		{% csrf_token %}
-		{% for field in change_user_info_form %}
-			{{ field.label_tag }}: {{ field }}
-			{{ field.errors }}
-		{% endfor %}
-		<br /><br />
-		<input type="submit" value="{% trans "submit" %}" class="box"/>
-	</form>
+  <form action="{% url settings-change-user-information %}" method="post" class="box_form">
+    {% csrf_token %}
+    {% for field in change_user_info_form %}
+      {{ field.label_tag }}: {{ field }}
+      {{ field.errors }}
+    {% endfor %}
+    <br /><br />
+    <input type="submit" value="{% trans "submit" %}" class="box"/>
+  </form>
 {% endblock %}

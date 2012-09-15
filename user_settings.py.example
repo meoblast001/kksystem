@@ -3,22 +3,29 @@
 DEBUG = True
 
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.', #Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-		'NAME': '', #Or path to database file if using sqlite3.
-		'USER': '', #Not used with sqlite3.
-		'PASSWORD': '', #Not used with sqlite3.
-		'HOST': '', #Set to empty string for localhost. Not used with sqlite3.
-		'PORT': '', #Set to empty string for default. Not used with sqlite3.
-	}
-}
+    'default': {
+        'ENGINE': 'django.db.backends.', #Add 'postgresql_psycopg2',
+                                         #'postgresql', 'mysql', 'sqlite3' or
+                                         #'oracle'.
+        'NAME': '', #Or path to database file if using sqlite3.
+        'USER': '', #Not used with sqlite3.
+        'PASSWORD': '', #Not used with sqlite3.
+        'HOST': '', #Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '', #Set to empty string for default. Not used with sqlite3.
+      }
+  }
 
 CACHES = {
-	'default': {
-		'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache', #'memcached.MemcachedCache' can be replaced with 'db.DatabaseCache', 'filebased.FileBasedCache', or 'locmem.LocMemCache'.
-		'LOCATION': '127.0.0.1:11211', #With MemcachedCache, host and port, colon separated. With DatabaseCache, table in database to store cache. With FileBasedCache, directory to store cache files. With LocMemCache, unique snowflake.
-	}
-}
+    'default': {
+        #'memcached.MemcachedCache' can be replaced with 'db.DatabaseCache',
+        #'filebased.FileBasedCache', or 'locmem.LocMemCache'.
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        #With MemcachedCache, host and port, colon separated. With
+        #DatabaseCache, table in database to store cache. With FileBasedCache,
+        #directory to store cache files. With LocMemCache, unique snowflake.
+        'LOCATION': '127.0.0.1:11211',
+      }
+  }
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'InsertSecretKeyHere'

@@ -20,13 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block title %}{{ menu_title }}{% endblock %}
 
 {% block body %}
-	<div style="text-align: center;"><a href="{% url centre %}"><img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikarten System" /></a></div>
-	<div class="block" style="width: 200px;">
-		<h2>{{ menu_title }}</h2>
-		{% for name, goto in menu_list %}
-			<div class="menuitem"><div class="box"><a href="{{ goto }}" class="menuitem_link">{{ name }}</a></div></div>
-		{% endfor %}
-		<br />
-		{% block extras %}{% endblock %}
-	</div>
+  <div style="text-align: center;">
+    <a href="{% url centre %}">
+      <img src="{{ STATIC_URL }}karteikarten.png" alt="Karteikarten System" />
+    </a>
+  </div>
+  <div class="block" style="width: 200px;">
+    <h2>{{ menu_title }}</h2>
+    {% for name, goto in menu_list %}
+      <div class="menuitem">
+        <div class="box">
+          <a href="{{ goto }}" class="menuitem_link">{{ name }}</a>
+        </div>
+      </div>
+    {% endfor %}
+    <br />
+    {% block extras %}{% endblock %}
+  </div>
 {% endblock %}

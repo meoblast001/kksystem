@@ -23,24 +23,24 @@ all_files = os.listdir(directory)
 #Find .py files
 py_files = []
 for filename in all_files:
-	if filename[-3:] == '.py':
-		py_files.append(filename)
+  if filename[-3:] == '.py':
+    py_files.append(filename)
 
 for filename in py_files:
-	#Replace every 4 spaces in original with tabs
-	file = open(directory + filename, 'r')
-	modified_lines = []
-	file_changed = False
-	for line in file:
-		modified_line = line.replace('    ', '\t')
-		modified_lines.append(modified_line)
-		if modified_line != line:
-			file_changed = True
-	file.close()
+  #Replace every 4 spaces in original with tabs
+  file = open(directory + filename, 'r')
+  modified_lines = []
+  file_changed = False
+  for line in file:
+    modified_line = line.replace('    ', '\t')
+    modified_lines.append(modified_line)
+    if modified_line != line:
+      file_changed = True
+  file.close()
 
-	if file_changed:
-		#Write modifications
-		file = open(directory + filename, 'w')
-		for line in modified_lines:
-			file.write(line)
-		file.close()
+  if file_changed:
+    #Write modifications
+    file = open(directory + filename, 'w')
+    for line in modified_lines:
+      file.write(line)
+    file.close()

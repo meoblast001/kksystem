@@ -9,8 +9,8 @@ from user_settings import *
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-	# ('Your Name', 'your_email@example.com'),
-)
+    # ('Your Name', 'your_email@example.com'),
+  )
 
 MANAGERS = ADMINS
 
@@ -26,9 +26,9 @@ USE_L10N = True
 
 # Available languages
 LANGUAGES = (
-	('en', 'English'),
-	('de', 'German'),
-)
+    ('en', 'English'),
+    ('de', 'German'),
+  )
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -46,62 +46,62 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-	os.path.join(ROOT_PATH, 'static'),
-)
+    os.path.join(ROOT_PATH, 'static'),
+  )
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
-	'django.contrib.staticfiles.finders.FileSystemFinder',
-	'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#	'django.contrib.staticfiles.finders.DefaultStorageFinder',
-)
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+  )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-	'django.core.context_processors.static',
-)
+    'django.core.context_processors.static',
+  )
 
 # Method by which sessions are stored.
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # Login form URL.
 try:
-	LOGIN_URL = FORCE_SCRIPT_NAME + '/accounts/login/'
+  LOGIN_URL = FORCE_SCRIPT_NAME + '/accounts/login/'
 except NameError:
-	LOGIN_URL = '/accounts/login/'
+  LOGIN_URL = '/accounts/login/'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-	'django.template.loaders.filesystem.Loader',
-	'django.template.loaders.app_directories.Loader',
-#	 'django.template.loaders.eggs.Loader',
-)
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.eggs.Loader',
+  )
 
 MIDDLEWARE_CLASSES = (
-	'django.middleware.common.CommonMiddleware',
-	'django.contrib.sessions.middleware.SessionMiddleware',
-	'django.middleware.csrf.CsrfViewMiddleware',
-	'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware',
-	'django.middleware.locale.LocaleMiddleware',
-)
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+  )
 
 ROOT_URLCONF = 'karteikartensystem.urls'
 
 TEMPLATE_DIRS = (
-	os.path.join(ROOT_PATH, 'templates')
-)
+    os.path.join(ROOT_PATH, 'templates')
+  )
 
 INSTALLED_APPS = (
-	'django.contrib.auth',
-	'django.contrib.contenttypes',
-	'django.contrib.sessions',
-	'django.contrib.sites',
-	'django.contrib.messages',
-	'django.contrib.staticfiles',
-	'south',
-	'karteikarten',
-)
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'south',
+    'karteikarten',
+  )
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -109,19 +109,19 @@ INSTALLED_APPS = (
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOGGING = {
-	'version': 1,
-	'disable_existing_loggers': False,
-	'handlers': {
-		'mail_admins': {
-			'level': 'ERROR',
-			'class': 'django.utils.log.AdminEmailHandler'
-		}
-	},
-	'loggers': {
-		'django.request': {
-			'handlers': ['mail_admins'],
-			'level': 'ERROR',
-			'propagate': True,
-		},
-	}
-}
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+          }
+      },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+          },
+      }
+  }

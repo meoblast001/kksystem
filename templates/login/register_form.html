@@ -20,14 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% load i18n %}
 
 {% block body %}
-	<form action="{% url register %}" method="post" class="box_form">
-		{% csrf_token %}
-		{% for field in form %}
-			{{ field.label_tag }}: {{ field }}
-			{{ field.errors }}
-		{% endfor %}
-		<div style="visibility: hidden; height: 0px;">DO NOT MODIFY: <input type="text" name="dnm_verify" /><br /></div>
-		<br /><br />
-		<input type="submit" value="{% trans "login" %}" class="box"/>
-	</form>
+  <form action="{% url register %}" method="post" class="box_form">
+    {% csrf_token %}
+    {% for field in form %}
+      {{ field.label_tag }}: {{ field }}
+      {{ field.errors }}
+    {% endfor %}
+    <div style="visibility: hidden; height: 0px;">
+      DO NOT MODIFY: <input type="text" name="dnm_verify" /><br />
+    </div>
+    <br /><br />
+    <input type="submit" value="{% trans "login" %}" class="box"/>
+  </form>
 {% endblock %}

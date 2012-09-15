@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% load i18n %}
 
 {% block body %}
-	{% trans "boxes" %}:<br /><br />
-	{% for box in boxes %}
-		<a href="{% url edit-box set_id box.id %}" class="item">{{ box.name }}</a>
-	{% endfor %}
+  {% trans "boxes" %}:<br /><br />
+  {% for box in boxes %}
+    <a href="{% url edit-box set_id box.id %}" class="item">{{ box.name }}</a>
+  {% endfor %}
 {% endblock %}

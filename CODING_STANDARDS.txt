@@ -1,14 +1,68 @@
-Karteikartensystem Coding Standards:
- * Use tabs for indentation.
- * No lines with only white space. Empty lines should actually be empty.
- * Use UNIX-style line endings (Should be a setting in the text editor).
- * New line at end of file (Should be a setting in the text editor).
- * Do not automatically wrap new lines (It's the text editor's job to wrap lines; there is no need to put the line wrapping in the file). Lines should only be wrapped if doing so helps code readability.
- * No space before parentheses (except when parentheses are used in if/while/for statements).
- * No space inside parentheses at beginning or end.
- * Use a space after commas.
- * Use a space between operators and other words.
- * Classes, methods, and functions should use pascal case (ThisIsAnExample).
- * Variables should use all lower-case and separate words with underscores (this_is_an_example).
+General Coding Standards:
+ - Use 2 spaces for indentation.
+ - No trailing whitespace. No lines containing only whitespace. Empty lines must
+   be empty.
+ - Use UNIX-style LF line endings (Should be a setting in the text editor).
+ - Use UTF-8 or ASCII encoding.
+ - New line at end of file (Should be a setting in the text editor).
+ - Do not exceed 80 columns per line. If a line exceeds 80 columns, break to
+   the next line and either (1) align to the beginning of the expression in
+   which the line break occurs (or a super-expression if necessary) or (2)
+   indent one level further than the indentation level of the initial line.
+   - Do not mix alignment styles 1 and 2 during a single expression, but
+     subexpressions may change alignment styles.
+   - Prefer higher level breaks to lower level breaks.
+   - Comments need not be aligned according to this rule, but must not exceed
+     80 columns per line.
+ - Parentheses for a parameter list should not include a space before the
+   opening parenthesis.
+ - Parentheses for control structures should include a space before the opening
+   parenthesis.
+ - No space inside parentheses at beginning or end.
+ - Use a space after commas.
+ - Use a space before and after binary operators.
+ - Classes should use pascal case (ThisIsAnExample).
+ - Functions and methods should use camel case (thisIsAnExample).
+ - Variables should use all lower-case and separate words with underscores
+   (this_is_an_example).
+ - Constants should use all capitals and separate words with underscores
+   (THIS_IS_AN_EXAMPLE).
+ - A case statement should be indented one level further than the switch
+   statement. If parentheses are used, they are indented at the same level as
+   the case. The body of the case should be indented one level further than the
+   case statement.***
+ - When breaking the line at binary operators or in chained expressions, break
+   the line after the operator.**
+ - Do not align after the first non-whitespace character.
+ - When declaring multiple variables simultaneously, align the first character
+   of the variable name if using alignment style 1.
+ - When defining a variable over multiple lines, align the first character of
+   the value on each line.
 
-WARNING: Django by default follows the Python standard using spaces for indentation. Karteikartensystem does not use spaces for indentation. After creating a migration, run the Python script tabify_migrations.py, which will update migration files to the Karteikartensystem standard.
+** This particular guideline is only a preference. Use common sense, but follow
+   the guideline when there is no good reason to break it.
+
+*** Any C-specific keywords used also apply to the equivalent in other
+    languages.
+
+XML Coding Standards: (extends General Coding Standards)
+ - If a node contains non-text child nodes, its opening and closing tags must
+   appear on their own lines.
+ - Do not follow column-per-line limit. Do not break lines.
+   - Column-per-line limit should still be followed with other languages
+     embedded in XML and text nodes.
+
+C-like Coding Standards (extends General Coding Standards):
+ - A new line should appear before opening and closing braces at the same level
+   as the control statement or function signature as in Allman style.
+
+Javascript Coding Standards: (extends C-like Coding Standards)
+ - For the purposes of these standards, a function is defined as any variable
+   which will only be set to a single function, a class is any function which
+   functions as a constructor, a constant is any value which should only be set
+   once during execution, a namespace is any object that appears at top level
+   (or an immediate child of another namespace) with the purpose of sorting code
+   into a package, and a variable is any other variable.
+ - A function or object used in the assignment of a class, namespace, or
+   constant function does not receive an additional level of indentation.
+   - This guideline does not include functions that appear in objects or arrays.

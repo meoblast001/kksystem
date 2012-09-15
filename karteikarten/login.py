@@ -20,7 +20,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib import auth
 from django.core.cache import cache
 from datetime import datetime
 import random
@@ -33,164 +33,292 @@ from django.utils.translation import ugettext as _
 #
 # Login
 #
-def Login(request):
-	#AJAX
-	if 'HTTP_X_REQUESTED_WITH' in request.META and request.META['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest':
-		is_ajax = True
-	else:
-		is_ajax = False
-	#Submit
-	if request.method == 'POST':
-		form = LoginForm(request.POST)
-		if form.is_valid():
-			user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
-			if user is not None:
-				if user.is_active:
-					login(request, user)
-					if is_ajax:
-						return HttpResponse('{"status" : "success"}')
-					else:
-						if 'next' in request.GET:
-							return HttpResponseRedirect(request.GET['next'])
-						else:
-							return HttpResponseRedirect(reverse('centre'))
-			if is_ajax:
-				return HttpResponse('{"status" : "fail", "message" : "' + _('login-failed') + '"}')
-			else:
-				return render_to_response('error.html', {'message' : _('login-failed'), 'go_back_to' : reverse('login'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-		else:
-			if is_ajax:
-				return HttpResponse('{"status" : "fail", "message" : "Required fields not filled."}')
-			else:
-				if 'next' in request.GET:
-					url_append = '?next=' + request.GET['next']
-				else:
-					url_append = ''
-				return render_to_response('login/login_form.html', {'form' : LoginForm(request.POST), 'title' : _('login'), 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
+def login(request):
+  #AJAX
+  if ('HTTP_X_REQUESTED_WITH' in request.META and
+      request.META['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'):
+    is_ajax = True
+  else:
+    is_ajax = False
+  #Submit
+  if request.method == 'POST':
+    form = LoginForm(request.POST)
+    if form.is_valid():
+      user = auth.authenticate(username = form.cleaned_data['username'],
+                          password = form.cleaned_data['password'])
+      if user is not None:
+        if user.is_active:
+          auth.login(request, user)
+          if is_ajax:
+            return HttpResponse('{"status" : "success"}')
+          else:
+            if 'next' in request.GET:
+              return HttpResponseRedirect(request.GET['next'])
+            else:
+              return HttpResponseRedirect(reverse('centre'))
+      if is_ajax:
+        return HttpResponse('{"status" : "fail", "message" : "' +
+                            _('login-failed') + '"}')
+      else:
+        return render_to_response('error.html', {
+            'message' : _('login-failed'),
+            'go_back_to' : reverse('login'),
+            'title' : _('error'),
+            'site_link_chain' : zip([], [])
+          }, context_instance = RequestContext(request))
+    else:
+      if is_ajax:
+        return HttpResponse('{"status" : "fail", ' +
+                            '"message" : "Required fields not filled."}')
+      else:
+        if 'next' in request.GET:
+          url_append = '?next=' + request.GET['next']
+        else:
+          url_append = ''
+        return render_to_response('login/login_form.html', {
+            'form' : LoginForm(request.POST),
+            'title' : _('login'),
+            'site_link_chain' : zip([], []),
+            'url_append' : url_append
+          }, context_instance = RequestContext(request))
 
-	#Form
-	else:
-		#If user is mobile, go to mobile site
-		if request.META['HTTP_USER_AGENT'].upper().find('MOBILE') != -1:
-			return HttpResponseRedirect(reverse('mobile'))
+  #Form
+  else:
+    #If user is mobile, go to mobile site
+    if request.META['HTTP_USER_AGENT'].upper().find('MOBILE') != -1:
+      return HttpResponseRedirect(reverse('mobile'))
 
-		if 'next' in request.GET:
-			url_append = '?next=' + request.GET['next']
-		else:
-			url_append = ''
-		return render_to_response('login/login_form.html', {'form' : LoginForm(), 'title' : _('login'), 'site_link_chain' : zip([], []), 'url_append' : url_append}, context_instance = RequestContext(request))
+    if 'next' in request.GET:
+      url_append = '?next=' + request.GET['next']
+    else:
+      url_append = ''
+    return render_to_response('login/login_form.html', {
+        'form' : LoginForm(),
+        'title' : _('login'),
+        'site_link_chain' : zip([], []),
+        'url_append' : url_append
+      }, context_instance = RequestContext(request))
 
 #
 # Logout
 #
 @login_required
-def Logout(request):
-	logout(request)
-	if 'HTTP_X_REQUESTED_WITH' in request.META and request.META['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest':
-		return HttpResponse()
-	else:
-		return HttpResponseRedirect(reverse('centre'))
+def logout(request):
+  auth.logout(request)
+  if ('HTTP_X_REQUESTED_WITH' in request.META and
+      request.META['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'):
+    return HttpResponse()
+  else:
+    return HttpResponseRedirect(reverse('centre'))
 
 #
 # Register
 #
-def Register(request):
-	#Submit
-	if request.method == 'POST':
-		if 'dnm_verify' in request.POST and request.POST['dnm_verify'] != '':
-			raise Http404
+def register(request):
+  #Submit
+  if request.method == 'POST':
+    if 'dnm_verify' in request.POST and request.POST['dnm_verify'] != '':
+      raise Http404
 
-		form = RegisterForm(request.POST)
-		if form.is_valid():
-			#Must create a unique user
-			users_with_same_username = User.objects.filter(username = form.cleaned_data['username'])
-			users_with_same_email = User.objects.filter(email = form.cleaned_data['email'])
-			if len(users_with_same_username) == 0:
-				if len(users_with_same_email) == 0:
-					new_user = User.objects.create_user(username = form.cleaned_data['username'], email = form.cleaned_data['email'], password = form.cleaned_data['password'])
-					return render_to_response('confirmation.html', {'message' : _('registration-successful'), 'short_messsage' : _('registered'), 'go_to' : reverse('centre'), 'go_to_name' : _('back-to-centre'), 'title' : _('confirmation'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-				else:
-					return render_to_response('error.html', {'message' : _('email-matches-that-of-another-user'), 'go_back_to' : reverse('register'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-			else:
-				return render_to_response('error.html', {'message' : _('username-matches-that-of-another-user'), 'go_back_to' : reverse('register'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-		else:
-			return render_to_response('login/register_form.html', {'form' : RegisterForm(request.POST), 'title' : _('register'), 'site_link_chain' : zip([reverse('login')], [_('login')])}, context_instance = RequestContext(request))
+    form = RegisterForm(request.POST)
+    if form.is_valid():
+      #Must create a unique user
+      users_with_same_username = \
+        User.objects.filter(username = form.cleaned_data['username'])
+      users_with_same_email = \
+        User.objects.filter(email = form.cleaned_data['email'])
+      if len(users_with_same_username) == 0:
+        if len(users_with_same_email) == 0:
+          new_user = \
+            User.objects.create_user(username = form.cleaned_data['username'],
+                                     email = form.cleaned_data['email'],
+                                     password = form.cleaned_data['password'])
+          return render_to_response('confirmation.html', {
+              'message' : _('registration-successful'),
+              'short_messsage' : _('registered'),
+              'go_to' : reverse('centre'),
+              'go_to_name' : _('back-to-centre'),
+              'title' : _('confirmation'),
+              'site_link_chain' : zip([], [])
+            }, context_instance = RequestContext(request))
+        else:
+          return render_to_response('error.html', {
+              'message' : _('email-matches-that-of-another-user'),
+              'go_back_to' : reverse('register'),
+              'title' : _('error'),
+              'site_link_chain' : zip([], [])
+            }, context_instance = RequestContext(request))
+      else:
+        return render_to_response('error.html', {
+            'message' : _('username-matches-that-of-another-user'),
+            'go_back_to' : reverse('register'),
+            'title' : _('error'),
+            'site_link_chain' : zip([], [])
+          }, context_instance = RequestContext(request))
+    else:
+      return render_to_response('login/register_form.html', {
+          'form' : RegisterForm(request.POST),
+          'title' : _('register'),
+          'site_link_chain' : zip([reverse('login')], [_('login')])
+        }, context_instance = RequestContext(request))
 
-	#Form
-	else:
-		return render_to_response('login/register_form.html', {'form' : RegisterForm(), 'title' : _('register'), 'site_link_chain' : zip([reverse('login')], [_('login')])}, context_instance = RequestContext(request))
+  #Form
+  else:
+    return render_to_response('login/register_form.html', {
+        'form' : RegisterForm(),
+        'title' : _('register'),
+        'site_link_chain' : zip([reverse('login')], [_('login')])
+      }, context_instance = RequestContext(request))
 
 #
 # Request password recovery email
 #
-def RecoverPassword(request):
-	#Submit
-	if request.method == 'POST':
-		form = RecoverPasswordForm(request.POST)
-		if form.is_valid():
-			users = User.objects.filter(username = form.cleaned_data['username'], email = form.cleaned_data['email'])
-			if len(users) > 0:
-				user = users[0]
+def recoverPassword(request):
+  #Submit
+  if request.method == 'POST':
+    form = RecoverPasswordForm(request.POST)
+    if form.is_valid():
+      users = User.objects.filter(username = form.cleaned_data['username'],
+                                  email = form.cleaned_data['email'])
+      if len(users) > 0:
+        user = users[0]
 
-				#Generate random identification string for this password recovery session
-				ident_string = ''
-				for i in range(10):
-					ident_string += random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
-				#Get current recovery session information
-				password_recovery = cache.get('password_recovery')
-				if password_recovery == None:
-					password_recovery = []
-				#Purge all expired recovery sessions
-				for session in password_recovery:
-					time_delta = datetime.now() - session['datetime']
-					if ((time_delta.microseconds + (time_delta.seconds + time_delta.days * 24 * 3600) * 10 ** 6) / 10 **6) > 18000:
-						password_recovery.remove(session)
-				#Cache recovery session information
-				password_recovery.append({'user' : user, 'ident' : ident_string, 'datetime' : datetime.now()})
-				cache.set('password_recovery', password_recovery, 18000)
-				#Dispatch email
-				site = Site.objects.get_current()
-				send_mail(_('password-recovery'), _('reset-password-here') + ': http://' + site.domain + reverse('recover-reset-password') + '?id=' + ident_string, 'noreply@' + site.domain, [user.email], fail_silently = False)
+        #Generate random identification string for this password recovery
+        #session
+        ident_string = ''
+        for i in range(10):
+          ident_string += random.choice(string.ascii_uppercase +
+                                        string.ascii_lowercase + string.digits)
+        #Get current recovery session information
+        password_recovery = cache.get('password_recovery')
+        if password_recovery == None:
+          password_recovery = []
+        #Purge all expired recovery sessions
+        for session in password_recovery:
+          time_delta = datetime.now() - session['datetime']
+          if (((time_delta.microseconds +
+              (time_delta.seconds + time_delta.days * 24 * 3600) * 10 ** 6) /
+              10 ** 6) > 18000):
+            password_recovery.remove(session)
+        #Cache recovery session information
+        password_recovery.append({
+            'user' : user,
+            'ident' : ident_string,
+            'datetime' : datetime.now()
+          })
+        cache.set('password_recovery', password_recovery, 18000)
+        #Dispatch email
+        site = Site.objects.get_current()
+        send_mail(_('password-recovery'),
+                  _('reset-password-here') +
+                  ': http://' + site.domain +
+                  reverse('recover-reset-password') + '?id=' + ident_string,
+                  'noreply@' + site.domain, [user.email], fail_silently = False)
 
-				return render_to_response('confirmation.html', {'message' : _('email-sent-with-reset-password-link'), 'short_messsage' : _('request-pending'), 'go_to' : reverse('login'), 'go_to_name' : _('back-to-login'), 'title' : _('confirmation'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-			else:
-				return render_to_response('error.html', {'message' : _('username-and-email-do-not-match-valid-user'), 'go_back_to' : reverse('recover-password'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-		else:
-			return render_to_response('login/recover_password_form.html', {'form' : RecoverPasswordForm(request.POST), 'title' : _('request-password-recovery-email'), 'site_link_chain' : zip([reverse('login')], [_('login')])}, context_instance = RequestContext(request))
-	#Form
-	else:
-		return render_to_response('login/recover_password_form.html', {'form' : RecoverPasswordForm(), 'title' : _('request-password-recovery-email'), 'site_link_chain' : zip([reverse('login')], [_('login')])}, context_instance = RequestContext(request))
+        return render_to_response('confirmation.html', {
+            'message' : _('email-sent-with-reset-password-link'),
+            'short_messsage' : _('request-pending'),
+            'go_to' : reverse('login'),
+            'go_to_name' : _('back-to-login'),
+            'title' : _('confirmation'),
+            'site_link_chain' : zip([], [])
+          }, context_instance = RequestContext(request))
+      else:
+        return render_to_response('error.html', {
+            'message' : _('username-and-email-do-not-match-valid-user'),
+            'go_back_to' : reverse('recover-password'),
+            'title' : _('error'),
+            'site_link_chain' : zip([], [])
+          }, context_instance = RequestContext(request))
+    else:
+      return render_to_response('login/recover_password_form.html', {
+          'form' : RecoverPasswordForm(request.POST),
+          'title' : _('request-password-recovery-email'),
+          'site_link_chain' : zip([reverse('login')], [_('login')])
+        }, context_instance = RequestContext(request))
+  #Form
+  else:
+    return render_to_response('login/recover_password_form.html', {
+        'form' : RecoverPasswordForm(),
+        'title' : _('request-password-recovery-email'),
+        'site_link_chain' : zip([reverse('login')], [_('login')])
+      }, context_instance = RequestContext(request))
 
 #
 # Reset password from password recovery email
 #
-def RecoverResetPassword(request):
-	#Submit
-	if request.method == 'POST':
-		form = RecoverResetPasswordForm(request.POST)
-		password_recovery = cache.get('password_recovery')
-		if password_recovery != None and 'id' in request.GET:
-			if form.is_valid():
-				for session in password_recovery:
-					if session['ident'] == request.GET['id'] and session['user'].username == form.cleaned_data['username']:
-						session['user'].set_password(request.POST['password'])
-						session['user'].save()
-						#Remove current recovery session
-						password_recovery.remove(session)
-						cache.set('password_recovery', password_recovery, 18000)
+def recoverResetPassword(request):
+  #Submit
+  if request.method == 'POST':
+    form = RecoverResetPasswordForm(request.POST)
+    password_recovery = cache.get('password_recovery')
+    if password_recovery != None and 'id' in request.GET:
+      if form.is_valid():
+        for session in password_recovery:
+          if (session['ident'] == request.GET['id'] and
+              session['user'].username == form.cleaned_data['username']):
+            session['user'].set_password(request.POST['password'])
+            session['user'].save()
+            #Remove current recovery session
+            password_recovery.remove(session)
+            cache.set('password_recovery', password_recovery, 18000)
 
-						return render_to_response('confirmation.html', {'message' : _('password-changed'), 'short_messsage' : _('password-recovery-complete'), 'go_to' : reverse('login'), 'go_to_name' : _('back-to-login'), 'title' : _('confirmation'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-					else:
-						return render_to_response('error.html', {'message' : _('doesnt-match-password-recovery-session'), 'go_back_to' : reverse('recover-password'), 'title' : 'Error', 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-			else:
-				return render_to_response('login/recover_reset_password_form.html', {'form' : RecoverResetPasswordForm(request.POST), 'url_append' : '?id=' + request.GET['id'], 'title' : _('reset-password'), 'site_link_chain' : zip([reverse('login'), reverse('recover-password')], ['Login', _('request-password-recovery-email')])}, context_instance = RequestContext(request))
-		else:
-			return render_to_response('error.html', {'message' : _('recovery-session-id-not-found'), 'go_back_to' : reverse('recover-password'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
-	#Form
-	else:
-		password_recovery = cache.get('password_recovery')
-		if password_recovery != None and 'id' in request.GET:
-			for session in password_recovery:
-				if session['ident'] == request.GET['id']:
-					return render_to_response('login/recover_reset_password_form.html', {'form' : RecoverResetPasswordForm(), 'url_append' : '?id=' + request.GET['id'], 'title' : _('reset-password'), 'site_link_chain' : zip([reverse('login'), reverse('recover-password')], [_('login'), _('request-password-recovery-email')])}, context_instance = RequestContext(request))
-		return render_to_response('error.html', {'message' : _('recovery-session-id-invalid'), 'go_back_to' : reverse('centre'), 'title' : _('error'), 'site_link_chain' : zip([], [])}, context_instance = RequestContext(request))
+            return render_to_response('confirmation.html', {
+                'message' : _('password-changed'),
+                'short_messsage' : _('password-recovery-complete'),
+                'go_to' : reverse('login'),
+                'go_to_name' : _('back-to-login'),
+                'title' : _('confirmation'),
+                'site_link_chain' : zip([], [])
+              }, context_instance = RequestContext(request))
+          else:
+            return render_to_response('error.html', {
+                'message' : _('doesnt-match-password-recovery-session'),
+                'go_back_to' : reverse('recover-password'),
+                'title' : 'Error',
+                'site_link_chain' : zip([], [])
+              }, context_instance = RequestContext(request))
+      else:
+        return render_to_response('login/recover_reset_password_form.html', {
+            'form' : RecoverResetPasswordForm(request.POST),
+            'url_append' : '?id=' + request.GET['id'],
+            'title' : _('reset-password'),
+            'site_link_chain' : zip([
+                reverse('login'),
+                reverse('recover-password')
+              ], [
+                'Login',
+                _('request-password-recovery-email')
+              ])
+          }, context_instance = RequestContext(request))
+    else:
+      return render_to_response('error.html', {
+          'message' : _('recovery-session-id-not-found'),
+          'go_back_to' : reverse('recover-password'),
+          'title' : _('error'),
+          'site_link_chain' : zip([], [])
+        }, context_instance = RequestContext(request))
+  #Form
+  else:
+    password_recovery = cache.get('password_recovery')
+    if password_recovery != None and 'id' in request.GET:
+      for session in password_recovery:
+        if session['ident'] == request.GET['id']:
+          return render_to_response('login/recover_reset_password_form.html', {
+              'form' : RecoverResetPasswordForm(),
+              'url_append' : '?id=' + request.GET['id'],
+              'title' : _('reset-password'),
+              'site_link_chain' : zip([
+                  reverse('login'),
+                  reverse('recover-password')
+                ], [
+                  _('login'),
+                  _('request-password-recovery-email')
+                ])
+            }, context_instance = RequestContext(request))
+    return render_to_response('error.html', {
+        'message' : _('recovery-session-id-invalid'),
+        'go_back_to' : reverse('centre'),
+        'title' : _('error'),
+        'site_link_chain' : zip([], [])
+      }, context_instance = RequestContext(request))

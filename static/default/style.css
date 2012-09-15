@@ -1,252 +1,252 @@
 body
 {
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-	background-color: #bfd0ea;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  background-color: #bfd0ea;
 }
 
 a
 {
-	color: #000011;
+  color: #000011;
 }
 
 ul
 {
-	list-style: none;
+  list-style: none;
 }
 
 a img
 {
-	border-width: 0px;
+  border-width: 0px;
 }
 
 .tree
 {
-	font-size: 12px;
+  font-size: 12px;
 }
 
 .tree a
 {
-	color: #000000;
+  color: #000000;
 }
 
 .main_menu_item
 {
-	color: #000000;
-	text-decoration: none;
-	width: 200px;
-	height: 150px;
-	border: 1px #0c1b33 solid;
-	margin: 5px;
-	background-image: url('centre_button_normal.png');
-	display: inline-block;
-	text-align: center;
-	position: relative;
+  color: #000000;
+  text-decoration: none;
+  width: 200px;
+  height: 150px;
+  border: 1px #0c1b33 solid;
+  margin: 5px;
+  background-image: url('centre_button_normal.png');
+  display: inline-block;
+  text-align: center;
+  position: relative;
 }
 
 .main_menu_item_text
 {
-	position: absolute;
-	bottom: 5px;
-	width: 100%;
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
 }
 
 .page_container
 {
-	margin-left: auto;
-	margin-right: auto;
-	width: 430px;
-	text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 430px;
+  text-align: center;
 }
 
 .page
 {
-	width: 350px;
-	margin-left: auto;
-	margin-right: auto;
-	background-color: #ddddff;
-	border: 1px #0c1b33 solid;
+  width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #ddddff;
+  border: 1px #0c1b33 solid;
 }
 
 .page_header
 {
-	color: #ffffff;
-	background-color: #5982c1;
-	border-bottom: 1px #0c1b33 solid;
-	width: 100%;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	text-align: center;
+  color: #ffffff;
+  background-color: #5982c1;
+  border-bottom: 1px #0c1b33 solid;
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
 }
 
 .page_content
 {
-	padding: 5px;
-	text-align: center;
+  padding: 5px;
+  text-align: center;
 }
 
 .box_form select
 {
-	width: 95%;
+  width: 95%;
 }
 
 .box_form input
 {
-	border: 1px solid #000000;
-	width: 95%;
-	margin-bottom: 5px;
+  border: 1px solid #000000;
+  width: 95%;
+  margin-bottom: 5px;
 }
 
 .box_form textarea
 {
-	border: 1px solid #000000;
-	width: 95%;
-	margin-bottom: 5px;
+  border: 1px solid #000000;
+  width: 95%;
+  margin-bottom: 5px;
 }
 
 .box_form div ul li label input
 {
-	width: 20px;
+  width: 20px;
 }
 
 .box_delete_form input
 {
-	border: 1px solid #000000;
-	width: 95%;
-	margin-bottom: 5px;
-	background-color: #FF5555;
+  border: 1px solid #000000;
+  width: 95%;
+  margin-bottom: 5px;
+  background-color: #FF5555;
 }
 
 .grid
 {
-	width: 100%;
-	font-size: 14px;
+  width: 100%;
+  font-size: 14px;
 }
 
 .grid_item
 {
-	text-align: center;
+  text-align: center;
 }
 
 .item
 {
-	display: block;
-	width: 95%;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 5px;
-	border: 1px #000000 solid;
-	background-color: #ccccff;
+  display: block;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+  border: 1px #000000 solid;
+  background-color: #ccccff;
 }
 
 .practice_sidebar
 {
-	background-color: #ddddff;
-	width: 190px;
-	margin-left: 5px;
-	margin-right: 5px;
-	padding: 5px;
-	border: 1px #000000 solid;
-	float: left;
+  background-color: #ddddff;
+  width: 190px;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 5px;
+  border: 1px #000000 solid;
+  float: left;
 }
 
 .card
 {
-	position: relative;
-	background-color: #ffffff;
-	width: 400px;
-	height: 200px;
-	margin-left: 210px;
-	margin-right: 5px;
-	margin-bottom: 5px;
-	border: 1px #000000 solid;
-	display: block;
+  position: relative;
+  background-color: #ffffff;
+  width: 400px;
+  height: 200px;
+  margin-left: 210px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border: 1px #000000 solid;
+  display: block;
 }
 
 .card_not_visible
 {
-	position: relative;
-	background-image: url('../common/card_not_visible.png');
-	width: 400px;
-	height: 200px;
-	margin-left: 210px;
-	margin-right: 5px;
-	margin-bottom: 5px;
-	border: 1px #000000 solid;
-	display: block;
+  position: relative;
+  background-image: url('../common/card_not_visible.png');
+  width: 400px;
+  height: 200px;
+  margin-left: 210px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border: 1px #000000 solid;
+  display: block;
 }
 
 .non_card
 {
-	position: relative;
-	width: 400px;
-	margin-left: 210px;
-	margin-right: 5px;
-	margin-bottom: 5px;
-	display: block;
+  position: relative;
+  width: 400px;
+  margin-left: 210px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  display: block;
 }
 
 .card_content
 {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	vertical-align: middle;
-	text-align: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+  text-align: center;
 }
 
 .card_content tr
 {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .card_content tr td
 {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .button
 {
-	display: block;
-	text-decoration: none;
-	border: 1px solid #000000;
-	width: 95%;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 5px;
+  display: block;
+  text-decoration: none;
+  border: 1px solid #000000;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
 }
 
 .errorlist
 {
-	color: #FF0000;
-	list-style-type: none;
-	padding-left: 0px;
-	margin: 0px;
+  color: #FF0000;
+  list-style-type: none;
+  padding-left: 0px;
+  margin: 0px;
 }
 
 .errorlist li:before
 {
-	content: "\00BB \0020";
+  content: "\00BB \0020";
 }
 
 .ajax_error
 {
-	background-color: #FF8888;
-	border: 1px solid #000000;
-	padding: 3px;
-	margin-bottom: 5px;
-	display: none;
+  background-color: #FF8888;
+  border: 1px solid #000000;
+  padding: 3px;
+  margin-bottom: 5px;
+  display: none;
 }
 
 .ajax_success
 {
-	background-color: #88FF88;
-	border: 1px solid #000000;
-	padding: 3px;
-	margin-bottom: 5px;
-	display: none;
+  background-color: #88FF88;
+  border: 1px solid #000000;
+  padding: 3px;
+  margin-bottom: 5px;
+  display: none;
 }

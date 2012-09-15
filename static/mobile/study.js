@@ -17,110 +17,119 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 var Study =
 {
-	Begin : function(study_options, database)
-	{
-		$('#content').html('');
-		$('#header_text').html('Loading...');
-		$('#back_button').hide();
-		$('#study_finish_button').show();
+  Begin : function(study_options, database)
+    {
+      $('#content').html('');
+      $('#header_text').html('Loading...');
+      $('#back_button').hide();
+      $('#study_finish_button').show();
 
-		Study.study_logic = new StudyLogic(study_options, database, function()
-		{
-			var content =
-				'<div id="front" class="card">' +
-					'<table class="card_content"><tr><td id="front_text" /></tr></table>' +
-				'</div>' +
-				'<div id="back" class="card_not_visible">' +
-					'<a href="javascript:Study.Show();" style="display: block;">' +
-						'<table class="card_content" style="color: #000000;"><tr><td>Click here to flip card.</td></tr></table>' +
-					'</a>' +
-					'<table id="back_content" class="card_content" style="float: left; background-color: #ffffff; display: none;">' +
-						'<tr><td id="back_text" /></tr>' +
-					'</table>' +
-				'</div>' +
-				'<div id="buttons" class="study_button_container" style="display: none;">' +
-					'<a href="javascript:Study.Correct();" class="study_button_correct">Correct</a>' +
-					'<a href="javascript:Study.Incorrect();" class="study_button_incorrect">Incorrect</a>' +
-				'</div>';
-			$('#content').html(content);
-			$('#header_text').html('Study');
+      Study.study_logic = new StudyLogic(study_options, database, function()
+        {
+          var content =
+            '<div id="front" class="card">' +
+              '<table class="card_content">' +
+                '<tr><td id="front_text" /></tr>' +
+              '</table>' +
+            '</div>' +
+            '<div id="back" class="card_not_visible">' +
+              '<a href="javascript:Study.Show();" style="display: block;">' +
+                '<table class="card_content" style="color: #000000;">' +
+                  '<tr><td>Click here to flip card.</td></tr>' +
+                '</table>' +
+              '</a>' +
+              '<table id="back_content" class="card_content" ' +
+              'style="float: left; background-color: #ffffff; display: none;"' +
+              '>' +
+                '<tr><td id="back_text" /></tr>' +
+              '</table>' +
+            '</div>' +
+            '<div id="buttons" class="study_button_container" ' +
+            'style="display: none;">' +
+              '<a href="javascript:Study.Correct();" ' +
+              'class="study_button_correct">Correct</a>' +
+              '<a href="javascript:Study.Incorrect();" ' +
+              'class="study_button_incorrect">Incorrect</a>' +
+            '</div>';
+          $('#content').html(content);
+          $('#header_text').html('Study');
 
-			Study.DisplayNextCard();
-		},
-		function(type, message)
-		{
-			if (type == 'network')
-				Pages.NetworkError(message);
-		});
-	},
+          Study.DisplayNextCard();
+        },
+        function(type, message)
+        {
+          if (type == 'network')
+            Pages.NetworkError(message);
+        });
+    },
 
-	Finish : function()
-	{
-		$('#content').html('Finished studying. Returning to Centre...');
-		$('#header_text').html('Finished');
-		$('#study_finish_button').hide();
-		setTimeout(Pages.Centre, 3000);
-	},
+  Finish : function()
+    {
+      $('#content').html('Finished studying. Returning to Centre...');
+      $('#header_text').html('Finished');
+      $('#study_finish_button').hide();
+      setTimeout(Pages.Centre, 3000);
+    },
 
-	DisplayNextCard : function()
-	{
-		//Hide
-		$('#back_content').hide();
-		$('#buttons').hide();
+  DisplayNextCard : function()
+    {
+      //Hide
+      $('#back_content').hide();
+      $('#buttons').hide();
 
-		Study.study_logic.GetNextCard(function(card)
-		{
-			Study.current_card = card;
-			if (Study.current_card !== null)
-			{
-				$('#front_text').html(Study.current_card['front']);
-				$('#back_text').html(Study.current_card['back']);
-			}
-			else
-				Study.Finish();
-		},
-		function(type, message)
-		{
-			if (type == 'network')
-				Pages.NetworkError(message);
-			else
-				Pages.FatalError(message);
-		});
-	},
+      Study.study_logic.GetNextCard(function(card)
+        {
+          Study.current_card = card;
+          if (Study.current_card !== null)
+          {
+            $('#front_text').html(Study.current_card['front']);
+            $('#back_text').html(Study.current_card['back']);
+          }
+          else
+            Study.Finish();
+        },
+        function(type, message)
+        {
+          if (type == 'network')
+            Pages.NetworkError(message);
+          else
+            Pages.FatalError(message);
+        });
+    },
 
-	Show : function()
-	{
-		$('#back_content').show();
-		$('#buttons').show();
-	},
+  Show : function()
+    {
+      $('#back_content').show();
+      $('#buttons').show();
+    },
 
-	Correct : function()
-	{
-		Study.study_logic.Correct(Study.current_card['id'], function()
-		{
-			Study.DisplayNextCard();
-		},
-		function(type, message)
-		{
-			if (type == 'network')
-				Pages.NetworkError(message);
-			else
-				Pages.FatalError(message);
-		});
-	},
+  Correct : function()
+    {
+      Study.study_logic.Correct(Study.current_card['id'], function()
+        {
+          Study.DisplayNextCard();
+        },
+        function(type, message)
+        {
+          if (type == 'network')
+            Pages.NetworkError(message);
+          else
+            Pages.FatalError(message);
+        });
+    },
 
-	Incorrect : function()
-	{
-		Study.study_logic.Incorrect(Study.current_card['id'], function()
-		{
-			Study.DisplayNextCard();
-		},
-		function(type, message)
-		{
-			if (type == 'network')
-				Pages.NetworkError(message);
-			else
-				Pages.FatalError(message);
-		});
-	},
+  Incorrect : function()
+    {
+      Study.study_logic.Incorrect(Study.current_card['id'], function()
+        {
+          Study.DisplayNextCard();
+        },
+        function(type, message)
+        {
+          if (type == 'network')
+            Pages.NetworkError(message);
+          else
+            Pages.FatalError(message);
+        });
+    },
 };

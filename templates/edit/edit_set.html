@@ -20,48 +20,64 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% load i18n %}
 
 {% block head %}
-	<script type="text/javascript">
-		$(document).ready(function()
-		{
-			$('#delete').click(function()
-			{
-				return confirm('{% trans "are-you-sure-delete" %}');
-			});
-		});
-	</script>
+  <script type="text/javascript">
+    $(document).ready(function()
+      {
+        $('#delete').click(function()
+          {
+            return confirm('{% trans "are-you-sure-delete" %}');
+          });
+      });
+  </script>
 {% endblock %}
 
 {% block body %}
-	<form action="{% if already_exists %}{% url edit-set id %}{% else %}{% url new-set %}{% endif %}" method="post" class="box_form">
-		{% csrf_token %}
-		{% for field in form %}
-			{{ field.label_tag }}: {{ field }}
-			{{ field.errors }}
-		{% endfor %}
-		<br /><br />
-		<input type="submit" value="{% trans "continue" %}" class="box"/>
-	</form>
-	{% if already_exists %}
-		<div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
-			<table class="grid">
-				<tr>
-					<td>{% trans "cards" %}:</td>
-				</tr>
-				<tr>
-					<td><a href="{% url new-card id %}"><img src="{{ STATIC_URL }}default/new_card.png" alt="" />{% trans "new-card" %}</a></td>
-					<td><a href="{% url edit-view-cards-by-set id %}"><img src="{{ STATIC_URL }}default/edit_card.png" alt="" />{% trans "edit-card" %}</a></td>
-				<tr>
-					<td>{% trans "boxes" %}:</td>
-				</tr>
-				<tr>
-					<td><a href="{% url new-box id %}"><img src="{{ STATIC_URL }}default/new_box.png" alt="" />{% trans "new-box" %}</a></td>
-					<td><a href="{% url edit-view-boxes-by-set id %}"><img src="{{ STATIC_URL }}default/edit_box.png" alt="" />{% trans "edit-box" %}</a></td>
-				</tr>
-			</table>
-			<form action="{% url delete-set id %}" method="POST" class="box_delete_form" style="padding-top: 20px;">
-				{% csrf_token %}
-				<input id="delete" type="submit" value="{% trans "delete" %}" />
-			</form>
-		</div>
-	{% endif %}
+  <form action="{% if already_exists %}{% url edit-set id %}{% else %}{% url new-set %}{% endif %}" method="post" class="box_form">
+    {% csrf_token %}
+    {% for field in form %}
+      {{ field.label_tag }}: {{ field }}
+      {{ field.errors }}
+    {% endfor %}
+    <br /><br />
+    <input type="submit" value="{% trans "continue" %}" class="box"/>
+  </form>
+  {% if already_exists %}
+    <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+      <table class="grid">
+        <tr>
+          <td>{% trans "cards" %}:</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="{% url new-card id %}">
+              <img src="{{ STATIC_URL }}default/new_card.png" alt="" />{% trans "new-card" %}
+            </a>
+          </td>
+          <td>
+            <a href="{% url edit-view-cards-by-set id %}">
+              <img src="{{ STATIC_URL }}default/edit_card.png" alt="" />{% trans "edit-card" %}
+            </a>
+          </td>
+        <tr>
+          <td>{% trans "boxes" %}:</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="{% url new-box id %}">
+              <img src="{{ STATIC_URL }}default/new_box.png" alt="" />{% trans "new-box" %}
+            </a>
+          </td>
+          <td>
+            <a href="{% url edit-view-boxes-by-set id %}">
+              <img src="{{ STATIC_URL }}default/edit_box.png" alt="" />{% trans "edit-box" %}
+            </a>
+          </td>
+        </tr>
+      </table>
+      <form action="{% url delete-set id %}" method="POST" class="box_delete_form" style="padding-top: 20px;">
+        {% csrf_token %}
+        <input id="delete" type="submit" value="{% trans "delete" %}" />
+      </form>
+    </div>
+  {% endif %}
 {% endblock %}

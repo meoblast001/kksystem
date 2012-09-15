@@ -17,40 +17,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <!DOCTYPE html>
 <html manifest="{% url mobile-cache-manifest %}">
-	<head>
-		<title>Karteikarten System</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}mobile/style.css" />
-		<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
-		<script type="text/javascript" src="{{ STATIC_URL }}common/jquery-1.7.1.min.js"></script>
-		<script type="text/javascript">
-			//<![CDATA[
-			var SITE_ROOT = '{{ site_root }}';
-			var CSRF_TOKEN = '{{ csrf_token }}';
+  <head>
+    <title>Karteikarten System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}mobile/style.css" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+    <script type="text/javascript" src="{{ STATIC_URL }}common/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+      //<![CDATA[
+      var SITE_ROOT = '{{ site_root }}';
+      var CSRF_TOKEN = '{{ csrf_token }}';
 
-			$(document).ready(function()
-			{
-				Pages.Start();
-			});
-			//]]>
-		</script>
-		<script type="text/javascript" src="{{ STATIC_URL }}common/database.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}common/localdb_websql.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}common/migrationssystem_websql.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}common/migrations_websql.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}mobile/form.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}mobile/pages.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}mobile/study.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}common/studylogic.js"></script>
-	</head>
-	<body>
-		<div id="header">
-			<div id="header_text">Loading...</div>
-			<a href="#" id="back_button" class="top_left_button" style="display: none;">Back</a>
-			<a href="#" id="study_finish_button" class="top_left_button" style="display: none;" onclick="Study.Finish();">Finish</a>
-		</div>
-		<div id="content">
-			Loading... If the page does not load, you may need to enable Javascript.
-		</div>
-	</body>
+      $(document).ready(function()
+        {
+          Pages.Start();
+        });
+      //]]>
+    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}common/database.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}common/localdb_websql.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}common/migrationssystem_websql.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}common/migrations_websql.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}mobile/form.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}mobile/pages.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}mobile/study.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}common/studylogic.js"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="header_text">Loading...</div>
+      <a href="#" id="back_button" class="top_left_button" style="display: none;">Back</a>
+      <a href="#" id="study_finish_button" class="top_left_button" style="display: none;" onclick="Study.Finish();">Finish</a>
+    </div>
+    <div id="content">
+      Loading... If the page does not load, you may need to enable Javascript.
+    </div>
+  </body>
 </html>

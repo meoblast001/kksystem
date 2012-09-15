@@ -27,23 +27,30 @@ import os
 #
 # Display mobile site
 #
-def Mobile(request):
-	return render_to_response('mobile.html', {'site_root' : settings.FORCE_SCRIPT_NAME if settings.FORCE_SCRIPT_NAME != None else '', 'csrf_token' : csrf.get_token(request)}, context_instance = RequestContext(request))
+def mobile(request):
+  return render_to_response('mobile.html', {
+      'site_root' : settings.FORCE_SCRIPT_NAME if
+                    settings.FORCE_SCRIPT_NAME != None else '',
+      'csrf_token' : csrf.get_token(request)
+    }, context_instance = RequestContext(request))
 
 #
 # Generate cache manifest
 #
-def CacheManifest(request):
-	site_root = settings.FORCE_SCRIPT_NAME if settings.FORCE_SCRIPT_NAME != None else ''
+def cacheManifest(request):
+  site_root = settings.FORCE_SCRIPT_NAME if \
+              settings.FORCE_SCRIPT_NAME != None else ''
 
-	cache_files = [site_root + reverse('mobile')]
-	for filename in os.listdir(os.path.abspath(os.path.dirname(__file__)) + '/../static/common/'):
-		cache_files.append(settings.STATIC_URL + 'common/' + filename)
-	for filename in os.listdir(os.path.abspath(os.path.dirname(__file__)) + '/../static/mobile/'):
-		cache_files.append(settings.STATIC_URL + 'mobile/' + filename)
+  cache_files = [site_root + reverse('mobile')]
+  for filename in os.listdir(os.path.abspath(os.path.dirname(__file__)) + \
+                             '/../static/common/'):
+    cache_files.append(settings.STATIC_URL + 'common/' + filename)
+  for filename in os.listdir(os.path.abspath(os.path.dirname(__file__)) + \
+                             '/../static/mobile/'):
+    cache_files.append(settings.STATIC_URL + 'mobile/' + filename)
 
-	manifest_text = 'CACHE MANIFEST\n\n'
-	for filename in cache_files:
-		manifest_text += filename + '\n'
+  manifest_text = 'CACHE MANIFEST\n\n'
+  for filename in cache_files:
+    manifest_text += filename + '\n'
 
-	return HttpResponse(manifest_text, content_type = 'text/cache-manifest')
+  return HttpResponse(manifest_text, content_type = 'text/cache-manifest')

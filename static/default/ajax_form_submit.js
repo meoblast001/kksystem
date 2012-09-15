@@ -20,48 +20,52 @@ Allows a form to be submitted over AJAX.
 */
 function AjaxFormSubmit(form, loading, success, error, error_message)
 {
-	form.submit(function()
-	{
-		//Only display loading screen
-		form.hide();
-		success.hide();
-		error.hide();
-		loading.show();
+  form.submit(function()
+  {
+    //Only display loading screen
+    form.hide();
+    success.hide();
+    error.hide();
+    loading.show();
 
-		//Collect data for POST from fields
-		var post_data = {};
-		form.find('input:checked, input:text, input:hidden, div input:hidden, input:password, input:submit, option:selected, textarea').filter(':enabled').each(function ()
-		{
-			post_data[this.name || this.id || this.parentNode.name || this.parentNode.id] = this.value;
-		});
+    //Collect data for POST from fields
+    var post_data = {};
+    form.find('input:checked, input:text, input:hidden, div input:hidden, ' +
+      'input:password, input:submit, option:selected, textarea').filter(
+      ':enabled').each(function ()
+      {
+        post_data[this.name || this.id || this.parentNode.name ||
+                  this.parentNode.id] = this.value;
+      });
 
-		//POST over AJAX
-		$.ajax({
-			type: 'POST',
-			url: form.attr('action'),
-			data: post_data,
-			success: function(json)
-			{
-				var data = jQuery.parseJSON(json);
-				form.show();
-				loading.hide();
-				if (data['status'] == 0)
-				{
-					success.show();
-					//Clear all text input fields
-					form.find('input:text, input:hidden, div input:hidden, input:password, textarea').filter(':enabled').each(function ()
-					{
-						this.value = '';
-					});
-				}
-				else
-				{
-					error_message.html(data['message']);
-					error.show();
-				}
-			}
-		});
+    //POST over AJAX
+    $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: post_data,
+        success: function(json)
+          {
+            var data = jQuery.parseJSON(json);
+            form.show();
+            loading.hide();
+            if (data['status'] == 0)
+            {
+              success.show();
+              //Clear all text input fields
+              form.find('input:text, input:hidden, div input:hidden, ' +
+                'input:password, textarea').filter(':enabled').each(function()
+                {
+                  this.value = '';
+                });
+            }
+            else
+            {
+              error_message.html(data['message']);
+              error.show();
+            }
+          }
+      });
 
-		return false;
-	});
+    return false;
+  });
 }
