@@ -60,14 +60,14 @@ def selectRunOptions(request):
     if form.is_valid():
       try:
         if form.cleaned_data['study_type'] == 'normal':
-          return HttpResponseRedirect(reverse('run-start',
+          return HttpResponseRedirect(reverse('run-run',
             args = [int(form.cleaned_data['card_set'])]))
         elif form.cleaned_data['study_type'] == 'single_box':
-          return HttpResponseRedirect(reverse('run-start',
+          return HttpResponseRedirect(reverse('run-run',
             args = [int(form.cleaned_data['card_set'])]) +
             '?box=' + form.cleaned_data['card_box'])
         elif form.cleaned_data['study_type'] == 'no_box':
-          return HttpResponseRedirect(reverse('run-start',
+          return HttpResponseRedirect(reverse('run-run',
             args = [int(form.cleaned_data['card_set'])]) + '?box=None')
         else:
           raise ValueError()

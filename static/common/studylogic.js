@@ -120,6 +120,7 @@ var StudyLogic = (function()
     {
       database.GetBoxes({'id' : study_options.box}, function(boxes, params)
         {
+          boxes[0].review = true;
           _this.boxes = boxes;
           database.GetCards({'current_box' : boxes[0]['id']},
             function(cards, params)
@@ -170,6 +171,21 @@ var StudyLogic = (function()
           error_callback(type, message);
         });
     }
+  }
+
+  /**
+  Gets information about the study state.
+  @return Object containing the current box's name as "box_name", the amount of
+    cards reviewed in this box as "reviewed_cards_this_box" and the total amount
+    of cards in this box as "total_cards_this_box".
+  */
+  StudyLogic.prototype.GetStudyInformation = function()
+  {
+    return {
+        'box_name' : this.boxes[this.current_box].name,
+        'reviewed_cards_this_box' : this.cards_reviewed_this_box.length,
+        'total_cards_this_box' : this.boxes[this.current_box].cards.length
+      };
   }
 
   /**

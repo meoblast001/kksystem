@@ -24,13 +24,100 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}default/style.css" />
     <script type="text/javascript" src="{{ STATIC_URL }}common/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}common/database.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}common/studylogic.js"></script>
 
     <script type="text/javascript">
-      function FlipCard()
+      //<![CDATA[
+      var SITE_ROOT = '{{ site_root }}';
+      var CSRF_TOKEN = '{{ csrf_token }}';
+
+      var study_options =
+        {% autoescape off %}{{ study_options }}{% endautoescape %};
+      var study_logic = null;
+      var current_card = null;
+
+      $(document).ready(function()
+        {
+          var database = new Database(false, function(database)
+            {
+              study_logic = new StudyLogic(study_options, database, function()
+                {
+                  $('#study_mode').text(study_options.study_type_name);
+                  $('#card_set_name').text(study_options.set_name);
+                  displayNextCard();
+                }, function(type, message)
+                {
+                })
+            }, function(type, message)
+            {
+              alert(message);
+            });
+        });
+
+      function displayNextCard()
       {
-        $('#back_content').show();
-        $('#buttons').show();
+        study_logic.GetNextCard(function(card)
+          {
+            if (card == null)
+            {
+              finish();
+              return;
+            }
+            current_card = card;
+            $('#card_front_text').html(card.front);
+            $('#card_back_text').html(card.back);
+
+            var study_information = study_logic.GetStudyInformation();
+            $('#card_box_name').text(study_information.box_name);
+            $('#num_completed_cards').text(
+              study_information.reviewed_cards_this_box);
+            $('#num_total_cards').text(study_information.total_cards_this_box);
+          }, function(type, message)
+          {
+            alert(message);
+          });
       }
+
+      function flipCard(visible)
+      {
+        if (visible)
+        {
+          $('#back_content').hide();
+          $('#buttons').hide();
+        }
+        else
+        {
+          $('#back_content').show();
+          $('#buttons').show();
+        }
+      }
+
+      function correct()
+      {
+        flipCard(true);
+        study_logic.Correct(current_card.id, displayNextCard,
+          function(type, message)
+          {
+            alert(message);
+          });
+      }
+
+      function incorrect()
+      {
+        flipCard(true);
+        study_logic.Incorrect(current_card.id, displayNextCard,
+          function(type, message)
+          {
+            alert(message);
+          });
+      }
+
+      function finish()
+      {
+        window.location.href = '{% url run-finished %}';
+      }
+      //]]>
     </script>
   </head>
   <body>
@@ -38,32 +125,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <img src="{{ STATIC_URL }}common/karteikarten.png" alt="Karteikartensystem" /><br />
       {% include "version.html" %}
     </div>
-    <div style="margin-left: auto; margin-right: auto; width: 600px; text-align: center;">
+    <div id="study" style="margin-left: auto; margin-right: auto; width: 600px; text-align: center;">
       <div class="practice_sidebar">
         <b>{% trans "study-mode" %}:</b><br />
-        {{ study_mode }}<br /><br />
+        <span id="study_mode"></span><br /><br />
         <b>{% trans "current-set" %}:</b><br />
-        {{ card_set.name }}<br /><br />
+        <span id="card_set_name"></span><br /><br />
         <b>{% trans "current-box" %}:</b><br />
-        {{ card_box.name }}<br /><br />
-        <b>{% trans "cards" %}{% if card_box %} ({% trans "in-this-box" %}){% endif %}:</b><br />
-        {{ num_completed_cards }} / {{ num_cards }}
-        {% if not card_box %}
+        <span id="card_box_name"></span><br /><br />
+        <b>{% trans "cards" %}<span id="in_this_box"> ({% trans "in-this-box" %})</span>:</b><br />
+        <span id="num_completed_cards"></span> / <span id="num_total_cards"></span>
+        <div id="finish">
           <br /><br />
           <a href="{% url run-finished %}" class="button" style="background-color: #ffffff;" >{% trans "finish" %}</a>
-        {% endif %}
+        </div>
       </div>
       <div id="front" class="card">
         <table class="card_content">
           <tr>
-            <td>
-              {% autoescape off %}{{ card.front }}{% endautoescape %}
+            <td id="card_front_text">
             </td>
           <tr>
         </table>
       </div>
       <div id="back" class="card_not_visible">
-        <a href="javascript:FlipCard();" style="display: block;">
+        <a href="javascript:flipCard();" style="display: block;">
           <table class="card_content">
             <tr>
               <td>
@@ -75,15 +161,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         <table id="back_content" class="card_content" style="float: left; background-color: #ffffff; display: none;">
           <tr>
-            <td>
-              {% autoescape off %}{{ card.back }}{% endautoescape %}
+            <td id="card_back_text">
             </td>
           <tr>
         </table>
       </div>
       <div id="buttons" class="non_card" style="display: none;">
-        <a href="{% url run-correct card.id %}{{ url_append }}" class="button" style="background-color: #00a000;">{% trans "correct" %}</a>
-        <a href="{% url run-incorrect card.id %}{{ url_append }}" class="button" style="background-color: #a00000;;">{% trans "incorrect" %}</a>
+        <a href="javascript:correct();" class="button" style="background-color: #00a000;">
+          {% trans "correct" %}
+        </a>
+        <a href="javascript:incorrect();" class="button" style="background-color: #a00000;">
+          {% trans "incorrect" %}
+        </a>
       </div>
     </div>
   </body>

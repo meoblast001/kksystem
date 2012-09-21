@@ -23,22 +23,37 @@ var Database = (function()
 {
   /**
   Constructs database.
+  @param use_local_db Boolean defining whether a local database should be used.
   @param success_callback Function to call if successful.
   @param error_callback Function to call if an error occurs.
   */
-  function Database(success_callback, error_callback)
+  function Database(use_local_db, success_callback, error_callback)
   {
     this.is_online = true;
     this.current_user = null;
     var _this = this;
-    this.local_db = new LocalDatabaseWebSQL('karteikartensystem', '1.0',
-      'Karteikartensystem', 200000, success_callback, function(type, message)
-      {
-        if (type == 'not-supported')
-          _this.local_db = null;
-        else
-          error_callback(type, message);
-      });
+    if (use_local_db)
+    {
+      this.local_db = new LocalDatabaseWebSQL('karteikartensystem', '1.0',
+        'Karteikartensystem', 200000, function()
+        {
+          success_callback(this);
+        }, function(type, message)
+        {
+          if (type == 'not-supported')
+          {
+            _this.local_db = null;
+            success_callback(this);
+          }
+          else
+            error_callback(type, message);
+        });
+    }
+    else
+    {
+      this.local_db = null;
+      success_callback(this);
+    }
   }
 
   /**
