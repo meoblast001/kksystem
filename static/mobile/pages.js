@@ -713,11 +713,19 @@ var Pages =
 
   Start : function()
     {
-      Pages.database = new Database(function()
+      function success()
+      {
+        //Recall function repeatedly until database is not null
+        if (Pages.database === null)
         {
-          Pages.Login();
-        },
-        function(type, message)
+          setTimeout(success, 25);
+          return;
+        }
+
+        Pages.Login();
+      }
+
+      Pages.database = new Database(true, success, function(type, message)
         {
           Pages.FatalError(message + ' [Error type: ' + type + ']');
         });

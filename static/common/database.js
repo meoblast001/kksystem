@@ -34,20 +34,37 @@ var Database = (function()
     var _this = this;
     if (use_local_db)
     {
-      this.local_db = new LocalDatabaseWebSQL('karteikartensystem', '1.0',
-        'Karteikartensystem', 200000, function()
+      function success()
+      {
+        //Do not call the success callback until local_db is set
+        if (_this.local_db === undefined)
         {
-          success_callback(this);
-        }, function(type, message)
+          setTimeout(success, 25);
+          return;
+        }
+
+        success_callback(this);
+      }
+
+      var set_local_db = true;
+      var local_db = new LocalDatabaseWebSQL('karteikartensystem', '1.0',
+        'Karteikartensystem', 200000, success, function(type, message)
         {
           if (type == 'not-supported')
           {
+            //Set local_db to null and do not overwrite it with the actual
+            //object
+            set_local_db = false;
             _this.local_db = null;
             success_callback(this);
           }
           else
             error_callback(type, message);
         });
+      //Set local_db to the local_db object unless it has already been set to
+      //null
+      if (set_local_db)
+        this.local_db = local_db;
     }
     else
     {
