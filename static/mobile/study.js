@@ -26,35 +26,15 @@ var Study =
 
       Study.study_logic = new StudyLogic(study_options, database, function()
         {
-          var content =
-            '<div id="front" class="card">' +
-              '<table class="card_content">' +
-                '<tr><td id="front_text" /></tr>' +
-              '</table>' +
-            '</div>' +
-            '<div id="back" class="card_not_visible">' +
-              '<a href="javascript:Study.Show();" style="display: block;">' +
-                '<table class="card_content" style="color: #000000;">' +
-                  '<tr><td>Click here to flip card.</td></tr>' +
-                '</table>' +
-              '</a>' +
-              '<table id="back_content" class="card_content" ' +
-              'style="float: left; background-color: #ffffff; display: none;"' +
-              '>' +
-                '<tr><td id="back_text" /></tr>' +
-              '</table>' +
-            '</div>' +
-            '<div id="buttons" class="study_button_container" ' +
-            'style="display: none;">' +
-              '<a href="javascript:Study.Correct();" ' +
-              'class="study_button_correct">Correct</a>' +
-              '<a href="javascript:Study.Incorrect();" ' +
-              'class="study_button_incorrect">Incorrect</a>' +
-            '</div>';
-          $('#content').html(content);
-          $('#header_text').html('Study');
-
-          Study.DisplayNextCard();
+          $.ajax({
+              url : SITE_ROOT + '/static/mobile/study.html',
+              success : function(result)
+                {
+                  $('#content').html(result);
+                  $('#header_text').html('Study');
+                  Study.DisplayNextCard();
+                }
+            });
         },
         function(type, message)
         {
