@@ -57,6 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       function displayNextCard()
       {
+        flipCard('loading');
         study_logic.GetNextCard(function(card)
           {
             if (card == null)
@@ -73,29 +74,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             $('#num_completed_cards').text(
               study_information.reviewed_cards_this_box);
             $('#num_total_cards').text(study_information.total_cards_this_box);
+            flipCard('hide');
           }, function(type, message)
           {
             alert(message);
           });
       }
 
-      function flipCard(visible)
+      function flipCard(visibility)
       {
-        if (visible)
+        if (visibility == 'show')
         {
-          $('#back_content').hide();
-          $('#buttons').hide();
-        }
-        else
-        {
+          $('#back').show();
           $('#back_content').show();
           $('#buttons').show();
+          $('#practice_sidebar_content').show();
+          $('#practice_sidebar_loading').hide();
+          $('#card_front_text').show();
+          $('#card_front_loading').hide();
+        }
+        else if (visibility == 'hide')
+        {
+          $('#back').show();
+          $('#back_content').hide();
+          $('#buttons').hide();
+          $('#practice_sidebar_content').show();
+          $('#practice_sidebar_loading').hide();
+          $('#card_front_text').show();
+          $('#card_front_loading').hide();
+        }
+        else //visibility == 'loading'
+        {
+          $('#back').hide();
+          $('#practice_sidebar_loading').show();
+          $('#practice_sidebar_content').hide();
+          $('#card_front_loading').show();
+          $('#card_front_text').hide();
         }
       }
 
       function correct()
       {
-        flipCard(true);
+        flipCard('loading');
         study_logic.Correct(current_card.id, displayNextCard,
           function(type, message)
           {
@@ -105,7 +125,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       function incorrect()
       {
-        flipCard(true);
+        flipCard('loading');
         study_logic.Incorrect(current_card.id, displayNextCard,
           function(type, message)
           {
@@ -127,29 +147,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </div>
     <div id="study" style="margin-left: auto; margin-right: auto; width: 600px; text-align: center;">
       <div class="practice_sidebar">
-        <b>{% trans "study-mode" %}:</b><br />
-        <span id="study_mode"></span><br /><br />
-        <b>{% trans "current-set" %}:</b><br />
-        <span id="card_set_name"></span><br /><br />
-        <b>{% trans "current-box" %}:</b><br />
-        <span id="card_box_name"></span><br /><br />
-        <b>{% trans "cards" %}<span id="in_this_box"> ({% trans "in-this-box" %})</span>:</b><br />
-        <span id="num_completed_cards"></span> / <span id="num_total_cards"></span>
-        <div id="finish">
-          <br /><br />
-          <a href="{% url run-finished %}" class="button" style="background-color: #ffffff;" >{% trans "finish" %}</a>
+        <div id="practice_sidebar_content">
+          <b>{% trans "study-mode" %}:</b><br />
+          <span id="study_mode"></span><br /><br />
+          <b>{% trans "current-set" %}:</b><br />
+          <span id="card_set_name"></span><br /><br />
+          <b>{% trans "current-box" %}:</b><br />
+          <span id="card_box_name"></span><br /><br />
+          <b>{% trans "cards" %}<span id="in_this_box"> ({% trans "in-this-box" %})</span>:</b><br />
+          <span id="num_completed_cards"></span> / <span id="num_total_cards"></span>
+          <div id="finish">
+            <br />
+            <a href="{% url run-finished %}" class="button" style="background-color: #ffffff;" >{% trans "finish" %}</a>
+          </div>
+        </div>
+        <div id="practice_sidebar_loading">
+          {% trans "loading" %}...
         </div>
       </div>
       <div id="front" class="card">
         <table class="card_content">
           <tr>
-            <td id="card_front_text">
+            <td>
+              <span id="card_front_text">
+              </span>
+              <img id="card_front_loading" style="display: none;" src="{{ STATIC_URL }}default/ajax-loader.gif" alt="{% trans "loading" %}..." />
             </td>
           <tr>
         </table>
       </div>
       <div id="back" class="card_not_visible">
-        <a href="javascript:flipCard();" style="display: block;">
+        <a href="javascript:flipCard('show');" style="display: block;">
           <table class="card_content">
             <tr>
               <td>
