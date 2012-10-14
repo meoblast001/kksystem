@@ -30,6 +30,7 @@ var Study =
               url : SITE_ROOT + '/static/mobile/study.html',
               success : function(result)
                 {
+                  result = result.replace(/\$STATIC_ROOT\$/g, STATIC_ROOT);
                   $('#content').html(result);
                   $('#header_text').html('Study');
                   Study.DisplayNextCard();
@@ -51,12 +52,19 @@ var Study =
       setTimeout(Pages.Centre, 3000);
     },
 
-  DisplayNextCard : function()
+  PreDisplayNextCard : function()
     {
+      //Loading
+      $('#front').hide();
+      $('#back').hide();
+      $('#loading').show();
       //Hide
       $('#back_content').hide();
       $('#buttons').hide();
+    },
 
+  DisplayNextCard : function()
+    {
       Study.study_logic.GetNextCard(function(card)
         {
           Study.current_card = card;
@@ -64,6 +72,10 @@ var Study =
           {
             $('#front_text').html(Study.current_card['front']);
             $('#back_text').html(Study.current_card['back']);
+            //Not loading
+            $('#front').show();
+            $('#back').show();
+            $('#loading').hide();
           }
           else
             Study.Finish();
@@ -85,6 +97,7 @@ var Study =
 
   Correct : function()
     {
+      Study.PreDisplayNextCard();
       Study.study_logic.Correct(Study.current_card['id'], function()
         {
           Study.DisplayNextCard();
@@ -100,6 +113,7 @@ var Study =
 
   Incorrect : function()
     {
+      Study.PreDisplayNextCard();
       Study.study_logic.Incorrect(Study.current_card['id'], function()
         {
           Study.DisplayNextCard();
