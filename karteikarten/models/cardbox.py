@@ -1,4 +1,4 @@
-# Copyright (C) 2011 Braden Walters
+# Copyright (C) 2012 Braden Walters
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -14,31 +14,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
+from cardset import CardSet
 from django.contrib.auth.models import User
 from datetime import datetime
 import time
 
-class CardSet(models.Model):
-  name = models.CharField(max_length = 60)
-  owner = models.ForeignKey(User)
-
-  def __unicode__(self):
-    return self.name
-
-  #
-  # Get dictionary of object
-  #
-  def serialize(self):
-    return {'id' : self.id, 'name' : self.name, 'owner' : self.owner.id}
-
-  #
-  # Modify object from dictionary
-  #
-  def modify(self, params):
-    if 'name' in params:
-      self.name = params['name']
-
 class CardBox(models.Model):
+  class Meta:
+    app_label = 'karteikarten'
+
   name = models.CharField(max_length = 60)
   owner = models.ForeignKey(User)
   parent_card_set = models.ForeignKey(CardSet)
@@ -87,39 +71,3 @@ class CardBox(models.Model):
     if 'last_reviewed' in params:
       self.last_reviewed = \
         datetime.fromtimestamp(float(params['last_reviewed']))
-
-class Card(models.Model):
-  front = models.TextField()
-  back = models.TextField()
-  owner = models.ForeignKey(User)
-  parent_card_set = models.ForeignKey(CardSet)
-  current_box = models.ForeignKey(CardBox, blank = True, null = True)
-
-  def __unicode__(self):
-    return self.front
-
-  #
-  # Get dictionary of object
-  #
-  def serialize(self):
-    return {
-        'id' : self.id,
-        'front' : self.front,
-        'back' : self.back,
-        'owner' : self.owner_id,
-        'parent_card_set' : self.parent_card_set_id,
-        'current_box' : self.current_box_id
-      }
-
-  #
-  # Modify object from dictionary.
-  #
-  def modify(self, params):
-    if 'front' in params:
-      self.front = params['front']
-    if 'back' in params:
-      self.back = params['back']
-    if 'parent_card_set' in params:
-      self.parent_card_set_id = params['parent_card_set']
-    if 'current_box' in params:
-      self.current_box_id = params['current_box']
