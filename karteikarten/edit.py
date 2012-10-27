@@ -40,7 +40,14 @@ def newSet(request):
         name = form.cleaned_data['name'], owner = request.user)
       if not len(existing_cardset):
         cardset = CardSet(name = form.cleaned_data['name'],
-                          owner = request.user)
+                          owner = request.user,
+                          reintroduce_cards = \
+                            form.cleaned_data['reintroduce_cards'],
+                          reintroduce_cards_amount = \
+                            form.cleaned_data['reintroduce_cards_amount'],
+                          reintroduce_cards_frequency = \
+                            form.cleaned_data['reintroduce_cards_frequency'],
+                          last_reintroduced_cards = datetime.now())
         cardset.save()
         return HttpResponseRedirect(reverse('select-set-to-edit'))
       return render_to_response('error.html', {
@@ -87,12 +94,17 @@ def editSet(request, set_id):
     if form.is_valid():
       cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
       cardset.name = form.cleaned_data['name']
+      cardset.reintroduce_cards = form.cleaned_data['reintroduce_cards']
+      cardset.reintroduce_cards_amount = \
+        form.cleaned_data['reintroduce_cards_amount']
+      cardset.reintroduce_cards_frequency = \
+        form.cleaned_data['reintroduce_cards_frequency']
       cardset.save()
       return HttpResponseRedirect(reverse('select-set-to-edit'))
     else:
       cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
       return render_to_response('edit/edit_set.html', {
-          'form' : EditSetForm(request.POST),
+          'form' : form,
           'already_exists' : True,
           'id' : cardset.pk,
           'title' : _('edit-set') + ': ' + cardset.name,
@@ -107,7 +119,12 @@ def editSet(request, set_id):
   else:
     cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
     return render_to_response('edit/edit_set.html', {
-        'form' : EditSetForm({'name' : cardset.name}),
+        'form' : EditSetForm({
+            'name' : cardset.name,
+            'reintroduce_cards' : cardset.reintroduce_cards,
+            'reintroduce_cards_amount' : cardset.reintroduce_cards_amount,
+            'reintroduce_cards_frequency' : cardset.reintroduce_cards_frequency,
+          }),
         'already_exists' : True,
         'id' : cardset.pk,
         'title' : _('edit-set') + ': ' + cardset.name,

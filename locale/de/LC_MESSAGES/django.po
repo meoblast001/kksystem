@@ -320,3 +320,15 @@ msgstr "Benutzerinformation geändert"
 
 msgid "back-to-settings"
 msgstr "Zurück zu den Einstellungen"
+
+msgid "reintroduce_cards"
+msgstr "Karten wiedereinführen"
+
+msgid "amount_of_cards_to_reintroduce"
+msgstr "Menge Karten wiedereinzuführen"
+
+msgid "frequency_of_card_reintroduction"
+msgstr "Häufigkeit der Kartenwiedereinführung"
+
+msgid "reintroduce_cards_required_fields"
+msgstr "Erforderliche Informationen für Kartenwiedereinführung nicht geboten."

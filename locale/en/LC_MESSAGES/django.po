@@ -320,3 +320,15 @@ msgstr "User Information Changed"
 
 msgid "back-to-settings"
 msgstr "Back to Settings"
+
+msgid "reintroduce_cards"
+msgstr "Reintroduce Cards"
+
+msgid "amount_of_cards_to_reintroduce"
+msgstr "Amount of Cards to Reintroduce"
+
+msgid "frequency_of_card_reintroduction"
+msgstr "Frequency of Card Reintroduction"
+
+msgid "reintroduce_cards_required_fields"
+msgstr "Required information for card reintroduction was not provided."

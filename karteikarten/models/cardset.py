@@ -22,6 +22,10 @@ class CardSet(models.Model):
 
   name = models.CharField(max_length = 60)
   owner = models.ForeignKey(User)
+  reintroduce_cards = models.BooleanField()
+  reintroduce_cards_amount = models.IntegerField(null = True)
+  reintroduce_cards_frequency = models.IntegerField(null = True)
+  last_reintroduced_cards = models.DateTimeField()
 
   def __unicode__(self):
     return self.name

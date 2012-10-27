@@ -112,6 +112,20 @@ class RunOptionsForm(forms.Form):
 #
 class EditSetForm(forms.Form):
   name = forms.CharField(max_length = 60, label = _('name'))
+  reintroduce_cards = forms.BooleanField(label = _('reintroduce_cards'),
+                                         required = False)
+  reintroduce_cards_amount = forms.IntegerField(
+    label = _('amount_of_cards_to_reintroduce'), required = False)
+  reintroduce_cards_frequency = forms.IntegerField(
+    label = _('frequency_of_card_reintroduction'), required = False)
+
+  def clean(self):
+    cleaned_data = super(EditSetForm, self).clean()
+    if (cleaned_data['reintroduce_cards'] and
+        (cleaned_data['reintroduce_cards_amount'] == None or
+         cleaned_data['reintroduce_cards_frequency'] == None)):
+      raise forms.ValidationError(_('reintroduce_cards_required_fields'))
+    return cleaned_data
 
 #
 # Form displayed when creating and editing card boxes.

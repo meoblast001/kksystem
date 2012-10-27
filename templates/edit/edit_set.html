@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       {{ field.label_tag }}: {{ field }}
       {{ field.errors }}
     {% endfor %}
+    {{ form.non_field_errors }}
     <br /><br />
     <input type="submit" value="{% trans "continue" %}" class="box"/>
   </form>
