@@ -331,4 +331,7 @@ msgid "frequency_of_card_reintroduction"
 msgstr "Häufigkeit der Kartenwiedereinführung"
 
 msgid "reintroduce_cards_required_fields"
-msgstr "Erforderliche Informationen für Kartenwiedereinführung nicht geboten."
+msgstr "Erforderliche Informationen für Kartenwiedereinführung nicht gegeben."
+
+msgid "cardset_with_name_already_exists"
+msgstr "Kartenzusammenstellung mit diesem Name existiert schon."

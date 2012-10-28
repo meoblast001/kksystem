@@ -332,3 +332,6 @@ msgstr "Frequency of Card Reintroduction"
 
 msgid "reintroduce_cards_required_fields"
 msgstr "Required information for card reintroduction was not provided."
+
+msgid "cardset_with_name_already_exists"
+msgstr "Cardset with this name already exists."

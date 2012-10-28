@@ -14,21 +14,33 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 class CardSet(models.Model):
   class Meta:
     app_label = 'karteikarten'
 
-  name = models.CharField(max_length = 60)
+  name = models.CharField(_('name'), max_length = 60)
   owner = models.ForeignKey(User)
-  reintroduce_cards = models.BooleanField()
-  reintroduce_cards_amount = models.IntegerField(null = True)
-  reintroduce_cards_frequency = models.IntegerField(null = True)
+  reintroduce_cards = models.BooleanField(_('reintroduce_cards'))
+  reintroduce_cards_amount = models.IntegerField(
+    _('amount_of_cards_to_reintroduce'), null = True, blank = True)
+  reintroduce_cards_frequency = models.IntegerField(
+    _('frequency_of_card_reintroduction'), null = True, blank = True)
   last_reintroduced_cards = models.DateTimeField()
 
   def __unicode__(self):
     return self.name
+
+  def clean(self):
+    if (self.reintroduce_cards and (self.reintroduce_cards_amount == None or
+                                    self.reintroduce_cards_frequency == None)):
+      raise ValidationError(_('reintroduce_cards_required_fields'))
+    if len(CardSet.objects.filter(name = self.name,
+                                  owner = self.owner)) > 0:
+      raise ValidationError(_('cardset_with_name_already_exists'))
 
   #
   # Get dictionary of object
