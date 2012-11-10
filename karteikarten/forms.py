@@ -29,15 +29,19 @@ class LoginForm(forms.Form):
 #
 # Form displayed on registration page.
 #
-class RegisterForm(forms.Form):
-  username = forms.CharField(max_length = 30, label = _('username'))
+class RegisterForm(forms.ModelForm):
+  class Meta:
+    model = User
+    fields = ('username', 'password', 'repeat_password', 'email')
+
   password = forms.CharField(widget = forms.PasswordInput,
-                             label = _('password'))
+                             label = _('password'), required = True)
   repeat_password = forms.CharField(widget = forms.PasswordInput,
-                                    label = _('repeat-password'))
-  email = forms.EmailField(label = _('email'))
+                                    label = _('repeat-password'),
+                                    required = True)
 
   def clean_repeat_password(self):
+    super(RegisterForm, self).clean()
     if self.cleaned_data['password'] != self.cleaned_data['repeat_password']:
       raise forms.ValidationError(_('passwords-dont-match'))
     return self.cleaned_data

@@ -118,43 +118,19 @@ def register(request):
   #Submit
   if request.method == 'POST':
     if 'dnm_verify' in request.POST and request.POST['dnm_verify'] != '':
-      raise Http404
+      raise Http403
 
     form = RegisterForm(request.POST)
     if form.is_valid():
-      #Must create a unique user
-      users_with_same_username = \
-        User.objects.filter(username = form.cleaned_data['username'])
-      users_with_same_email = \
-        User.objects.filter(email = form.cleaned_data['email'])
-      if len(users_with_same_username) == 0:
-        if len(users_with_same_email) == 0:
-          new_user = \
-            User.objects.create_user(username = form.cleaned_data['username'],
-                                     email = form.cleaned_data['email'],
-                                     password = form.cleaned_data['password'])
-          return render_to_response('confirmation.html', {
-              'message' : _('registration-successful'),
-              'short_messsage' : _('registered'),
-              'go_to' : reverse('centre'),
-              'go_to_name' : _('back-to-centre'),
-              'title' : _('confirmation'),
-              'site_link_chain' : zip([], [])
-            }, context_instance = RequestContext(request))
-        else:
-          return render_to_response('error.html', {
-              'message' : _('email-matches-that-of-another-user'),
-              'go_back_to' : reverse('register'),
-              'title' : _('error'),
-              'site_link_chain' : zip([], [])
-            }, context_instance = RequestContext(request))
-      else:
-        return render_to_response('error.html', {
-            'message' : _('username-matches-that-of-another-user'),
-            'go_back_to' : reverse('register'),
-            'title' : _('error'),
-            'site_link_chain' : zip([], [])
-          }, context_instance = RequestContext(request))
+      form.save()
+      return render_to_response('confirmation.html', {
+          'message' : _('registration-successful'),
+          'short_messsage' : _('registered'),
+          'go_to' : reverse('centre'),
+          'go_to_name' : _('back-to-centre'),
+          'title' : _('confirmation'),
+          'site_link_chain' : zip([], [])
+        }, context_instance = RequestContext(request))
     else:
       return render_to_response('login/register_form.html', {
           'form' : RegisterForm(request.POST),
