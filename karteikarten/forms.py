@@ -40,11 +40,14 @@ class RegisterForm(forms.ModelForm):
                                     label = _('repeat-password'),
                                     required = True)
 
+  def save(self, *args, **kwargs):
+    self.instance.set_password(self.cleaned_data['password'])
+    super(RegisterForm, self).save(*args, **kwargs)
+
   def clean_repeat_password(self):
-    super(RegisterForm, self).clean()
     if self.cleaned_data['password'] != self.cleaned_data['repeat_password']:
       raise forms.ValidationError(_('passwords-dont-match'))
-    return self.cleaned_data
+    return self.cleaned_data['repeat_password']
 
 #
 # Form displayed on password recovery email request page.
@@ -56,17 +59,31 @@ class RecoverPasswordForm(forms.Form):
 #
 # Form displayed on password reset form.
 #
-class RecoverResetPasswordForm(forms.Form):
+class RecoverResetPasswordForm(forms.ModelForm):
+  class Meta:
+    model = User
+    fields = ('username', 'password', 'repeat_password')
+
   username = forms.CharField(max_length = 30, label = _('username'))
   password = forms.CharField(widget = forms.PasswordInput,
-                             label = _('password'))
+                             label = _('password'), required = True)
   repeat_password = forms.CharField(widget = forms.PasswordInput,
-                                    label = _('repeat-password'))
+                                    label = _('repeat-password'),
+                                    required = True)
+
+  def save(self, *args, **kwargs):
+    self.instance.set_password(self.cleaned_data['password'])
+    super(RecoverResetPasswordForm, self).save(*args, **kwargs)
+
+  def clean_username(self):
+    if self.cleaned_data['username'] != self.instance.username:
+      raise forms.ValidationError(_('provided-username-is-incorrect'))
+    return self.cleaned_data['username']
 
   def clean_repeat_password(self):
     if self.cleaned_data['password'] != self.cleaned_data['repeat_password']:
       raise forms.ValidationError(_('passwords-dont-match'))
-    return self.cleaned_data
+    return self.cleaned_data['repeat_password']
 
 #
 # Form displayed when selecting set to edit

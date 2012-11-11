@@ -16,6 +16,7 @@
 from django.contrib.auth import models
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 class User(models.User):
   class Meta:
@@ -24,6 +25,8 @@ class User(models.User):
   def clean(self):
     super(User, self).clean()
     #User must have unique email
-    users_with_same_email = User.objects.filter(email = self.email)
+    query = Q(email = self.email) & ~Q(pk = self.pk) if self.pk != None else \
+            Q(email = self.email)
+    users_with_same_email = User.objects.filter(query)
     if len(users_with_same_email) > 0:
-      raise ValidationError('email', _('email-matches-that-of-another-user'))
+      raise ValidationError(_('email-matches-that-of-another-user'))

@@ -168,8 +168,8 @@ msgstr "Passwort geändert"
 msgid "password-recovery-complete"
 msgstr "Passwortwiederherstellung ist fertig"
 
-msgid "doesnt-match-password-recovery-session"
-msgstr "Daten, die du gegeben hast, passt nicht mit Passwort-Wiederherstellungs-Information zusammen. Dein Benutzername ist nicht korrekt oder du bist nicht die korrekte URL gefolgt."
+msgid "provided-username-is-incorrect"
+msgstr "Der eingegebene Benutzername ist falsch."
 
 msgid "reset-password"
 msgstr "Passwort zurücksetzen"

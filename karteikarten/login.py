@@ -226,53 +226,48 @@ def recoverPassword(request):
 def recoverResetPassword(request):
   #Submit
   if request.method == 'POST':
-    form = RecoverResetPasswordForm(request.POST)
+    #Find user for given recovery session
+    session = None
     password_recovery = cache.get('password_recovery')
     if password_recovery != None and 'id' in request.GET:
-      if form.is_valid():
-        for session in password_recovery:
-          if (session['ident'] == request.GET['id'] and
-              session['user'].username == form.cleaned_data['username']):
-            session['user'].set_password(request.POST['password'])
-            session['user'].save()
-            #Remove current recovery session
-            password_recovery.remove(session)
-            cache.set('password_recovery', password_recovery, 18000)
-
-            return render_to_response('confirmation.html', {
-                'message' : _('password-changed'),
-                'short_messsage' : _('password-recovery-complete'),
-                'go_to' : reverse('login'),
-                'go_to_name' : _('back-to-login'),
-                'title' : _('confirmation'),
-                'site_link_chain' : zip([], [])
-              }, context_instance = RequestContext(request))
-          else:
-            return render_to_response('error.html', {
-                'message' : _('doesnt-match-password-recovery-session'),
-                'go_back_to' : reverse('recover-password'),
-                'title' : 'Error',
-                'site_link_chain' : zip([], [])
-              }, context_instance = RequestContext(request))
-      else:
-        return render_to_response('login/recover_reset_password_form.html', {
-            'form' : RecoverResetPasswordForm(request.POST),
-            'url_append' : '?id=' + request.GET['id'],
-            'title' : _('reset-password'),
-            'site_link_chain' : zip([
-                reverse('login'),
-                reverse('recover-password')
-              ], [
-                'Login',
-                _('request-password-recovery-email')
-              ])
-          }, context_instance = RequestContext(request))
-    else:
+      for cur_session in password_recovery:
+        if cur_session['ident'] == request.GET['id']:
+          session = cur_session
+    if session == None:
       return render_to_response('error.html', {
           'message' : _('recovery-session-id-not-found'),
           'go_back_to' : reverse('recover-password'),
           'title' : _('error'),
           'site_link_chain' : zip([], [])
+        }, context_instance = RequestContext(request))
+
+    form = RecoverResetPasswordForm(request.POST, instance = session['user'])
+    if form.is_valid():
+      form.save()
+      #Remove current recovery session
+      password_recovery.remove(session)
+      cache.set('password_recovery', password_recovery, 18000)
+
+      return render_to_response('confirmation.html', {
+          'message' : _('password-changed'),
+          'short_messsage' : _('password-recovery-complete'),
+          'go_to' : reverse('login'),
+          'go_to_name' : _('back-to-login'),
+          'title' : _('confirmation'),
+          'site_link_chain' : zip([], [])
+        }, context_instance = RequestContext(request))
+    else:
+      return render_to_response('login/recover_reset_password_form.html', {
+          'form' : form,
+          'url_append' : '?id=' + request.GET['id'],
+          'title' : _('reset-password'),
+          'site_link_chain' : zip([
+              reverse('login'),
+              reverse('recover-password')
+            ], [
+              'Login',
+              _('request-password-recovery-email')
+            ])
         }, context_instance = RequestContext(request))
   #Form
   else:
