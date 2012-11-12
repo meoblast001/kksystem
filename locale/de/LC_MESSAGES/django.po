@@ -210,6 +210,9 @@ msgstr "Ein Fehler ist passiert. Kastendaten wird nicht gespeichert."
 msgid "message"
 msgstr "Nachricht"
 
+msgid "reasons"
+msgstr "Gründe"
+
 msgid "success"
 msgstr "Erfolg"
 
@@ -335,3 +338,9 @@ msgstr "Erforderliche Informationen für Kartenwiedereinführung nicht gegeben."
 
 msgid "cardset_with_name_already_exists"
 msgstr "Kartenzusammenstellung mit diesem Name existiert schon."
+
+msgid "cardbox-with-name-already-exists"
+msgstr "Kartenkasten mit diesem Name existiert schon."
+
+msgid "frequency-must-be-greater-than-zero"
+msgstr "Häufigkeit muss größer als null sein."

@@ -26,6 +26,7 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from django.db.models import Q
+import json
 
 #
 # Create new card set
@@ -233,31 +234,26 @@ def editBox(request, set_id, box_id):
 @login_required
 def newBox(request, set_id):
   if request.method == 'POST':
-    try:
-      form = EditBoxForm(request.POST)
-      if form.is_valid():
-        cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-        box = CardBox(name = form.cleaned_data['name'],
-          owner = request.user, parent_card_set = cardset,
-          review_frequency = int(form.cleaned_data['review_frequency']),
-          last_reviewed = datetime.now())
-        if box.review_frequency == 0:
-          raise ValueError()
-        box.save()
-        if request.is_ajax():
-          return HttpResponse('{"status" : 0}')
-        else:
-          return HttpResponseRedirect(reverse('select-set-to-edit'))
+    cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+    cardbox = CardBox(owner = request.user,
+                      parent_card_set = cardset,
+                      last_reviewed = datetime.now())
+    form = EditBoxForm(request.POST, instance = cardbox)
+    if form.is_valid():
+      form.save()
+      if request.is_ajax():
+        return HttpResponse('{"status" : 0}')
       else:
-        raise ValueError()
-    except ValueError:
+        return HttpResponseRedirect(reverse('select-set-to-edit'))
+    else:
       if request.is_ajax():
         return HttpResponse('{"status" : 1, "message" : "' +
-                            _('ajax-form-not-valid') + '"}')
+                            _('ajax-form-not-valid') + '", "reasons" : ' +
+                            json.dumps(form.errors) + '}')
       else:
         cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
         return render_to_response('edit/edit_box.html', {
-            'form' : EditBoxForm(request.POST),
+            'form' : form,
             'already_exists' : False,
             'set_id' : set_id,
             'title' : _('new-box'),

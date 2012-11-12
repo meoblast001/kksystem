@@ -210,6 +210,9 @@ msgstr "An error has occurred, Box data has not been saved."
 msgid "message"
 msgstr "Message"
 
+msgid "reasons"
+msgstr "Reasons"
+
 msgid "success"
 msgstr "Success"
 
@@ -335,3 +338,9 @@ msgstr "Required information for card reintroduction was not provided."
 
 msgid "cardset_with_name_already_exists"
 msgstr "Cardset with this name already exists."
+
+msgid "cardbox-with-name-already-exists"
+msgstr "Cardbox with this name already exists."
+
+msgid "frequency-must-be-greater-than-zero"
+msgstr "Frequency must be greater than zero."

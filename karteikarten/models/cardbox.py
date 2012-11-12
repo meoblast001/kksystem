@@ -14,6 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError
 from cardset import CardSet
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -23,14 +25,21 @@ class CardBox(models.Model):
   class Meta:
     app_label = 'karteikarten'
 
-  name = models.CharField(max_length = 60)
+  name = models.CharField(_('name'), max_length = 60)
   owner = models.ForeignKey(User)
   parent_card_set = models.ForeignKey(CardSet)
-  review_frequency = models.IntegerField()
+  review_frequency = models.IntegerField(_('review-frequency-in-days'))
   last_reviewed = models.DateTimeField()
 
   def __unicode__(self):
     return self.name
+
+  def clean(self):
+    if (len(CardBox.objects.filter(name = self.name,
+        owner = self.owner, parent_card_set = self.parent_card_set.pk)) > 0):
+      raise ValidationError(_('cardbox-with-name-already-exists'))
+    if self.review_frequency is not None and self.review_frequency <= 0:
+      raise ValidationError(_('frequency-must-be-greater-than-zero'))
 
   #
   # Returns a dictionary of all card boxes in an array of card sets.

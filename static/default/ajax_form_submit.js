@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**
 Allows a form to be submitted over AJAX.
 */
-function AjaxFormSubmit(form, loading, success, error, error_message)
+function AjaxFormSubmit(form, loading, success, error, error_message,
+                        error_reasons)
 {
   form.submit(function()
   {
@@ -40,10 +41,10 @@ function AjaxFormSubmit(form, loading, success, error, error_message)
 
     //POST over AJAX
     $.ajax({
-        type: 'POST',
-        url: form.attr('action'),
-        data: post_data,
-        success: function(json)
+        type : 'POST',
+        url : form.attr('action'),
+        data : post_data,
+        success : function(json)
           {
             var data = jQuery.parseJSON(json);
             form.show();
@@ -61,8 +62,31 @@ function AjaxFormSubmit(form, loading, success, error, error_message)
             else
             {
               error_message.html(data['message']);
+              error_reasons.html(''); //Clear error reasons
+              //Append each reason
+              for (field in data['reasons'])
+              {
+                for (var i = 0; i < data['reasons'][field].length; ++i)
+                {
+                  var field_name_prefix = '';
+                  if (field != '__all__')
+                    field_name_prefix = $('label[for=id_' + field + ']').
+                                        text() + ': ';
+                  error_reasons.append('<li>' + field_name_prefix +
+                                       data['reasons'][field][i] + '</li>');
+                }
+              }
+              error_reasons.parent().show();
               error.show();
             }
+          },
+        error : function(jq_xhr, text_status, error_thrown)
+          {
+            error_message.html(text_status);
+            error_reasons.parent().hide();
+            error.show();
+            loading.hide();
+            form.show();
           }
       });
 

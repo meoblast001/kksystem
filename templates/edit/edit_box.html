@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       $(document).ready(function()
         {
           AjaxFormSubmit($('#form'), $('#loading'), $('#success'), $('#error'),
-                         $('#error_message'));
+                         $('#error_message'), $('#error_reasons'));
         });
     </script>
   {% endif %}
@@ -45,7 +45,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <div id="error" class="ajax_error">
     {% trans "error-occurred-box-data-not-saved" %}<br /><br />
     <b>{% trans "message" %}:</b><br />
-    <span id="error_message" />
+    <span id="error_message"></span><br /><br />
+    <div>
+      <b>{% trans "reasons" %}:</b><br />
+      <span id="error_reasons" style="list-style-position: inside;"></span>
+    </div>
   </div>
   <div id="success" class="ajax_success">
     {% trans "success" %}!

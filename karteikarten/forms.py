@@ -141,9 +141,10 @@ class EditSetForm(forms.ModelForm):
 #
 # Form displayed when creating and editing card boxes.
 #
-class EditBoxForm(forms.Form):
-  name = forms.CharField(max_length = 60, label = _('name'))
-  review_frequency = forms.IntegerField(label = _('review-frequency-in-days'))
+class EditBoxForm(forms.ModelForm):
+  class Meta:
+    model = CardBox
+    fields = ('name', 'review_frequency')
 
 #
 # Form displayed when creating and editing cards.
