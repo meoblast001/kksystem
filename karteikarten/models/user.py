@@ -25,8 +25,8 @@ class User(models.User):
   def clean(self):
     super(User, self).clean()
     #User must have unique email
-    query = Q(email = self.email) & ~Q(pk = self.pk) if self.pk != None else \
-            Q(email = self.email)
-    users_with_same_email = User.objects.filter(query)
-    if len(users_with_same_email) > 0:
+    query = Q(email = self.email)
+    if self.pk != None:
+      query &= ~Q(pk = self.pk)
+    if User.objects.filter(query).count() > 0:
       raise ValidationError(_('email-matches-that-of-another-user'))

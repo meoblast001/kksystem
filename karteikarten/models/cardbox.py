@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from cardset import CardSet
@@ -35,8 +36,12 @@ class CardBox(models.Model):
     return self.name
 
   def clean(self):
-    if (len(CardBox.objects.filter(name = self.name,
-        owner = self.owner, parent_card_set = self.parent_card_set.pk)) > 0):
+    query = Q(name = self.name) & Q(owner = self.owner) & \
+            Q(parent_card_set = self.parent_card_set.pk)
+    if self.pk != None:
+      query &= ~Q(pk = self.pk)
+
+    if CardBox.objects.filter(query).count() > 0:
       raise ValidationError(_('cardbox-with-name-already-exists'))
     if self.review_frequency is not None and self.review_frequency <= 0:
       raise ValidationError(_('frequency-must-be-greater-than-zero'))

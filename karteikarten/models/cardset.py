@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
@@ -38,8 +39,10 @@ class CardSet(models.Model):
     if (self.reintroduce_cards and (self.reintroduce_cards_amount == None or
                                     self.reintroduce_cards_frequency == None)):
       raise ValidationError(_('reintroduce_cards_required_fields'))
-    if len(CardSet.objects.filter(name = self.name,
-                                  owner = self.owner)) > 0:
+    query = Q(name = self.name) & Q(owner = self.owner)
+    if self.pk != None:
+      query &= ~Q(pk = self.pk)
+    if CardSet.objects.filter(query).count() > 0:
       raise ValidationError(_('cardset_with_name_already_exists'))
 
   #

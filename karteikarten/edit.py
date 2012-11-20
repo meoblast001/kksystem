@@ -166,25 +166,16 @@ def viewBoxesBySet(request, set_id):
 def editBox(request, set_id, box_id):
   #Submit
   if request.method == 'POST':
-    try:
-      form = EditBoxForm(request.POST)
-      if form.is_valid():
-        box = get_object_or_404(CardBox, pk = box_id)
-        box.name = form.cleaned_data['name']
-        box.review_frequency = int(form.cleaned_data['review_frequency'])
-        if box.review_frequency == 0:
-          raise ValueError()
-        box.save()
-        return HttpResponseRedirect(reverse('edit-view-boxes-by-set',
-                                            args = [str(set_id)]))
-      else:
-        raise ValueError()
-    except ValueError:
-      cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-      box = get_object_or_404(CardBox, pk = box_id, parent_card_set = cardset,
-                              owner = request.user)
+    cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+    box = get_object_or_404(CardBox, pk = box_id, owner = request.user)
+    form = EditBoxForm(request.POST, instance = box)
+    if form.is_valid():
+      form.save()
+      return HttpResponseRedirect(reverse('edit-view-boxes-by-set',
+                                          args = [str(set_id)]))
+    else:
       return render_to_response('edit/edit_box.html', {
-          'form' : EditBoxForm(request.POST),
+          'form' : form,
           'already_exists' : True,
           'id' : box_id,
           'set_id' : set_id,
@@ -197,7 +188,8 @@ def editBox(request, set_id, box_id):
             ], [
               _('centre'),
               _('edit'),
-              _('edit-set') + ': ' + cardset.name, _('boxes-by-set')
+              _('edit-set') + ': ' + cardset.name,
+              _('boxes-by-set')
             ])
         }, context_instance = RequestContext(request))
   #Form
