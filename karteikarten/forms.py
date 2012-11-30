@@ -16,6 +16,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from models import *
 
 #
@@ -149,23 +150,48 @@ class EditBoxForm(forms.ModelForm):
 #
 # Form displayed when creating and editing cards.
 #
-class EditCardForm(forms.Form):
-  front = forms.CharField(widget = forms.Textarea({'rows' : 5}),
-                          label = _('front'))
-  back = forms.CharField(widget = forms.Textarea({'rows' : 5}),
-                         label = _('back'))
-  card_box = forms.ChoiceField(label = _('card-box'))
+class EditCardForm(forms.ModelForm):
+  class Meta:
+    model = Card
+    fields = ('front', 'back', 'current_box')
+    widgets = {
+        'front' : forms.Textarea(attrs = {'rows' : 5}),
+        'back' : forms.Textarea(attrs = {'rows' : 5}),
+      }
 
-  def __init__(self, card_box_choices, values = None):
-    super(EditCardForm, self).__init__(values)
+  current_box = forms.ChoiceField(label = _('card-box'))
+
+  def __init__(self, *args, **kwargs):
+    super(EditCardForm, self).__init__(*args, **kwargs)
     #Copy box id and name for value and text of choices
     card_box_names = []
-    for i, item in enumerate(card_box_choices):
+    card_boxes = CardBox.objects.filter(owner = self.instance.owner,
+      parent_card_set = self.instance.parent_card_set)
+    for i, item in enumerate(card_boxes):
       card_box_names.append([str(item.pk), item.name])
     #Create no box option
     card_box_names.append(['0', '[' + _('no-box') + ']'])
     #Provide choices for card box choice field
-    self.fields['card_box'].choices = card_box_names
+    self.fields['current_box'].choices = card_box_names
+
+  def clean_current_box(self):
+    try:
+      if int(self.cleaned_data['current_box']) == 0:
+        return None
+      return CardBox.objects.get(pk = self.cleaned_data['current_box'],
+        parent_card_set = self.instance.parent_card_set,
+        owner = self.instance.owner)
+    except ObjectDoesNotExist:
+      raise forms.ValidationError(_('internal-server-error'))
+    except ValueError:
+      raise forms.ValidationError(_('internal-server-error'))
+
+  def clean(self):
+    super(EditCardForm, self).clean()
+    if (CardSet.objects.filter(pk = self.instance.parent_card_set.pk,
+                               owner = self.instance.owner).count() <= 0):
+      raise forms.ValidationError(_('internal-server-error'))
+    return self.cleaned_data
 
 #
 # Form displayed when changing user information in settings.

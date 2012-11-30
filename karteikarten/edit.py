@@ -374,18 +374,11 @@ def newCard(request, set_id):
   #Submit
   if request.method == 'POST':
     cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-    form = EditCardForm(
-      CardBox.objects.filter(owner = request.user, parent_card_set = cardset),
-      request.POST)
+    form = EditCardForm(request.POST,
+      instance = Card(owner = request.user,
+                      parent_card_set = CardSet(pk = set_id)))
     if form.is_valid():
-      cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
-      box = get_object_or_404(CardBox, pk = int(form.cleaned_data['card_box']),
-                              owner = request.user, parent_card_set = cardset) \
-            if int(form.cleaned_data['card_box']) != 0 else None
-      card = Card(front = form.cleaned_data['front'],
-                  back = form.cleaned_data['back'], owner = request.user,
-                  parent_card_set = cardset, current_box = box)
-      card.save()
+      form.save()
       if request.is_ajax():
         return HttpResponse('{"status" : 0}')
       else:
@@ -393,7 +386,8 @@ def newCard(request, set_id):
     else:
       if request.is_ajax():
         return HttpResponse('{"status" : 1, "message" : "' +
-                            _('ajax-form-not-valid') + '"}')
+                            _('ajax-form-not-valid') + '", "reasons" : ' +
+                            json.dumps(form.errors) + '}')
       else:
         return render_to_response('edit/edit_card.html', {
             'form' : form,
@@ -414,9 +408,8 @@ def newCard(request, set_id):
   else:
     cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
     return render_to_response('edit/edit_card.html', {
-        'form' :
-          EditCardForm(CardBox.objects.filter(owner = request.user,
-                       parent_card_set = cardset)),
+        'form' : EditCardForm(instance =
+          Card(owner = request.user, parent_card_set = CardSet(pk = set_id))),
         'already_exists' : False,
         'set_id' : set_id,
         'title' : _('new-card'),

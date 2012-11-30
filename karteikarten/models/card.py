@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 from cardset import CardSet
 from cardbox import CardBox
 from django.contrib.auth.models import User
@@ -22,11 +23,12 @@ class Card(models.Model):
   class Meta:
     app_label = 'karteikarten'
 
-  front = models.TextField()
-  back = models.TextField()
+  front = models.TextField(_('front'))
+  back = models.TextField(_('back'))
   owner = models.ForeignKey(User)
   parent_card_set = models.ForeignKey(CardSet)
-  current_box = models.ForeignKey(CardBox, blank = True, null = True)
+  current_box = models.ForeignKey(CardBox, blank = True, null = True,
+                                  related_name = _('card-box'))
 
   def __unicode__(self):
     return self.front

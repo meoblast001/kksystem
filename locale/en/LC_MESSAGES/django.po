@@ -344,3 +344,6 @@ msgstr "Cardbox with this name already exists."
 
 msgid "frequency-must-be-greater-than-zero"
 msgstr "Frequency must be greater than zero."
+
+msgid "internal-server-error"
+msgstr "Internal server error."

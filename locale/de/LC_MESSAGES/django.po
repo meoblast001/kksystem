@@ -344,3 +344,6 @@ msgstr "Kartenkasten mit diesem Name existiert schon."
 
 msgid "frequency-must-be-greater-than-zero"
 msgstr "Häufigkeit muss größer als null sein."
+
+msgid "internal-server-error"
+msgstr "Interner Serverfehler."
