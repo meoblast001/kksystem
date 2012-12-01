@@ -166,13 +166,18 @@ class EditCardForm(forms.ModelForm):
     #Copy box id and name for value and text of choices
     card_box_names = []
     card_boxes = CardBox.objects.filter(owner = self.instance.owner,
-      parent_card_set = self.instance.parent_card_set)
+      parent_card_set = self.instance.parent_card_set).order_by('pk')
     for i, item in enumerate(card_boxes):
       card_box_names.append([str(item.pk), item.name])
     #Create no box option
     card_box_names.append(['0', '[' + _('no-box') + ']'])
     #Provide choices for card box choice field
     self.fields['current_box'].choices = card_box_names
+    #If existing card is provided as the instance, set the initial current box
+    #to the instance's current box
+    if self.instance.pk != None:
+      self.initial['current_box'] = \
+        self.instance.current_box.pk if self.instance.current_box != None else 0
 
   def clean_current_box(self):
     try:
