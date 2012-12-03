@@ -18,6 +18,8 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from datetime import datetime
+import time
 
 class CardSet(models.Model):
   class Meta:
@@ -49,7 +51,16 @@ class CardSet(models.Model):
   # Get dictionary of object
   #
   def serialize(self):
-    return {'id' : self.id, 'name' : self.name, 'owner' : self.owner.id}
+    return {
+        'id' : self.id,
+        'name' : self.name,
+        'owner' : self.owner.id,
+        'reintroduce_cards' : self.reintroduce_cards,
+        'reintroduce_cards_amount' : self.reintroduce_cards_amount,
+        'reintroduce_cards_frequency' : self.reintroduce_cards_frequency,
+        'last_reintroduced_cards' : \
+          time.mktime(self.last_reintroduced_cards.timetuple())
+      }
 
   #
   # Modify object from dictionary
@@ -57,3 +68,12 @@ class CardSet(models.Model):
   def modify(self, params):
     if 'name' in params:
       self.name = params['name']
+    if 'reintroduce_cards' in params:
+      self.reintroduce_cards = params['reintroduce_cards']
+    if 'reintroduce_cards_amount' in params:
+      self.reintroduce_cards_amount = params['reintroduce_cards_amount']
+    if 'reintroduce_cards_frequency' in params:
+      self.reintroduce_cards_frequency = params['reintroduce_cards_frequency']
+    if 'last_reintroduced_cards' in params:
+      self.last_reintroduced_cards = \
+        datetime.fromtimestamp(float(params['last_reintroduced_cards']))

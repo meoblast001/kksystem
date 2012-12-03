@@ -36,10 +36,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {% csrf_token %}
     {% for field in form %}
       {{ field.label_tag }}: {{ field }}
-      {{ field.errors }}
+      {{ field.errors }}<br />
     {% endfor %}
     {{ form.non_field_errors }}
-    <br /><br />
+    <br />
     <input type="submit" value="{% trans "continue" %}" class="box"/>
   </form>
   {% if already_exists %}

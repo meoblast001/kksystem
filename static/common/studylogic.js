@@ -35,7 +35,7 @@ var StudyLogic = (function()
   function StudyLogic(study_options, database, success_callback, error_callback)
   {
     this.database = database;
-    this.set_id = parseInt(study_options.set);
+    this.cardset =  null;
     this.boxes = [];
     this.study_type = study_options.study_type;
     this.cards_reviewed = [];
@@ -64,59 +64,98 @@ var StudyLogic = (function()
       }
     }
 
-    if (this.study_type == 'normal')
+    //Function to set up normal study
+    function normal()
     {
-      database.GetBoxes({'parent_card_set' : this.set_id},
-        function(boxes, params)
+      //Called after getting boxes if successful.
+      function getBoxesSuccess(boxes, params)
+      {
+        _this.boxes = boxes;
+        BoxSortByReviewFrequency(_this.boxes);
+        var boxes_processed = 0;
+        function GenerateGetCardsFunction(i)
         {
-          _this.boxes = boxes;
-          BoxSortByReviewFrequency(_this.boxes);
-          var boxes_processed = 0;
-          function GenerateGetCardsFunction(i)
-          {
-            return function()
-              {
-                database.GetCards({'current_box' : _this.boxes[i]['id']},
-                  function(cards, params)
+          return function()
+            {
+              database.GetCards({'current_box' : _this.boxes[i]['id']},
+                function(cards, params)
+                {
+                  _this.boxes[i].cards = cards;
+                  ++boxes_processed;
+                  //Ready
+                  if (boxes_processed == _this.boxes.length)
                   {
-                    _this.boxes[i].cards = cards;
-                    ++boxes_processed;
-                    //Ready
-                    if (boxes_processed == _this.boxes.length)
+                    function finalSuccess()
                     {
                       _this.current_box = _this.boxes.length - 1;
                       if (!already_failed)
                         success_callback();
                     }
-                  },
-                  function(type, message)
-                  {
-                    if (!already_failed)
-                      error_callback(type, message);
-                    already_failed = true;
-                  });
-              };
-          }
-          for (i = 0; i < _this.boxes.length; ++i)
-          {
-            var hours_since_last_review =
-              Math.round((new Date(/*Now*/) - _this.boxes[i]['last_reviewed']) /
-              (1000 /*Milliseconds to seconds*/ * 3600 /*Seconds to hours*/));
-            if (hours_since_last_review > _this.boxes[i]['review_frequency'] *
-                24 - 6)
-              _this.boxes[i].review = true;
-            else
-              _this.boxes[i].review = false;
 
-            GenerateGetCardsFunction(i)();
-          }
-        },
+                    var hours_since_last_reintroduce_cards =
+                      Math.round((new Date(/*Now*/) -
+                      _this.cardset['last_reintroduced_cards'] /
+                      (1000 /*Milliseconds to seconds*/ * 3600 /*Seconds to
+                      hours*/)));
+                    if (_this.cardset['reintroduce_cards'] &&
+                        hours_since_last_reintroduce_cards >
+                        _this.cardset['reintroduce_cards_frequency'] * 24 - 6)
+                    {
+                      database.GetCards({
+                          'parent_card_set' : _this.cardset['id'],
+                          'current_box' : null
+                        }, function(cards)
+                        {
+                          //Create virtual box
+                          _this.boxes.push({
+                              'id' : null,
+                              'name' : 'No Box',
+                              'review' : true,
+                              'cards' : cards
+                            });
+                          finalSuccess();
+                        }, function(type, message)
+                        {
+                          error_callback(type, message);
+                        }, 0, _this.cardset['reintroduce_cards_amount'], true);
+                    }
+                    else
+                      finalSuccess();
+                  }
+                },
+                function(type, message)
+                {
+                  if (!already_failed)
+                    error_callback(type, message);
+                  already_failed = true;
+                });
+            };
+        }
+        for (i = 0; i < _this.boxes.length; ++i)
+        {
+          var hours_since_last_review =
+            Math.round((new Date(/*Now*/) - _this.boxes[i]['last_reviewed']) /
+            (1000 /*Milliseconds to seconds*/ * 3600 /*Seconds to hours*/));
+          if (hours_since_last_review > _this.boxes[i]['review_frequency'] *
+              24 - 6)
+            _this.boxes[i].review = true;
+          else
+            _this.boxes[i].review = false;
+
+          GenerateGetCardsFunction(i)();
+        }
+      }
+
+      //Get all boxes
+      database.GetBoxes({'parent_card_set' : _this.cardset['id']}, getBoxesSuccess,
         function(type, message)
         {
           error_callback(type, message);
         });
     }
-    else if (this.study_type == 'single_box')
+
+    //Function to set up single box study
+    function singleBox()
     {
       database.GetBoxes({'id' : study_options.box}, function(boxes, params)
         {
@@ -143,16 +182,20 @@ var StudyLogic = (function()
           error_callback(type, message);
         });
     }
-    else if (this.study_type == 'no_box')
+
+    //Function to set up no-box study
+    function noBox()
     {
       //Create virtual box
-      _this.boxes.push({'name' : 'No Box', 'review' : true});
-      database.GetCards({'parent_card_set' : this.set_id, 'current_box' : null},
-        function(cards, params)
+      _this.boxes.push({'id' : null, 'name' : 'No Box', 'review' : true});
+      database.GetCards({
+          'parent_card_set' : _this.cardset['id'],
+          'current_box' : null
+        }, function(cards, params)
         {
           _this.boxes[0].cards = cards;
           _this.current_box = _this.boxes.length - 1;
-          database.GetBoxes({'parent_card_set' : _this.set_id},
+          database.GetBoxes({'parent_card_set' : _this.cardset['id']},
             function(boxes, params)
             {
               _this.lowest_box = boxes[0];
@@ -171,6 +214,26 @@ var StudyLogic = (function()
           error_callback(type, message);
         });
     }
+
+    //Get card set information and then set up study mode
+    database.GetSets({'id' : parseInt(study_options.set)}, function(results)
+      {
+        if (results.length > 0)
+          _this.cardset = results[0];
+        else
+          error_callback('server', 'Card set could not be found.');
+
+        if (_this.study_type == 'normal')
+          normal();
+        else if (_this.study_type == 'single_box')
+          singleBox();
+        else if (_this.study_type == 'no_box')
+          noBox();
+      },
+      function(type, message)
+      {
+        error_callback(type, message);
+      });
   }
 
   /**
@@ -199,7 +262,7 @@ var StudyLogic = (function()
   StudyLogic.prototype.GetNextCard = function(success_callback, error_callback)
   {
     var _this = this;
-    function PostUpdateBox()
+    function postUpdateBox()
     {
       //If empty, switch boxes
       while (_this.current_box >= 0 &&
@@ -237,16 +300,29 @@ var StudyLogic = (function()
 
     if (this.study_type == 'normal')
     {
-      //If empty, mark now as last review date
+      //If empty, mark now as last review date or card reintroduction date
       if (this.boxes[this.current_box].cards.length ==
           this.cards_reviewed_this_box.length)
       {
-        this.database.ModifyBox(this.boxes[this.current_box].id,
-                                {last_reviewed : new Date()}, PostUpdateBox,
-                                error_callback);
+        //If box
+        if (this.boxes[this.current_box]['id'] !== null)
+        {
+          this.database.ModifyBox(this.boxes[this.current_box].id,
+                                  {last_reviewed : new Date()}, postUpdateBox,
+                                  error_callback);
+          return;
+        }
+        //If no box
+        else
+        {
+          this.database.ModifySet(this.cardset['id'],
+            {last_reintroduced_cards : new Date()}, postUpdateBox,
+            error_callback);
+          return;
+        }
       }
     }
-    PostUpdateBox();
+    postUpdateBox();
   }
 
   /**
@@ -264,10 +340,12 @@ var StudyLogic = (function()
   {
     this.cards_reviewed.push(card_id);
     this.cards_reviewed_this_box.push(card_id);
-    if (this.study_type == 'normal')
+    if (this.study_type == 'normal' &&
+        this.boxes[this.current_box]['id'] !== null /*Already in no box*/)
     {
       var box_id = null;
-      if (this.current_box < this.boxes.length - 1)
+      if (this.current_box < this.boxes.length - 1 &&
+          this.boxes[this.current_box + 1]['id'] !== null)
         box_id = this.boxes[this.current_box + 1]['id'];
       this.database.ModifyCard(card_id, {'current_box' : box_id},
                                success_callback, error_callback);

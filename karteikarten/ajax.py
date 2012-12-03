@@ -39,6 +39,8 @@ def ajax(request):
       params['owner'] = request.user
       results = []
       cardsets = CardSet.objects.filter(**params)
+      if 'random' in request.POST and request.POST['random']:
+        cardsets = cardsets.order_by('?')
       start = request.POST['start'] if 'start' in request.POST else 0
       end = request.POST['end'] if 'end' in request.POST else len(cardsets)
       for cardset in cardsets[start:end]:
@@ -53,6 +55,8 @@ def ajax(request):
       params['owner'] = request.user
       results = []
       cardboxes = CardBox.objects.filter(**params)
+      if 'random' in request.POST and request.POST['random']:
+        cardboxes = cardboxes.order_by('?')
       start = request.POST['start'] if 'start' in request.POST else 0
       end = request.POST['end'] if 'end' in request.POST else len(cardboxes)
       for cardbox in cardboxes[start:end]:
@@ -67,6 +71,8 @@ def ajax(request):
       params['owner'] = request.user
       results = []
       cards = Card.objects.filter(**params)
+      if 'random' in request.POST and request.POST['random']:
+        cards = cards.order_by('?')
       start = request.POST['start'] if 'start' in request.POST else 0
       end = request.POST['end'] if 'end' in request.POST else len(cards)
       for card in cards[start:end]:

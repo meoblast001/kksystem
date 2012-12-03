@@ -746,9 +746,10 @@ var Database = (function()
     message.
   @param start Index of result that should be the first element.
   @param end Index following result that should be the last element.
+  @param random True if random, false if not random.
   */
   Database.prototype.GetSets = function(attributes, success_callback,
-                                        error_callback, start, end)
+                                        error_callback, start, end, random)
   {
     if (this.is_online)
     {
@@ -756,9 +757,18 @@ var Database = (function()
           csrfmiddlewaretoken : CSRF_TOKEN,
           type : 'get-cardsets',
           params : JSON.stringify(attributes),
-          start : start, end : end
+          start : start,
+          end : end,
+          random : (random === true) ? true : false
         };
-      AJAX(post_data, success_callback, error_callback, true);
+      AJAX(post_data, function(results)
+        {
+          for (var i = 0; i < results.length; ++i)
+            if (results[i]['last_reintroduced_cards'] !== undefined)
+              results[i]['last_reintroduced_cards'] =
+                new Date(results[i]['last_reintroduced_cards'] * 1000);
+          success_callback(results);
+        }, error_callback, true);
     }
     else
     {
@@ -780,9 +790,10 @@ var Database = (function()
     message.
   @param start Index of result that should be the first element.
   @param end Index following result that should be the last element.
+  @param random True if random, false if not random.
   */
   Database.prototype.GetBoxes = function(attributes, success_callback,
-                                         error_callback, start, end)
+                                         error_callback, start, end, random)
   {
     if (this.is_online)
     {
@@ -794,7 +805,8 @@ var Database = (function()
           type : 'get-cardboxes',
           params : JSON.stringify(attributes),
           start : start,
-          end : end
+          end : end,
+          random : (random === true) ? true : false
         };
       AJAX(post_data, function(results)
         {
@@ -825,9 +837,10 @@ var Database = (function()
     and message.
   @param start Index of result that should be the first element.
   @param end Index following result that should be the last element.
+  @param random True if random, false if not random.
   */
   Database.prototype.GetCards = function(attributes, success_callback,
-                                         error_callback, start, end)
+                                         error_callback, start, end, random)
   {
     if (this.is_online)
     {
@@ -836,7 +849,8 @@ var Database = (function()
           type : 'get-cards',
           params : JSON.stringify(attributes),
           start : start,
-          end : end
+          end : end,
+          random : (random === true) ? true : false
         };
       AJAX(post_data, success_callback, error_callback, true);
     }
@@ -867,6 +881,9 @@ var Database = (function()
     if (this.is_online)
     {
       attributes['id'] = id;
+      if (attributes['last_reintroduced_cards'] !== undefined)
+        attributes['last_reintroduced_cards'] =
+          Math.round(attributes['last_reintroduced_cards'].getTime() / 1000);
       var post_data = {
           csrfmiddlewaretoken : CSRF_TOKEN,
           type : 'modify-cardset',
