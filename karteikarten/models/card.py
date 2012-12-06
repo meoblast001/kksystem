@@ -22,6 +22,7 @@ from django.contrib.auth.models import User
 class Card(models.Model):
   class Meta:
     app_label = 'karteikarten'
+    ordering = ('id',)
 
   front = models.TextField(_('front'))
   back = models.TextField(_('back'))

@@ -25,6 +25,7 @@ import time
 class CardBox(models.Model):
   class Meta:
     app_label = 'karteikarten'
+    ordering = ('id',)
 
   name = models.CharField(_('name'), max_length = 60)
   owner = models.ForeignKey(User)
