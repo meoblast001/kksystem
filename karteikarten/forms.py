@@ -40,6 +40,7 @@ class RegisterForm(forms.ModelForm):
   repeat_password = forms.CharField(widget = forms.PasswordInput,
                                     label = _('repeat-password'),
                                     required = True)
+  email = forms.EmailField(label = _('email'), required = True)
 
   def save(self, *args, **kwargs):
     self.instance.set_password(self.cleaned_data['password'])
