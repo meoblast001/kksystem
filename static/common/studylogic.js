@@ -94,9 +94,9 @@ var StudyLogic = (function()
 
                     var hours_since_last_reintroduce_cards =
                       Math.round((new Date(/*Now*/) -
-                      _this.cardset['last_reintroduced_cards'] /
+                      _this.cardset['last_reintroduced_cards']) /
                       (1000 /*Milliseconds to seconds*/ * 3600 /*Seconds to
-                      hours*/)));
+                      hours*/));
                     if (_this.cardset['reintroduce_cards'] &&
                         hours_since_last_reintroduce_cards >
                         _this.cardset['reintroduce_cards_frequency'] * 24 - 6)
@@ -147,8 +147,8 @@ var StudyLogic = (function()
       }
 
       //Get all boxes
-      database.GetBoxes({'parent_card_set' : _this.cardset['id']}, getBoxesSuccess,
-        function(type, message)
+      database.GetBoxes({'parent_card_set' : _this.cardset['id']},
+        getBoxesSuccess, function(type, message)
         {
           error_callback(type, message);
         });
