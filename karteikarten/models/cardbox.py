@@ -27,10 +27,16 @@ class CardBox(models.Model):
     app_label = 'karteikarten'
     ordering = ('id',)
 
+  def greaterThanZeroValidator(value):
+    if value is not None and value <= 0:
+      raise ValidationError(_('value-must-be-greater-than-zero'))
+    return value
+
   name = models.CharField(_('name'), max_length = 60)
   owner = models.ForeignKey(User)
   parent_card_set = models.ForeignKey(CardSet)
-  review_frequency = models.IntegerField(_('review-frequency-in-days'))
+  review_frequency = models.IntegerField(_('review-frequency-in-days'),
+    validators = [greaterThanZeroValidator])
   last_reviewed = models.DateTimeField()
 
   def __unicode__(self):
@@ -44,8 +50,6 @@ class CardBox(models.Model):
 
     if CardBox.objects.filter(query).count() > 0:
       raise ValidationError(_('cardbox-with-name-already-exists'))
-    if self.review_frequency is not None and self.review_frequency <= 0:
-      raise ValidationError(_('frequency-must-be-greater-than-zero'))
 
   #
   # Returns a dictionary of all card boxes in an array of card sets.

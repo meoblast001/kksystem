@@ -26,13 +26,20 @@ class CardSet(models.Model):
     app_label = 'karteikarten'
     ordering = ('id',)
 
+  def greaterThanZeroValidator(value):
+    if value is not None and value <= 0:
+      raise ValidationError(_('value-must-be-greater-than-zero'))
+    return value
+
   name = models.CharField(_('name'), max_length = 60)
   owner = models.ForeignKey(User)
   reintroduce_cards = models.BooleanField(_('reintroduce_cards'))
   reintroduce_cards_amount = models.IntegerField(
-    _('amount_of_cards_to_reintroduce'), null = True, blank = True)
+    _('amount_of_cards_to_reintroduce'), null = True, blank = True,
+    validators = [greaterThanZeroValidator])
   reintroduce_cards_frequency = models.IntegerField(
-    _('frequency_of_card_reintroduction'), null = True, blank = True)
+    _('frequency_of_card_reintroduction'), null = True, blank = True,
+    validators = [greaterThanZeroValidator])
   last_reintroduced_cards = models.DateTimeField()
 
   def __unicode__(self):

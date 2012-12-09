@@ -342,8 +342,8 @@ msgstr "Cardset with this name already exists."
 msgid "cardbox-with-name-already-exists"
 msgstr "Cardbox with this name already exists."
 
-msgid "frequency-must-be-greater-than-zero"
-msgstr "Frequency must be greater than zero."
+msgid "value-must-be-greater-than-zero"
+msgstr "Value must be greater than zero."
 
 msgid "internal-server-error"
 msgstr "Internal server error."

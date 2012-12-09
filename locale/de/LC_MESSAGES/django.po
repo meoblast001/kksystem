@@ -342,8 +342,8 @@ msgstr "Kartenzusammenstellung mit diesem Name existiert schon."
 msgid "cardbox-with-name-already-exists"
 msgstr "Kartenkasten mit diesem Name existiert schon."
 
-msgid "frequency-must-be-greater-than-zero"
-msgstr "Häufigkeit muss größer als null sein."
+msgid "value-must-be-greater-than-zero"
+msgstr "Wert muss größer als null sein."
 
 msgid "internal-server-error"
 msgstr "Interner Serverfehler."
