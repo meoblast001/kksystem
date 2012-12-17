@@ -82,15 +82,22 @@ var Pages =
   Login : function()
     {
       //Clear content area
-      $('#content').html('<div id="online_login" /><div id="offline_login" />');
+      var content = $('#content');
+      content.html(''); //Clear
+      var online_login_form_el = document.createElement('form');
+      online_login_form_el.setAttribute('id', 'online_login');
+      online_login_form_el.setAttribute('class', 'box_form');
+      content[0].appendChild(online_login_form_el);
+      var offline_login_form_el = document.createElement('form');
+      offline_login_form_el.setAttribute('id', 'offline_login');
+      offline_login_form_el.setAttribute('class', 'box_form');
+      content[0].appendChild(offline_login_form_el);
+
       $('#header_text').html('Welcome');
       Pages.SetBackButtonFunction(null);
 
-      var online_login_form = new Form(Pages.OnlineLoginSubmit, 'box_form',
-                                       'Online Login');
-      online_login_form.AddText('username', 'Username', null, 30);
-      online_login_form.AddPassword('password', 'Password');
-      online_login_form.Display($('#online_login'));
+      var online_login_form =
+        new Form($('#online_login')[0], FORM_CONFIG.login);
 
       Pages.database.GetUsersByNetworkStatus(false, function(results)
         {

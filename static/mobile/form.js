@@ -16,217 +16,307 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
-Creates a new HTML form, which submits to a Javascript function.
+Constructs a form from an object and handles the results when submitted.
+Annotated example of configuration: {
+  on_submit : function(post_data)
+    {
+      //Triggered when the form is submitted. Receives an object where keys are
+      //field names and values are the field value.
+    },
+  fields : [
+      {
+        type : 'text', //Creates a single-lined text input.
+        name : 'name_of_field', //Name of field element.
+        attributes : {
+            //Other HTML attributes for field.
+          },
+        label : 'Name of Field' //Optional label to display above the field.
+                                //Will be omitted from following fields, but can
+                                //be used with all fields.
+      },
+      {
+        type : 'password', //Creates a single-lined password text input.
+        name : 'name_of_field' //Name of field element.
+        attributes : {
+            //Other HTML attributes for field.
+          },
+      },
+      {
+        type : 'hidden', //Creates an invisible input.
+        name : 'name_of_field' //Name of field element.
+        attributes : {
+            //Other HTML attributes for field.
+          },
+      },
+      {
+        type : 'textarea', //Creates a multi-line text area.
+        name : 'name_of_field' //Name of field element.
+        attributes : {
+            //Other HTML attributes for field.
+          },
+      },
+      {
+        type : 'select', //Creates a drop-down select menu.
+        name : 'name_of_field' //Name of field element.
+        attributes : {
+            //Other HTML attributes for field.
+          },
+        options : {
+            value_of_option_1 : 'Label of Option 1',
+            value_of_option_2 : 'Label of Option 2',
+            //...
+          }
+      },
+      {
+        type : 'radio', //Creates a list of radio buttons.
+        name : 'name_of_field' //Name of field element.
+        attributes : {
+            //Other HTML attributes for field.
+          },
+        options : {
+            value_of_radio_1 : 'Label of Radio 1',
+            value_of_radio_2 : 'Label of Radio 2',
+            //...
+          }
+      },
+      {
+        type : 'submit', //Creates a submit button.
+        name : 'submit', //Name of submit button.
+        value : 'Submit' //Value (text) of button.
+      }
+    ]
+  }
 */
 var Form = (function()
 {
-  /**
-  Constructs a new form.
-  @param submit_callback Function to call when the form is submitted
-  @param id ID to use for the form element.
-  @param html_class Class to use for the form element.
-  @param submit_button_name Value to use for submit button.
-  */
-  function Form(submit_callback, html_class, submit_button_name)
-  {
-    this.submit_callback = submit_callback;
-    this.id = Form.prototype.cur_form_id++;
-    this.html_class = html_class;
-    this.submit_button_name = submit_button_name;
-    this.inputs = [];
-    Form.prototype.all_forms[this.id] = this;
-  }
-
-  //List of all forms
-  Form.prototype.all_forms = {};
-  Form.prototype.cur_form_id = 1;
-
-  /**
-  Adds a text input field to the form.
-  @param name Name of the field.
-  @param label Field label.
-  @param initial_value Initial value of input. Null if no initial value.
-  @param max_length Maximium length of input text.
-  */
-  Form.prototype.AddText = function(name, label, initial_value, max_length)
-  {
-    this.inputs.push({
-        type : 'text',
-        name : name,
-        label : label,
-        attributes : {
-          value : initial_value,
-          maxlength : max_length
-        }
-      });
-  };
-
-  /**
-  Adds a password text input field to the form.
-  @param name Name of the field.
-  @param label Field label.
-  */
-  Form.prototype.AddPassword = function(name, label)
-  {
-    this.inputs.push({
-        type : 'password',
-        name : name,
-        label : label,
-        attributes : {}
-      });
-  };
-
-  /**
-  Adds a textarea to the form.
-  @param name Name of the field.
-  @param label Field label.
-  @param initial_value Initial value of textarea. Null if no initial value.
-  */
-  Form.prototype.AddTextarea = function(name, label, initial_value)
-  {
-    this.inputs.push({
-        type : 'textarea',
-        name : name,
-        label : label,
-        initial_value : initial_value
-      });
-  }
-
-  /**
-  Adds a select drop-down field to the form.
-  @param name Name of the field.
-  @param label Field label.
-  @param options Menu options. A dictionary of values to names.
-  @param initial_value Value of the initially selected menu option.
-  */
-  Form.prototype.AddSelect = function(name, label, options, initial_value)
-  {
-    this.inputs.push({
-        type : 'select',
-        name : name,
-        label : label,
-        options : options,
-        initial_value : initial_value
-      });
-  };
-
-  /**
-  Adds a group of radio buttons to the form.
-  @param name Name of the radio button group.
-  @param label Group label.
-  @param options Radio buttons. A dictionary of values to names.
-  */
-  Form.prototype.AddRadio = function(name, label, options)
-  {
-    this.inputs.push({
-        type : 'radio',
-        name : name,
-        label : label,
-        options : options
-      });
-  };
-
-  /**
-  Adds a hidden input to the form.
-  @param name Name of the field.
-  @param initial_value Initial value of input. Null if no initial value.
-  */
-  Form.prototype.AddHidden = function(name, initial_value)
-  {
-    this.inputs.push({
-        type : 'hidden',
-        name : name,
-        attributes : {value : initial_value}
-      });
-  };
-
-  /**
-  Creates the form in the document.
-  @param base_element JQuery object in which to place the item.
-  */
-  Form.prototype.Display = function(base_element)
-  {
-    var result = '<form id="form_' + this.id + '" ' +
-                 (this.html_class !== null
-                  ? ' class="' + this.html_class + '"' : '') + '>';
-    //Get inputs
-    for (i = 0; i < this.inputs.length; ++i)
-    {
-      var cur_input = this.inputs[i]
-
-      if (cur_input.label !== undefined)
-        result += '<label for="id_' + cur_input.name + '">' + cur_input.label +
-                  '</label><br />';
-
-      if (cur_input.type == 'text' || cur_input.type == 'password' ||
-          cur_input.type == 'hidden')
-      {
-        result += '<input type="' + cur_input.type + '" name="' +
-                  cur_input.name + '" id="id_' + cur_input.name + '"';
-        //Get attributes
-        for (var cur_attribute in cur_input.attributes)
-          if (cur_input.attributes[cur_attribute] !== null)
-            result += ' ' + cur_attribute + '="' +
-                      cur_input.attributes[cur_attribute] + '"';
-        result += ' />';
-      }
-      else if (cur_input.type == 'textarea')
-        result += '<textarea name="' + cur_input.name + '" id="id_' +
-                  cur_input.name + '">' + cur_input.initial_value +
-                  '</textarea>';
-      else if (cur_input.type == 'select')
-      {
-        result += '<select name="' + cur_input.name + '" id="id_' +
-                  cur_input.name + '">';
-        //Get options
-        for (var cur_option in cur_input.options)
-          result += '<option value="' + cur_option + '"' +
-                    (cur_option == cur_input.initial_value ?
-                     ' selected="selected"' : '') + '>' +
-                    cur_input.options[cur_option] + '</option>';
-        result += '</select>';
-      }
-      else if (cur_input.type == 'radio')
-      {
-        result += '<div id="id_' + cur_input.name + '">';
-        //Get options
-        var j = 0;
-        for (var cur_option in cur_input.options)
-        {
-          result += '<label for="id_' + cur_input.name + '_' + j + '">' +
-                    '<input type="radio" id="id_' + cur_input.name + '_' + j +
-                    '" name="' + cur_input.name + '" value="' + cur_option +
-                    '" /> ' + cur_input.options[cur_option] + '</label><br />';
-          ++j;
-        }
-        result += '</div>';
-      }
-
-      if (cur_input.type != 'hidden')
-        result += '<br />';
-    }
-    result += '<input type="submit" value="' + this.submit_button_name +
-              '" /></form>';
-    base_element.append(result)
-
-    //Create submit action
-    var form_id = this.id;
-    $('#form_' + this.id).submit(function()
-      {
-        //Collect POST data
-        var post_data = {};
-        $('#form_' + form_id).find('input:checked, input:text, input:hidden, ' +
-          'div input:hidden, input:password, option:selected, textarea').each(
-          function()
+  //Object of functions related to the fields in the form.
+  var field_functions = {
+    /**
+    Object of field generators by type.
+    @param config Field configuration.
+    @return Base element of field.
+    */
+    generate : {
+        text : function(config)
           {
-            post_data[this.name || this.id || this.parentNode.name ||
-                      this.parentNode.id] = this.value;
-          });
+            if (config.name === undefined)
+              return null;
+            var node = document.createElement('input');
+            node.setAttribute('type', 'text');
+            node.setAttribute('name', config.name);
+            for (key in config.attributes)
+              node.setAttribute(key, config.attributes[key]);
+            return node;
+          },
+        password : function(config)
+          {
+            if (config.name === undefined)
+              return null;
+            var node = document.createElement('input');
+            node.setAttribute('type', 'password');
+            node.setAttribute('name', config.name);
+            for (key in config.attributes)
+              node.setAttribute(key, config.attributes[key]);
+            return node;
+          },
+        hidden : function(config)
+          {
+            if (config.name === undefined)
+              return null;
+            var node = document.createElement('input');
+            node.setAttribute('type', 'hidden');
+            node.setAttribute('name', config.name);
+            for (key in config.attributes)
+              node.setAttribute(key, config.attributes[key]);
+            return node;
+          },
+        textarea : function(config)
+          {
+            if (config.name === undefined)
+              return null;
+            var node = document.createElement('textarea');
+            node.setAttribute('name', config.name);
+            for (key in config.attributes)
+              node.setAttribute(key, config.attributes[key]);
+            return node;
+          },
+        select : function(config)
+          {
+            if (config.name === undefined)
+              return null;
+            var node = document.createElement('select');
+            node.setAttribute('name', config.name);
+            for (key in config.attributes)
+              node.setAttribute(key, config.attributes[key]);
+            for (value in config.options)
+            {
+              var o_node = document.createElement('option');
+              o_node.setAttribute('value', value);
+              o_node.appendChild(
+                document.createTextNode(config.options[value]));
+              for (key in config.options[value].attributes)
+                o_node.setAttribute(key, config.options[value].attributes[key]);
+              node.appendChild(o_node);
+            }
+            return node;
+          },
+        radio : function(config)
+          {
+            if (config.name === undefined)
+              return null;
+            var node = document.createElement('div');
+            node.setAttribute('name', config.name);
+            for (value in config.options)
+            {
+              var r_node = document.createElement('input');
+              r_node.setAttribute('type', 'radio');
+              r_node.setAttribute('value', value);
+              r_node.appendChild(
+                document.createTextNode(config.options[value]));
+              for (key in config.options[value].attributes)
+                r_node.setAttribute(key, config.options[value].attributes[key]);
+              node.appendChild(r_node);
+            }
+            return node;
+          },
+        submit : function(config)
+          {
+            if (config.name === undefined || config.value === undefined)
+              return null;
+            var node = document.createElement('input');
+            node.setAttribute('type', 'submit');
+            node.setAttribute('name', config.name);
+            node.setAttribute('value', config.value);
+            return node;
+          }
+      },
+    /**
+    Object of functions to set the value of fields by type.
+    @param element Field element
+    @param value Value to assign to field.
+    */
+    set_value : {
+        text : function(element, value)
+          {
+            element.setAttribute('value', value);
+          },
+        password : function(element, value)
+          {
+            element.setAttribute('value', value);
+          },
+        hidden : function(element, value)
+          {
+            element.setAttribute('value', value);
+          },
+        textarea : function(element, value)
+          {
+            for (var i = 0; i < element.childNodes.length; ++i)
+              element.removeChild(element.childNodes[i]);
+            element.appendChild(document.createTextNode(value));
+          },
+        select : function(element, value)
+          {
+            for (var i = 0; i < element.childNodes.length; ++i)
+            {
+              var option_element = element.childNodes[i];
+              if (option_element.getAttribute('value') == value)
+                option_element.setAttribute('selected', 'selected');
+            }
+          },
+        radio : function(element, value)
+          {
+            for (var i = 0; i < element.childNodes.length; ++i)
+            {
+              var radio_element = element.childNodes[i];
+              if (radio_element.getAttribute('value') == value)
+                radio_element.setAttribute('checked', 'checked');
+            }
+          },
+        submit : function(element, value)
+          {
+            //Cannot set value of submit.
+          }
+      }
+  }
 
-        Form.prototype.all_forms[form_id].submit_callback(post_data);
+  /**
+  Collects data POSTed by the form.
+  @param element Form element.
+  @return Object linking field names (or ID if none) to values.
+  */
+  function collectPostData(element)
+  {
+    var post_data = {};
+    for (var i = 0; i < element.childNodes.length; ++i)
+    {
+      var field_node = element.childNodes[i];
+      var field_node_name = field_node.nodeName.toLowerCase();
+      if (field_node_name == 'input')
+      {
+        var type = field_node.getAttribute('type').toLowerCase();
+        if (type == 'text' || type == 'password' || type == 'hidden' ||
+            (type == 'checkbox' && field_node.checked))
+          post_data[field_node.name || field_node.id] = field_node.value;
+      }
+      else if (field_node_name == 'textarea')
+        post_data[field_node.name || field_node.id] = field_node.value;
+      else if (field_node_name == 'select' || field_node_name == 'div')
+      {
+        for (var j = 0; j < field_node.childNodes.length; ++j)
+        {
+          var choice_node = field_node.childNode[j];
+          var is_option = choice_node.nodeName.toLowerCase() == 'option';
+          var is_radio = choice_node.nodeName.toLowerCase() == 'radio' &&
+                         choice_node.getAttribute('type').toLowerCase() ==
+                         'radio';
+          if (choice_node.selected && (is_option || is_radio))
+            post_data[field_node.name || field_node.id] = choice_node.value;
+        }
+      }
+    }
+    return post_data;
+  }
+
+  /**
+  Constructs a form at an element.
+  @param element Form element on which to create the form.
+  @param config Object defining the configuration of the form.
+  */
+  function Form(element, config)
+  {
+    if (config.fields !== undefined)
+    {
+      for (var i = 0; i < config.fields.length; ++i)
+      {
+        var field = config.fields[i];
+
+        if (field.label !== undefined && field.name !== undefined)
+        {
+          var label = document.createElement('label');
+          label.setAttribute('for', field.name);
+          label.appendChild(document.createTextNode(field.label));
+          element.appendChild(label);
+          element.appendChild(document.createElement('br'));
+        }
+
+        if (field.type in field_functions.generate)
+        {
+          element.appendChild(field_functions.generate[field.type](field));
+          element.appendChild(document.createElement('br'));
+        }
+      }
+    }
+    if (config.on_submit !== undefined)
+    {
+      function onSubmit()
+      {
+        var post_data = collectPostData(element);
+        config.on_submit(post_data);
         return false;
-      });
-  };
+      }
+      element.onsubmit = onSubmit;
+    }
+  }
 
   return Form;
 })();
