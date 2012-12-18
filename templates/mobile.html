@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <!DOCTYPE html>
-<html manifest="{% url mobile-cache-manifest %}">
+<html{% if not debug %} manifest="{% url mobile-cache-manifest %}"{% endif %}>
   <head>
     <title>Karteikarten System</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

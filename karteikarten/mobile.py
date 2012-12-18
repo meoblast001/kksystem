@@ -31,7 +31,8 @@ def mobile(request):
   return render_to_response('mobile.html', {
       'site_root' : settings.FORCE_SCRIPT_NAME if
                     settings.FORCE_SCRIPT_NAME != None else '',
-      'csrf_token' : csrf.get_token(request)
+      'csrf_token' : csrf.get_token(request),
+      'debug' : settings.DEBUG,
     }, context_instance = RequestContext(request))
 
 #
