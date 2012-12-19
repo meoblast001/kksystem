@@ -97,7 +97,7 @@ var Pages =
       Pages.SetBackButtonFunction(null);
 
       var online_login_form =
-        new Form($('#online_login')[0], FORM_CONFIG.login);
+        new Form(document.getElementById('online_login'), FORM_CONFIG.login());
 
       Pages.database.GetUsersByNetworkStatus(false, function(results)
         {
@@ -176,16 +176,12 @@ var Pages =
           for (i = 0; i < result.length; ++i)
             options[result[i].id] = result[i].name;
 
-          var study_options_form = new Form(Pages.StudyOptions2, 'box_form',
-                                            'Continue');
-          study_options_form.AddSelect('set', 'Set', options, null);
-          study_options_form.AddRadio('study_type', 'Study Type', {
-              'normal' : 'Normal',
-              'single_box' : 'Practice Single Box',
-              'no_box' : 'Practice Cards Currently in No Box'
-            });
-          $('#content').html(''); //Clear content area
-          study_options_form.Display($('#content'));
+          var study_options_form_el = document.createElement('form');
+          study_options_form_el.setAttribute('class', 'box_form');
+          var study_options_form =
+            new Form(study_options_form_el, FORM_CONFIG.studyOptions(options));
+
+          $('#content').html(study_options_form_el);
           $('#header_text').html('Choose Study Options');
           Pages.SetBackButtonFunction(Pages.Centre);
         },

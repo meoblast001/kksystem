@@ -170,12 +170,13 @@ var Form = (function()
             {
               var r_node = document.createElement('input');
               r_node.setAttribute('type', 'radio');
+              r_node.setAttribute('name', config.name);
               r_node.setAttribute('value', value);
-              r_node.appendChild(
-                document.createTextNode(config.options[value]));
               for (key in config.options[value].attributes)
                 r_node.setAttribute(key, config.options[value].attributes[key]);
               node.appendChild(r_node);
+              node.appendChild(document.createTextNode(config.options[value]));
+              node.appendChild(document.createElement('br'));
             }
             return node;
           },

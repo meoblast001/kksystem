@@ -32,7 +32,7 @@ def mobile(request):
       'site_root' : settings.FORCE_SCRIPT_NAME if
                     settings.FORCE_SCRIPT_NAME != None else '',
       'csrf_token' : csrf.get_token(request),
-      'debug' : settings.DEBUG,
+      'debug' : settings.DEBUG and 'NO_DEBUG' not in request.GET,
     }, context_instance = RequestContext(request))
 
 #

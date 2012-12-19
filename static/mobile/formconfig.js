@@ -15,10 +15,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var FORM_CONFIG = function()
+var FORM_CONFIG =
 {
-  return {
-      login : {
+  //Login form
+  login : function()
+    {
+      return {
           on_submit : Pages.OnlineLoginSubmit,
           fields : [
               {
@@ -37,6 +39,36 @@ var FORM_CONFIG = function()
                 value : 'Submit'
               }
             ]
-        }
-    };
-}
+        };
+    },
+  //Study options stage 1
+  studyOptions : function(cardsets)
+    {
+      return {
+          on_submit : Pages.StudyOptions2,
+          fields : [
+              {
+                type : 'select',
+                name : 'set',
+                label : 'Cardset',
+                options : cardsets
+              },
+              {
+                type : 'radio',
+                name : 'study_type',
+                label : 'Study Type',
+                options : {
+                    normal : 'Normal',
+                    single_box : 'Practice Single Box',
+                    no_box : 'Practice Cards Currently in No Box'
+                  }
+              },
+              {
+                type : 'submit',
+                name : 'submit',
+                value : 'Continue'
+              }
+            ]
+        };
+    }
+};
