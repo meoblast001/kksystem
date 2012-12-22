@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 var FORM_CONFIG =
 {
-  //Login form
+  //Online login form
   login : function()
     {
       return {
@@ -36,7 +36,26 @@ var FORM_CONFIG =
               {
                 type : 'submit',
                 name : 'submit',
-                value : 'Submit'
+                value : 'Online Login'
+              }
+            ]
+        };
+    },
+  //Offline login form
+  offlineLogin : function(users)
+    {
+      return {
+          on_submit : Pages.OfflineLoginSubmit,
+          fields : [
+              {
+                type : 'select',
+                name : 'user',
+                options : users
+              },
+              {
+                type : 'submit',
+                name : 'submit',
+                value : 'Offline Login'
               }
             ]
         };

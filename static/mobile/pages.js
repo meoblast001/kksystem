@@ -97,20 +97,20 @@ var Pages =
       Pages.SetBackButtonFunction(null);
 
       var online_login_form =
-        new Form(document.getElementById('online_login'), FORM_CONFIG.login());
+        new Form(online_login_form_el, FORM_CONFIG.login());
+
+      var offline_login_form
 
       Pages.database.GetUsersByNetworkStatus(false, function(results)
         {
-          var offline_login_form = new Form(Pages.OfflineLoginSubmit,
-                                            'box_form', 'Offline Login');
           var options = {};
           for (var i = 0; i < results.length; ++i)
           {
             var cur_result = results[i];
             options[cur_result['id']] = cur_result['username'];
           }
-          offline_login_form.AddSelect('user', 'User', options, null);
-          offline_login_form.Display($('#offline_login'));
+          var offline_login_form =
+            new Form(offline_login_form_el, FORM_CONFIG.offlineLogin(options));
         },
         function(type, message)
         {
