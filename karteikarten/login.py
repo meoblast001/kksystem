@@ -28,7 +28,7 @@ import string
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.contrib.auth.decorators import login_required
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 #
 # Login
