@@ -211,11 +211,14 @@ var Pages =
               for (i = 0; i < result.length; ++i)
                 options[result[i].id] = result[i].name;
 
-              var study_options_form = new Form(Pages.Study, 'box_form',
-                                                'Continue');
-              study_options_form.AddSelect('box', 'Box', options, null);
-              $('#content').html(''); //Clear content area
-              study_options_form.Display($('#content'));
+              var study_options_form_el = document.createElement('form');
+              study_options_form_el.setAttribute('class', 'box_form');
+
+              var study_options_form =
+                new Form(study_options_form_el,
+                         FORM_CONFIG.studyOptionsSingleBox(options));
+
+              $('#content').html(study_options_form_el);
               $('#header_text').html('Choose Box to Study');
               Pages.SetBackButtonFunction(Pages.StudyOptions);
             },

@@ -174,8 +174,10 @@ var Form = (function()
               r_node.setAttribute('value', value);
               for (key in config.options[value].attributes)
                 r_node.setAttribute(key, config.options[value].attributes[key]);
-              node.appendChild(r_node);
-              node.appendChild(document.createTextNode(config.options[value]));
+              var label = document.createElement('label');
+              label.appendChild(r_node);
+              label.appendChild(document.createTextNode(config.options[value]));
+              node.appendChild(label);
               node.appendChild(document.createElement('br'));
             }
             return node;
@@ -261,18 +263,20 @@ var Form = (function()
       }
       else if (field_node_name == 'textarea')
         post_data[field_node.name || field_node.id] = field_node.value;
-      else if (field_node_name == 'select' || field_node_name == 'div')
+      else if (field_node_name == 'select')
       {
-        for (var j = 0; j < field_node.childNodes.length; ++j)
-        {
-          var choice_node = field_node.childNode[j];
-          var is_option = choice_node.nodeName.toLowerCase() == 'option';
-          var is_radio = choice_node.nodeName.toLowerCase() == 'radio' &&
-                         choice_node.getAttribute('type').toLowerCase() ==
-                         'radio';
-          if (choice_node.selected && (is_option || is_radio))
-            post_data[field_node.name || field_node.id] = choice_node.value;
-        }
+        var options = field_node.getElementsByTagName('option');
+        for (var j = 0; j < options.length; ++j)
+          if (options[j].selected)
+            post_data[field_node.name || field_node.id] = options[j].value;
+      }
+      else if (field_node_name == 'div')
+      {
+        var inputs = field_node.getElementsByTagName('input');
+        for (var j = 0; j < inputs.length; ++j)
+          if (inputs[j].checked)
+            post_data[field_node.getAttribute('name') || field_node.id] =
+              inputs[j].value;
       }
     }
     return post_data;

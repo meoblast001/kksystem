@@ -70,5 +70,25 @@ var FORM_CONFIG =
               }
             ]
         };
+    },
+  //Study options stage 2 for single box study
+  studyOptionsSingleBox : function(cardboxes)
+    {
+      return {
+          on_submit : Pages.Study,
+          fields : [
+              {
+                type : 'select',
+                name : 'box',
+                label : 'Cardbox',
+                options : cardboxes
+              },
+              {
+                type : 'submit',
+                name : 'submit',
+                value : 'Continue'
+              }
+            ]
+        };
     }
 };
