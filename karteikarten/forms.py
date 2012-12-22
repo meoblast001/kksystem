@@ -15,6 +15,7 @@
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from models import *
@@ -98,7 +99,8 @@ class SelectSetForm(forms.Form):
     card_set_names = []
     #If edit set form, display option to create a new set
     if is_edit_set:
-      card_set_names.append(['new', '[' + _('create-new-set') + ']'])
+      card_set_names.append(['new',
+                            string_concat('[', _('create-new-set'), ']')])
     #Copy set id and name for value and text of choices
     for i, item in enumerate(card_set_choices):
       card_set_names.append([str(item.pk), item.name])
@@ -171,7 +173,7 @@ class EditCardForm(forms.ModelForm):
     for i, item in enumerate(card_boxes):
       card_box_names.append([str(item.pk), item.name])
     #Create no box option
-    card_box_names.append(['0', '[' + _('no-box') + ']'])
+    card_box_names.append(['0', string_concat('[', _('no-box'), ']')])
     #Provide choices for card box choice field
     self.fields['current_box'].choices = card_box_names
     #If existing card is provided as the instance, set the initial current box

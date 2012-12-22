@@ -19,7 +19,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.middleware import csrf
 import json
 
