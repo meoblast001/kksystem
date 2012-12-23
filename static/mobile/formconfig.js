@@ -109,5 +109,25 @@ var FORM_CONFIG =
               }
             ]
         };
+    },
+  //Select set to edit
+  editSetSelect : function(cardsets)
+    {
+      return {
+          on_submit : Pages.EditSet,
+          fields : [
+              {
+                type : 'select',
+                name : 'cardset',
+                label : 'Cardset',
+                options : cardsets
+              },
+              {
+                type : 'submit',
+                name : 'submit',
+                value : 'Edit'
+              }
+            ]
+        };
     }
 };

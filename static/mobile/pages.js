@@ -254,10 +254,13 @@ var Pages =
           for (i = 0; i < result.length; ++i)
             options[result[i].id] = result[i].name;
 
-          var set_select_form = new Form(Pages.EditSet, 'box_form', 'Edit');
-          set_select_form.AddSelect('cardset', 'Set', options, null);
-          $('#content').html(''); //Clear content area
-          set_select_form.Display($('#content'));
+          var set_select_form_el = document.createElement('form');
+          set_select_form_el.setAttribute('class', 'box_form');
+
+          var set_select_form =
+            new Form(set_select_form_el, FORM_CONFIG.editSetSelect(options));
+
+          $('#content').html(set_select_form_el);
           $('#header_text').html('Select Set to Edit');
           Pages.SetBackButtonFunction(Pages.Centre);
         },
