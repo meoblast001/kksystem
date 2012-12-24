@@ -21,7 +21,6 @@ var FORM_CONFIG =
   login : function()
     {
       return {
-          on_submit : Pages.OnlineLoginSubmit,
           fields : [
               {
                 type : 'text',
@@ -32,13 +31,46 @@ var FORM_CONFIG =
                 type : 'password',
                 name : 'password',
                 label : 'Password'
-              },
+              }
+            ],
+          buttons : [
               {
                 type : 'submit',
                 name : 'submit',
                 value : 'Online Login'
               }
-            ]
+            ],
+          on_submit : function(post_data, submit_event)
+            {
+              post_data['csrfmiddlewaretoken'] = CSRF_TOKEN;
+              $.ajax({
+                  type : 'POST',
+                  url : SITE_ROOT + '/accounts/login/',
+                  data : post_data,
+                  dataType : 'json',
+                  success : function(result)
+                    {
+                      if (result['status'] == 'success')
+                      {
+                        Pages.database.LoginOnline(post_data['username'],
+                          function()
+                          {
+                            Pages.Centre();
+                          },
+                          function(type, message)
+                          {
+                            Pages.FatalError(message);
+                          });
+                      }
+                      else if (result['status'] == 'fail')
+                        submit_event.nonFieldError(result['message']);
+                    },
+                  error : function(jq_xhr, text_status, error_thrown)
+                    {
+                      submit_event.nonFieldError('Error: ' + text_status);
+                    }
+                });
+            }
         };
     },
   //Offline login form
@@ -51,7 +83,9 @@ var FORM_CONFIG =
                 type : 'select',
                 name : 'user',
                 options : users
-              },
+              }
+            ],
+          buttons : [
               {
                 type : 'submit',
                 name : 'submit',
@@ -81,7 +115,9 @@ var FORM_CONFIG =
                     single_box : 'Practice Single Box',
                     no_box : 'Practice Cards Currently in No Box'
                   }
-              },
+              }
+            ],
+          buttons : [
               {
                 type : 'submit',
                 name : 'submit',
@@ -101,7 +137,9 @@ var FORM_CONFIG =
                 name : 'box',
                 label : 'Cardbox',
                 options : cardboxes
-              },
+              }
+            ],
+          buttons : [
               {
                 type : 'submit',
                 name : 'submit',
@@ -121,7 +159,9 @@ var FORM_CONFIG =
                 name : 'cardset',
                 label : 'Cardset',
                 options : cardsets
-              },
+              }
+            ],
+          buttons : [
               {
                 type : 'submit',
                 name : 'submit',

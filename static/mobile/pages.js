@@ -36,37 +36,6 @@ var Pages =
 
   //Login
 
-  OnlineLoginSubmit : function(post_data)
-    {
-      post_data['csrfmiddlewaretoken'] = CSRF_TOKEN;
-      $.ajax({
-          type : 'POST',
-          url : SITE_ROOT + '/accounts/login/',
-          data : post_data,
-          dataType : 'json',
-          success : function(result)
-            {
-              if (result['status'] == 'success')
-              {
-                Pages.database.LoginOnline(post_data['username'], function()
-                {
-                  Pages.Centre();
-                },
-                function(type, message)
-                {
-                  Pages.FatalError(message);
-                });
-              }
-              else if (result['status'] == 'fail')
-                alert(result['message']);
-            },
-          error : function(jq_xhr, text_status, error_thrown)
-            {
-              alert('Error: ' + text_status);
-            }
-        });
-    },
-
   OfflineLoginSubmit : function(post_data)
     {
       Pages.database.LoginOffline(post_data['user'], function()
