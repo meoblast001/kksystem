@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import csv
-import HTMLParser
+from HTMLParser import HTMLParser
 from karteikarten.models import Card, CardBox
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
@@ -222,9 +222,30 @@ class AnkiImporter(SetImporter):
   '''
   Import file from ANKI Text File.
   '''
+  class AnkiHtml(HTMLParser):
+    '''
+    Converts Anki's HTML to plain text.
+    '''
+    def __init__(self, *args, **kwargs):
+      HTMLParser.__init__(self, *args, **kwargs)
+      self.result_string = ''
+
+    def handle_starttag(self, tag, attrs):
+      if tag == 'br':
+        self.result_string += '\n'
+
+    def handle_data(self, data):
+      self.result_string += data
+
+    def getResult(self):
+      '''
+      Gets result string.
+      @return String of processed data.
+      '''
+      return self.result_string
+
   def __init__(self, file, *args, **kwargs):
     super(AnkiImporter, self).__init__(*args, **kwargs)
-    htmlparser = HTMLParser.HTMLParser()
     sniffer = csv.Sniffer().sniff(file.read(1024))
     file.seek(0)
     csvreader = csv.reader(file, sniffer)
@@ -235,9 +256,13 @@ class AnkiImporter(SetImporter):
         for i in range(len(row)):
           try:
             if fields[i] == 'front':
-              card.setAttribute('front', htmlparser.unescape(row[i]))
+              anki_html = AnkiImporter.AnkiHtml()
+              anki_html.feed(anki_html.unescape(row[i]))
+              card.setAttribute('front', anki_html.getResult())
             elif fields[i] == 'back':
-              card.setAttribute('back', htmlparser.unescape(row[i]))
+              anki_html = AnkiImporter.AnkiHtml()
+              anki_html.feed(anki_html.unescape(row[i]))
+              card.setAttribute('back', anki_html.getResult())
           except UnicodeDecodeError:
             pass
         self.addCard(card)
