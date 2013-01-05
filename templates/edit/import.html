@@ -1,0 +1,70 @@
+{% extends "base_page.html" %}
+
+{% comment %}
+Copyright (C) 2012 Braden Walters
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+
+{% load i18n %}
+
+{% block page_style %}
+  {% if verification %}
+    width: auto;
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+  {% if upload_form %}
+    <form method="POST" enctype="multipart/form-data" class="box_form">
+      {% csrf_token %}
+      {% for field in form %}
+        {{ field.label_tag }}: {{ field }}
+        {{ field.errors }}<br />
+      {% endfor %}
+      {{ form.non_field_errors }}
+      <br />
+      <input type="submit" value="{% trans "continue" %}" class="box"/>
+    </form>
+  {% elif verification %}
+    <form method="POST" enctype="multipart/form-data" class="box_form">
+      {% csrf_token %}
+      {% trans "cards" %}:
+      <table>
+        <thead>
+          <tr>
+            {% for field in importer.getCardFields %}
+              <td>{% trans field %}</td>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for card in importer.getCards %}
+          <tr>
+            {% for attribute in card.getAllAttributesInFieldOrder %}
+              {% if attribute != None %}
+                <td class="{% if card.valid %}import_success{% else %}import_failure{% endif %}">{{ attribute }}</td>
+              {% else %}
+                <td class="import_failure">[{% trans "import-failure" %}]</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <input type="hidden" name="import_data" value="{{ importer_json }}" />
+      <input type="submit" name="verify" value="{% trans "continue" %}" class="box" />
+    </form>
+  {% endif %}
+{% endblock %}
