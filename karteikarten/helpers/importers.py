@@ -251,17 +251,16 @@ class AnkiImporter(SetImporter):
     sniffer = csv.Sniffer().sniff(file.read(1024))
     file.seek(0)
     csvreader = csv.reader(file, sniffer)
-    fields = csvreader.next()
     for row in csvreader:
       try:
         card = SetImporter.CardImporter()
         for i in range(len(row)):
           try:
-            if fields[i] == 'front':
+            if i == 0:
               anki_html = AnkiImporter.AnkiHtml()
               anki_html.feed(anki_html.unescape(row[i].decode('utf-8')))
               card.setAttribute('front', anki_html.getResult())
-            elif fields[i] == 'back':
+            elif i == 1:
               anki_html = AnkiImporter.AnkiHtml()
               anki_html.feed(anki_html.unescape(row[i].decode('utf-8')))
               card.setAttribute('back', anki_html.getResult())

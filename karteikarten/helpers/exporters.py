@@ -21,7 +21,7 @@ class AnkiExporter(object):
   '''
   @staticmethod
   def export(cardset):
-    result = u'front\tback\n'
+    result = u''
     for card in Card.objects.filter(parent_card_set = cardset):
       result += card.front.replace('\n', '<br />').replace('\r', '') + '\t' + \
                 card.back.replace('\n', '<br />').replace('\r', '') + '\n'

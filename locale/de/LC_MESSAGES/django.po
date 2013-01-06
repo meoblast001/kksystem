@@ -361,7 +361,7 @@ msgid "format"
 msgstr "Format"
 
 msgid "anki-text-file"
-msgstr "Anki Textdatei"
+msgstr "Anki Textdatei (Vorderseite; Rückseite)"
 
 msgid "import-successful"
 msgstr "Import erfolgreich"
