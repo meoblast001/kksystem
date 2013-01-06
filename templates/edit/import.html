@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <form method="POST" enctype="multipart/form-data" class="box_form">
       {% csrf_token %}
       {% trans "cards" %}:
-      <table>
+      <table style="width: 100%;">
         <thead>
           <tr>
             {% for field in importer.getCardFields %}
@@ -54,7 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           <tr>
             {% for attribute in card.getAllAttributesInFieldOrder %}
               {% if attribute != None %}
-                <td class="{% if card.valid %}import_success{% else %}import_failure{% endif %}">{{ attribute }}</td>
+                <td class="{% if card.valid %}import_success{% else %}import_failure{% endif %}">{{ attribute|linebreaksbr }}</td>
               {% else %}
                 <td class="import_failure">[{% trans "import-failure" %}]</td>
               {% endif %}
