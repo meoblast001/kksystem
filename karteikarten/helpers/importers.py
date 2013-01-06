@@ -187,6 +187,9 @@ class SetImporter(object):
       try:
         self._current_box = self._cards_current_box = CardBox.objects.get(
           pk = serialisation['cards_current_box']['id'], owner = owner)
+        #Update the card box for each existing card.
+        for card in self.getCards():
+          card._current_card_box = self._current_box
       except ObjectDoesNotExist:
         raise SetImporter.ImportError
 
@@ -200,6 +203,8 @@ class SetImporter(object):
     card._cardset = self._cardset
     card._owner = self._owner
     card._current_card_box = self._cards_current_box
+    #Add all fields that appear in the new card, but are not already in the list
+    #of used cards, to that list.
     for key in card._attributes:
       if key not in self._used_card_fields:
         self._used_card_fields.append(key)
