@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import csv
+import codecs
 from HTMLParser import HTMLParser
 from karteikarten.models import Card, CardBox
 from django.core.exceptions import ObjectDoesNotExist
@@ -245,6 +246,7 @@ class AnkiImporter(SetImporter):
       return self.result_string
 
   def __init__(self, file, *args, **kwargs):
+    file = codecs.EncodedFile(file, 'utf-8')
     super(AnkiImporter, self).__init__(*args, **kwargs)
     sniffer = csv.Sniffer().sniff(file.read(1024))
     file.seek(0)
@@ -257,11 +259,11 @@ class AnkiImporter(SetImporter):
           try:
             if fields[i] == 'front':
               anki_html = AnkiImporter.AnkiHtml()
-              anki_html.feed(anki_html.unescape(row[i]))
+              anki_html.feed(anki_html.unescape(row[i].decode('utf-8')))
               card.setAttribute('front', anki_html.getResult())
             elif fields[i] == 'back':
               anki_html = AnkiImporter.AnkiHtml()
-              anki_html.feed(anki_html.unescape(row[i]))
+              anki_html.feed(anki_html.unescape(row[i].decode('utf-8')))
               card.setAttribute('back', anki_html.getResult())
           except UnicodeDecodeError:
             pass
