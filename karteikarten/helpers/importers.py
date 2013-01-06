@@ -137,10 +137,10 @@ class SetImporter(object):
       self._restore(restore, cardset, owner)
     else:
       try:
-        self._cards_current_box = CardBox.objects.get(
+        self._cards_current_box = CardBox.objects.filter(
           parent_card_set = cardset, owner = owner). \
           order_by('review_frequency')[0]
-      except ObjectDoesNotExist:
+      except IndexError:
         pass
 
   def save(self):
