@@ -46,7 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
       <table class="grid">
         <tr>
-          <td>{% trans "cards" %}:</td>
+          <td colspan="2">{% trans "cards" %}:</td>
         </tr>
         <tr>
           <td>
@@ -60,7 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </a>
           </td>
         <tr>
-          <td>{% trans "boxes" %}:</td>
+          <td colspan="2">{% trans "boxes" %}:</td>
         </tr>
         <tr>
           <td>
@@ -75,11 +75,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           </td>
         </tr>
         <tr>
-          <td>{% trans "import" %} / {% trans "export" %}:</td>
+          <td colspan="2">{% trans "import" %} / {% trans "export" %}:</td>
         </tr>
         <tr>
           <td>
             <a href="{% url set-import id %}">{% trans "import" %}</a>
+          </td>
+          <td>
+            <a href="{% url set-export id %}">{% trans "export" %}</a>
           </td>
         </tr>
       </table>

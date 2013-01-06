@@ -19,7 +19,7 @@ from django.utils.translation import string_concat
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from models import *
-from helpers import importers
+from helpers import importers, exporters
 
 #
 # Form displayed on login page.
@@ -215,6 +215,24 @@ class SetImportForm(forms.Form):
     format = self.cleaned_data['format']
     if format == 'anki-text':
       return importers.AnkiImporter(self.files['file'], cardset, owner)
+
+#
+# Form displayed to export set data.
+#
+class SetExportForm(forms.Form):
+  format = forms.ChoiceField(label = _('format'), choices = [
+      ['anki-text', _('anki-text-file')]
+    ])
+
+  def exportData(self, cardset):
+    format = self.cleaned_data['format']
+    if format == 'anki-text':
+      return exporters.AnkiExporter.export(cardset)
+
+  def dataExtension(self):
+    format = self.cleaned_data['format']
+    if format == 'anki-text':
+      return exporters.AnkiExporter.getExtension()
 
 #
 # Form displayed when changing user information in settings.

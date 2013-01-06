@@ -583,3 +583,36 @@ def setImport(request, set_id):
             _('edit-set') + ': ' + cardset.name
           ])
       }, context_instance = RequestContext(request))
+
+#
+# Edit set data
+#
+@login_required
+def setExport(request, set_id):
+  cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+  if request.POST:
+    form = SetExportForm(request.POST)
+    if form.is_valid():
+      response = HttpResponse(mimetype = 'text/plain')
+      response['Content-Disposition'] = 'attachment; filename="' + \
+                                        cardset.owner.username + '_' + \
+                                        cardset.name + form.dataExtension() + \
+                                        '"'
+      response.write(form.exportData(cardset))
+      return response
+  else:
+    form = SetExportForm()
+  return render_to_response('edit/export.html', {
+      'id' : set_id,
+      'form' : form,
+      'title' : _('export'),
+      'site_link_chain' : zip([
+            reverse('centre'),
+            reverse('select-set-to-edit'),
+            reverse('edit-set', args = [set_id])
+        ], [
+            _('centre'),
+            _('edit'),
+            _('edit-set') + ': ' + cardset.name
+        ])
+    }, context_instance = RequestContext(request))
