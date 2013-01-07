@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <br />
       <input type="submit" value="{% trans "continue" %}" class="box"/>
     </form>
-  {% elif verification %}
+  {% else %} {% comment %}Should be verification{% endcomment %}
     <form method="POST" enctype="multipart/form-data" class="box_form">
       {% csrf_token %}
       {% trans "cards" %}:

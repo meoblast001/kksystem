@@ -5,6 +5,12 @@ import os
 ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 from user_settings import *
+import django
+import sys
+
+if django.get_version() != '1.3.5':
+  print 'Requires Django version 1.3.5'
+  sys.exit(1)
 
 TEMPLATE_DEBUG = DEBUG
 

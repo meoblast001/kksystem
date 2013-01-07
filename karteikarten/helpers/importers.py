@@ -148,15 +148,11 @@ class SetImporter(object):
     Saves all data in the importer to the database.
     @throws SetImporter.ImportError if any model does not pass validation.
     '''
-    cards_to_save = []
     for card_importer in self._card_importers:
       try:
-        card = card_importer.save(defer_save = True)
-        if card is not None:
-          cards_to_save.append(card)
+        card = card_importer.save()
       except SetImporter.ImportError:
         pass
-    Card.objects.bulk_create(cards_to_save)
 
   def serialise(self):
     '''
