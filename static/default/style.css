@@ -250,3 +250,15 @@ a img
   margin-bottom: 5px;
   display: none;
 }
+
+.import_success
+{
+  border: 2px none;
+  background-color: #CDFFDD;
+}
+
+.import_failure
+{
+  border: 2px none;
+  background-color: #FFCCCC;
+}

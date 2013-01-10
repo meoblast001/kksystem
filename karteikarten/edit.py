@@ -1,4 +1,4 @@
-# Copyright (C) 2011 Braden Walters
+# Copyright (C) 2011 - 2013 Braden Walters
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -502,3 +502,117 @@ def deleteCard(request, set_id, card_id):
         'title' : _('error'),
         'site_link_chain' : zip([], [])
       }, context_instance = RequestContext(request))
+
+#
+# Import set data
+#
+@login_required
+def setImport(request, set_id):
+  cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+  if request.method == 'POST':
+    #File uploaded
+    if 'file' in request.FILES:
+      form = SetImportForm(request.POST, request.FILES)
+      if form.is_valid():
+        importer = form.importData(cardset, request.user)
+        return render_to_response('edit/import.html', {
+            'id' : set_id,
+            'importer' : importer,
+            'importer_json' : json.dumps(importer.serialise()),
+            'verification' : True,
+            'title' : _('import'),
+            'site_link_chain' : zip([
+                reverse('centre'),
+                reverse('select-set-to-edit'),
+                reverse('edit-set', args = [set_id])
+              ], [
+                _('centre'),
+                _('edit'),
+                _('edit-set') + ': ' + cardset.name
+              ])
+          }, context_instance = RequestContext(request))
+      else:
+        return render_to_response('edit/import.html', {
+            'id' : set_id,
+            'form' : form,
+            'upload_form' : True,
+            'title' : _('import'),
+            'site_link_chain' : zip([
+                reverse('centre'),
+                reverse('select-set-to-edit'),
+                reverse('edit-set', args = [set_id])
+              ], [
+                _('centre'),
+                _('edit'),
+                _('edit-set') + ': ' + cardset.name
+              ])
+          }, context_instance = RequestContext(request))
+    #Verified
+    elif 'import_data' in request.POST:
+      try:
+        importer = importers.SetImporter(cardset, request.user,
+          restore = json.loads(request.POST['import_data']))
+        importer.save()
+        return render_to_response('confirmation.html', {
+            'message' : _('import-successful'),
+            'go_to' : reverse('edit-set', args = [set_id]),
+            'go_to_name' : _('back-to-centre'),
+            'title' : _('confirmation'),
+            'site_link_chain' : zip([], [])
+          }, context_instance = RequestContext(request))
+      except importers.SetImporter.ImportError:
+        return render_to_response('error.html', {
+            'message' : _('import-failure'),
+            'go_back_to' : reverse('set-import', args = [set_id]),
+            'title' : _('error'),
+            'site_link_chain' : zip([], [])
+          }, context_instance = RequestContext(request))
+  else:
+    return render_to_response('edit/import.html', {
+        'id' : set_id,
+        'form' : SetImportForm(),
+        'upload_form' : True,
+        'title' : _('import'),
+        'site_link_chain' : zip([
+            reverse('centre'),
+            reverse('select-set-to-edit'),
+            reverse('edit-set', args = [set_id])
+          ], [
+            _('centre'),
+            _('edit'),
+            _('edit-set') + ': ' + cardset.name
+          ])
+      }, context_instance = RequestContext(request))
+
+#
+# Edit set data
+#
+@login_required
+def setExport(request, set_id):
+  cardset = get_object_or_404(CardSet, pk = set_id, owner = request.user)
+  if request.POST:
+    form = SetExportForm(request.POST)
+    if form.is_valid():
+      response = HttpResponse(mimetype = 'text/plain')
+      response['Content-Disposition'] = 'attachment; filename="' + \
+                                        cardset.owner.username + '_' + \
+                                        cardset.name + form.dataExtension() + \
+                                        '"'
+      response.write(form.exportData(cardset))
+      return response
+  else:
+    form = SetExportForm()
+  return render_to_response('edit/export.html', {
+      'id' : set_id,
+      'form' : form,
+      'title' : _('export'),
+      'site_link_chain' : zip([
+            reverse('centre'),
+            reverse('select-set-to-edit'),
+            reverse('edit-set', args = [set_id])
+        ], [
+            _('centre'),
+            _('edit'),
+            _('edit-set') + ': ' + cardset.name
+        ])
+    }, context_instance = RequestContext(request))

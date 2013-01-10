@@ -1,7 +1,7 @@
 {% extends "base_page.html" %}
 
 {% comment %}
-Copyright (C) 2011 Braden Walters
+Copyright (C) 2011 - 2012 Braden Walters
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -46,7 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
       <table class="grid">
         <tr>
-          <td>{% trans "cards" %}:</td>
+          <td colspan="2">{% trans "cards" %}:</td>
         </tr>
         <tr>
           <td>
@@ -60,7 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </a>
           </td>
         <tr>
-          <td>{% trans "boxes" %}:</td>
+          <td colspan="2">{% trans "boxes" %}:</td>
         </tr>
         <tr>
           <td>
@@ -72,6 +72,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <a href="{% url edit-view-boxes-by-set id %}">
               <img src="{{ STATIC_URL }}default/edit_box.png" alt="" />{% trans "edit-box" %}
             </a>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">{% trans "import" %} / {% trans "export" %}:</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="{% url set-import id %}">{% trans "import" %}</a>
+          </td>
+          <td>
+            <a href="{% url set-export id %}">{% trans "export" %}</a>
           </td>
         </tr>
       </table>

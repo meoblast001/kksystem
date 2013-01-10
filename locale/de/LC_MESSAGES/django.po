@@ -1,4 +1,4 @@
-# Copyright (C) 2012 Braden Walters
+# Copyright (C) 2012 - 2013 Braden Walters
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -347,3 +347,24 @@ msgstr "Wert muss größer als null sein."
 
 msgid "internal-server-error"
 msgstr "Interner Serverfehler."
+
+msgid "import"
+msgstr "Importieren"
+
+msgid "export"
+msgstr "Exportieren"
+
+msgid "file"
+msgstr "Datei"
+
+msgid "format"
+msgstr "Format"
+
+msgid "anki-text-file"
+msgstr "Anki Textdatei (Vorderseite; Rückseite)"
+
+msgid "import-successful"
+msgstr "Import erfolgreich"
+
+msgid "import-failure"
+msgstr "Importausfall"
