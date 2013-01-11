@@ -249,10 +249,16 @@ var Pages =
         {
           $('#content').html('<div id="form" /><div id="menu" />');
 
-          var edit_set_form = new Form(Pages.EditSetSubmit, 'box_form', 'Edit');
-          edit_set_form.AddHidden('id', post_data.cardset);
-          edit_set_form.AddText('name', 'Name', result[0].name, 60);
-          edit_set_form.Display($('#form'));
+          var edit_set_form_el = document.createElement('form');
+          edit_set_form_el.setAttribute('class', 'box_form');
+
+          var edit_set_form = new Form(edit_set_form_el, FORM_CONFIG.editSet());
+          edit_set_form.setValues({
+              id : post_data.cardset,
+              name : result[0].name
+            });
+
+          $('#form').html(edit_set_form_el);
 
           var menu_content =
             '<a href="javascript:Pages.EditCard(\'new\', ' + post_data.cardset +
@@ -270,28 +276,6 @@ var Pages =
           $('#menu').html(menu_content);
           $('#header_text').html('Edit Set - ' + result[0].name);
           Pages.SetBackButtonFunction(Pages.EditSetSelect);
-        },
-        function(type, message)
-        {
-          if (type == 'network')
-            Pages.NetworkError(message);
-          else
-            Pages.FatalError(message);
-        });
-    },
-
-  EditSetSubmit : function(post_data)
-    {
-      var id = post_data['id'];
-      delete post_data['id'];
-      Pages.database.ModifySet(id, post_data, function()
-        {
-          $('#content').html('Edited successfully. Returning to edit set page...');
-          $('#header_text').html('Success');
-            setTimeout(function()
-            {
-              Pages.EditSet({'cardset' : id});
-            }, 3000);
         },
         function(type, message)
         {

@@ -305,7 +305,11 @@ var Form = (function()
         //Generate field using a generator function
         if (field.type in field_functions.generate && 'name' in field)
         {
-          element.appendChild(field_functions.generate[field.type](field));
+          //Generate field element and tag the root and type so it can be found.
+          var field_el = field_functions.generate[field.type](field);
+          field_el.setAttribute('data-field-root', field.name);
+          field_el.setAttribute('data-field-type', field.type);
+          element.appendChild(field_el);
 
           //Render field error area
           var field_errors = document.createElement('ul');
@@ -353,6 +357,25 @@ var Form = (function()
         return false;
       }
       element.onsubmit = onSubmit;
+    }
+  }
+
+  /**
+  Set the values of each field on the form.
+  @param values Object of field names to their values.
+  */
+  Form.prototype.setValues = function(values)
+  {
+    for (var name in values)
+    {
+      var field_root =
+        this.element.querySelector('[data-field-root=' + name + ']');
+      if (field_root !== null)
+      {
+        var field_type = field_root.getAttribute('data-field-type');
+        if (field_type in field_functions.set_value)
+          field_functions.set_value[field_type](field_root, values[name]);
+      }
     }
   }
 

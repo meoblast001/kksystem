@@ -169,5 +169,51 @@ var FORM_CONFIG =
               }
             ]
         };
+    },
+  //Edit set
+  editSet : function()
+    {
+      return {
+          fields : [
+              {
+                type : 'hidden',
+                name : 'id'
+              },
+              {
+                type : 'text',
+                name : 'name',
+                label : 'Name',
+              }
+            ],
+          buttons : [
+              {
+                type : 'submit',
+                name : 'submit',
+                value : 'Submit'
+              }
+            ],
+          on_submit : function(post_data)
+            {
+              var id = post_data['id'];
+              delete post_data['id'];
+              Pages.database.ModifySet(id, post_data, function()
+                {
+                  $('#content').html('Edited successfully. Returning to edit ' +
+                                     'set page...');
+                  $('#header_text').html('Success');
+                    setTimeout(function()
+                    {
+                      Pages.EditSet({'cardset' : id});
+                    }, 3000);
+                },
+                function(type, message)
+                {
+                  if (type == 'network')
+                    Pages.NetworkError(message);
+                  else
+                    Pages.FatalError(message);
+                });
+            }
+        };
     }
 };
