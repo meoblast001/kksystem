@@ -82,7 +82,7 @@ msgid "card-set"
 msgstr "Kartenzusammenstellung"
 
 msgid "create-new-set"
-msgstr "Neue Zusammenstellung machen"
+msgstr "Neue Zusammenstellung erstellen"
 
 msgid "study-type-normal"
 msgstr "Normal"
@@ -217,7 +217,7 @@ msgid "success"
 msgstr "Erfolg"
 
 msgid "create"
-msgstr "Machen"
+msgstr "Erstellen"
 
 msgid "loading"
 msgstr "Ladet gerade"
@@ -461,3 +461,18 @@ msgstr "Ja"
 
 msgid "no"
 msgstr "Nein"
+
+msgid "created-successfully"
+msgstr "Erfolgreich erstellt."
+
+msgid "edited-successfully"
+msgstr "Erfolgreich bearbeitet."
+
+msgid "returning-to-edit-set-page"
+msgstr "Kehrt zu Zusammenstellung-Bearbeitungsseite zurück..."
+
+msgid "cardset"
+msgstr "Kartenzusammenstellung"
+
+msgid "cardbox"
+msgstr "Kartenkasten"

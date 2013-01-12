@@ -461,3 +461,18 @@ msgstr "Yes"
 
 msgid "no"
 msgstr "No"
+
+msgid "created-successfully"
+msgstr "Created successfully."
+
+msgid "edited-successfully"
+msgstr "Edited successfully."
+
+msgid "returning-to-edit-set-page"
+msgstr "Returning to edit set page..."
+
+msgid "cardset"
+msgstr "Cardset"
+
+msgid "cardbox"
+msgstr "Cardbox"

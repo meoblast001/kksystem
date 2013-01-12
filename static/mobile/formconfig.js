@@ -136,7 +136,7 @@ var FORM_CONFIG =
               {
                 type : 'select',
                 name : 'box',
-                label : 'Cardbox',
+                label : gettext('cardbox'),
                 options : cardboxes
               }
             ],
@@ -199,9 +199,9 @@ var FORM_CONFIG =
               delete post_data['id'];
               Pages.database.ModifySet(id, post_data, function()
                 {
-                  $('#content').html('Edited successfully. Returning to edit ' +
-                                     'set page...');
-                  $('#header_text').html('Success');
+                  $('#content').html(gettext('edited-successfully') + ' ' +
+                                     gettext('returning-to-edit-set-page'));
+                  $('#header_text').html(gettext('success'));
                     setTimeout(function()
                     {
                       Pages.EditSet({'cardset' : id});
@@ -233,17 +233,17 @@ var FORM_CONFIG =
               {
                 type : 'textarea',
                 name : 'front',
-                label : 'Front'
+                label : gettext('front')
               },
               {
                 type : 'textarea',
                 name : 'back',
-                label : 'Back'
+                label : gettext('back')
               },
               {
                 type : 'select',
                 name : 'current_box',
-                label : 'Current box',
+                label : gettext('current-box'),
                 options : cardboxes
               }
             ],
@@ -251,7 +251,7 @@ var FORM_CONFIG =
               {
                 type : 'submit',
                 name : 'submit',
-                value : 'Submit'
+                value : gettext('submit')
               }
             ],
           on_submit : function(post_data)
@@ -266,11 +266,11 @@ var FORM_CONFIG =
               Pages.database.ModifyCard(type == 'edit' ? id : null, post_data,
                 function()
                 {
-                  $('#header_text').html('Success');
+                  $('#header_text').html(gettext('success'));
                   if (type == 'new')
                   {
-                    $('#content').html('Created successfully. ' +
-                                       'Returning to edit set page...');
+                    $('#content').html(gettext('created-successfully') + ' ' +
+                                       gettext('returning-to-edit-set-page'));
                     setTimeout(function()
                       {
                         Pages.EditSet({'cardset' : id});
@@ -278,8 +278,8 @@ var FORM_CONFIG =
                   }
                   else if (type == 'edit')
                   {
-                    $('#content').html('Edited successfully. ' +
-                                       'Returning to edit set page...');
+                    $('#content').html(gettext('edited-successfully') + ' ' +
+                                       gettext('returning-to-edit-set-page'));
                     setTimeout(function()
                       {
                         Pages.database.GetCards({'id' : id}, function(results)
@@ -324,12 +324,12 @@ var FORM_CONFIG =
               {
                 type : 'text',
                 name : 'name',
-                label : 'Name'
+                label : gettext('name')
               },
               {
                 type : 'text',
                 name : 'review_frequency',
-                label : 'Review Frequency'
+                label : gettext('review-frequency-in-days')
               },
               {
                 type : 'hidden',
@@ -340,7 +340,7 @@ var FORM_CONFIG =
               {
                 type : 'submit',
                 name : 'submit',
-                value : 'Submit'
+                value : gettext('submit')
               }
             ],
           on_submit : function(post_data)
@@ -357,11 +357,11 @@ var FORM_CONFIG =
               Pages.database.ModifyBox(type == 'edit' ? id : null, post_data,
                 function()
                 {
-                  $('#header_text').html('Success');
+                  $('#header_text').html(gettext('success'));
                   if (type == 'new')
                   {
-                    $('#content').html('Created successfully. ' +
-                                       'Returning to edit set page...');
+                    $('#content').html(gettext('created-successfully') + ' ' +
+                                       gettext('returning-to-edit-set-page'));
                     setTimeout(function()
                       {
                         Pages.EditSet({'cardset' : id});
@@ -369,8 +369,8 @@ var FORM_CONFIG =
                   }
                   else if (type == 'edit')
                   {
-                    $('#content').html('Edited successfully. ' +
-                                       'Returning to edit set page...');
+                    $('#content').html(gettext('edited-successfully') + ' ' +
+                                       gettext('returning-to-edit-set-page'));
                     setTimeout(function()
                       {
                         Pages.database.GetBoxes({'id' : id}, function(results)
