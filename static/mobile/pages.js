@@ -337,17 +337,20 @@ var Pages =
             for (i = 0; i < box_results.length; ++i)
               options[box_results[i].id] = box_results[i].name;
 
-            $('#content').html('');
-            var edit_card_form = new Form(Pages.EditCardSubmit, 'box_form',
-                                          'Edit');
-            edit_card_form.AddHidden('type', type);
-            edit_card_form.AddHidden('id', id);
-            edit_card_form.AddTextarea('front', 'Front',
-                                       card_results[0]['front']);
-            edit_card_form.AddTextarea('back', 'Back', card_results[0]['back']);
-            edit_card_form.AddSelect('current_box', 'Current Box', options,
-                                     card_results[0]['current_box']);
-            edit_card_form.Display($('#content'));
+            var edit_card_form_el = document.createElement('form');
+            edit_card_form_el.setAttribute('class', 'box_form');
+
+            var edit_card_form =
+              new Form(edit_card_form_el, FORM_CONFIG.editCard(options));
+            edit_card_form.setValues({
+                type : type,
+                id : id,
+                front : card_results[0]['front'],
+                back : card_results[0]['back'],
+                current_box : card_results[0]['current_box']
+              });
+
+            $('#content').html(edit_card_form_el);
             $('#header_text').html('Edit Card');
             Pages.SetBackButtonFunction(function()
             {
@@ -379,56 +382,6 @@ var Pages =
               Pages.FatalError(message);
           });
       }
-    },
-
-  EditCardSubmit : function(post_data)
-    {
-      //If type == 'new', set ID; If type == 'edit', card ID
-      var id = post_data['id'];
-      var type = post_data['type'];
-      delete post_data['id'];
-      delete post_data['type'];
-      if (type == 'new')
-        post_data['parent_card_set'] = id;
-      Pages.database.ModifyCard(type == 'edit' ? id : null, post_data, function()
-        {
-          $('#header_text').html('Success');
-          if (type == 'new')
-          {
-            $('#content').html('Created successfully. ' +
-                               'Returning to edit set page...');
-            setTimeout(function()
-              {
-                Pages.EditSet({'cardset' : id});
-              }, 3000);
-          }
-          else if (type == 'edit')
-          {
-            $('#content').html('Edited successfully. ' +
-                               'Returning to edit set page...');
-            setTimeout(function()
-              {
-                Pages.database.GetCards({'id' : id}, function(results)
-                  {
-                    Pages.EditSet({'cardset' : results[0]['parent_card_set']});
-                  },
-                  function(type, message)
-                  {
-                    if (type == 'network')
-                      Pages.NetworkError(message);
-                    else
-                      Pages.FatalError(message);
-                  });
-              }, 3000);
-          }
-        },
-        function(type, message)
-        {
-          if (type == 'network')
-            Pages.NetworkError(message);
-          else
-            Pages.FatalError(message);
-        });
     },
 
   ViewBoxesBySet : function(cardset_id, start)
