@@ -298,6 +298,7 @@ var Form = (function()
         {
           var label = document.createElement('label');
           label.setAttribute('for', field.name);
+          label.classList.add('field_label');
           label.appendChild(document.createTextNode(field.label));
           element.appendChild(label);
         }
@@ -318,7 +319,8 @@ var Form = (function()
           field_errors.hidden = true;
           element.appendChild(field_errors);
 
-          element.appendChild(document.createElement('br'));
+          if (field.type != 'hidden')
+            element.appendChild(document.createElement('br'));
         }
       }
     }
