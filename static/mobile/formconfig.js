@@ -306,5 +306,96 @@ var FORM_CONFIG =
                 });
             }
         };
+    },
+  //Create new box or edit
+  editBox : function()
+    {
+      return {
+          fields : [
+              {
+                type : 'hidden',
+                name : 'type'
+              },
+              {
+                type : 'hidden',
+                name : 'id'
+              },
+              {
+                type : 'text',
+                name : 'name',
+                label : 'Name'
+              },
+              {
+                type : 'text',
+                name : 'review_frequency',
+                label : 'Review Frequency'
+              },
+              {
+                type : 'hidden',
+                name : 'last_reviewed'
+              },
+            ],
+          buttons : [
+              {
+                type : 'submit',
+                name : 'submit',
+                value : 'Submit'
+              }
+            ],
+          on_submit : function(post_data)
+            {
+              //If type == 'new', set ID; If type == 'edit', box ID
+              var id = post_data['id'];
+              var type = post_data['type'];
+              delete post_data['id'];
+              delete post_data['type'];
+              post_data['last_reviewed'] =
+                new Date(post_data['last_reviewed'] * 1000);
+              if (type == 'new')
+                post_data['parent_card_set'] = id;
+              Pages.database.ModifyBox(type == 'edit' ? id : null, post_data,
+                function()
+                {
+                  $('#header_text').html('Success');
+                  if (type == 'new')
+                  {
+                    $('#content').html('Created successfully. ' +
+                                       'Returning to edit set page...');
+                    setTimeout(function()
+                      {
+                        Pages.EditSet({'cardset' : id});
+                      }, 3000);
+                  }
+                  else if (type == 'edit')
+                  {
+                    $('#content').html('Edited successfully. ' +
+                                       'Returning to edit set page...');
+                    setTimeout(function()
+                      {
+                        Pages.database.GetBoxes({'id' : id}, function(results)
+                          {
+                            Pages.EditSet({
+                                'cardset' : results[0]['parent_card_set']
+                              });
+                          },
+                          function(type, message)
+                          {
+                            if (type == 'network')
+                              Pages.NetworkError(message);
+                            else
+                              Pages.FatalError(message);
+                          });
+                      }, 3000);
+                  }
+                },
+                function(type, message)
+                {
+                  if (type == 'network')
+                    Pages.NetworkError(message);
+                  else
+                    Pages.FatalError(message);
+                });
+            }
+        }
     }
 };

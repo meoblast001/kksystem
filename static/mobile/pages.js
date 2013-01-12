@@ -426,21 +426,20 @@ var Pages =
     {
       function GenerateForm(box_results)
       {
-        //Get options
-        var options = {};
-        for (i = 0; i < box_results.length; ++i)
-          options[box_results[i].id] = box_results[i].name;
+        var edit_box_form_el = document.createElement('form');
+        edit_box_form_el.setAttribute('class', 'box_form');
 
-        $('#content').html('');
-        var edit_box_form = new Form(Pages.EditBoxSubmit, 'box_form', 'Edit');
-        edit_box_form.AddHidden('type', type);
-        edit_box_form.AddHidden('id', id);
-        edit_box_form.AddText('name', 'Name', box_results[0]['name'], 60);
-        edit_box_form.AddText('review_frequency', 'Review Frequency',
-                              box_results[0]['review_frequency'], 10);
-        edit_box_form.AddHidden('last_reviewed',
-          Math.round(box_results[0]['last_reviewed'].getTime() / 1000));
-        edit_box_form.Display($('#content'));
+        var edit_box_form = new Form(edit_box_form_el, FORM_CONFIG.editBox());
+        edit_box_form.setValues({
+            type : type,
+            id : id,
+            name : box_results[0]['name'],
+            review_frequency : box_results[0]['review_frequency'],
+            last_reviewed :
+              Math.round(box_results[0]['last_reviewed'].getTime() / 1000)
+          });
+
+        $('#content').html(edit_box_form_el);
         $('#header_text').html('Edit Box');
         Pages.SetBackButtonFunction(function()
           {
@@ -470,57 +469,6 @@ var Pages =
               Pages.FatalError(message);
           });
       }
-    },
-
-  EditBoxSubmit : function(post_data)
-    {
-      //If type == 'new', set ID; If type == 'edit', box ID
-      var id = post_data['id'];
-      var type = post_data['type'];
-      delete post_data['id'];
-      delete post_data['type'];
-      post_data['last_reviewed'] = new Date(post_data['last_reviewed'] * 1000);
-      if (type == 'new')
-        post_data['parent_card_set'] = id;
-      Pages.database.ModifyBox(type == 'edit' ? id : null, post_data, function()
-        {
-          $('#header_text').html('Success');
-          if (type == 'new')
-          {
-            $('#content').html('Created successfully. ' +
-                               'Returning to edit set page...');
-            setTimeout(function()
-              {
-                Pages.EditSet({'cardset' : id});
-              }, 3000);
-          }
-          else if (type == 'edit')
-          {
-            $('#content').html('Edited successfully. ' +
-                               'Returning to edit set page...');
-            setTimeout(function()
-              {
-                Pages.database.GetBoxes({'id' : id}, function(results)
-                  {
-                    Pages.EditSet({'cardset' : results[0]['parent_card_set']});
-                  },
-                  function(type, message)
-                  {
-                    if (type == 'network')
-                      Pages.NetworkError(message);
-                    else
-                      Pages.FatalError(message);
-                  });
-              }, 3000);
-          }
-        },
-        function(type, message)
-        {
-          if (type == 'network')
-            Pages.NetworkError(message);
-          else
-            Pages.FatalError(message);
-        });
     },
 
   CheckOut : function(id)
