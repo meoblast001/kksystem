@@ -1,6 +1,11 @@
 from django.conf.urls.defaults import patterns, include, url
+import settings
 
 urlpatterns = patterns('',
+    url(r'^jsi18n/$',
+        'django.views.i18n.javascript_catalog',
+        {'packages': settings.INSTALLED_APPS, 'domain' : 'django'},
+        name = 'i18n-js-catalog'),
     url(r'^accounts/login/$',
         'karteikarten.login.login',
         name = 'login'),

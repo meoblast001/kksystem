@@ -174,7 +174,7 @@ var Database = (function()
   {
     if (this.local_db === null)
     {
-      error_callback('no-local-db', 'No local database');
+      error_callback('no-local-db', gettext('no-local-db'));
       return;
     }
 
@@ -190,7 +190,7 @@ var Database = (function()
           success_callback();
         }
         else
-          error_callback('user-not-found', 'User was not found');
+          error_callback('user-not-found', gettext('user-not-found'));
       }, error_callback);
   }
 
@@ -216,7 +216,7 @@ var Database = (function()
   {
     if (this.local_db === null)
     {
-      error_callback('no-local-db', 'No local database');
+      error_callback('no-local-db', gettext('no-local-db'));
       return;
     }
 
@@ -243,7 +243,7 @@ var Database = (function()
   {
     if (this.local_db === null)
     {
-      error_callback('no-local-db', 'No local database.');
+      error_callback('no-local-db', gettext('no-local-db'));
       return;
     }
     this.local_db.Select('user', {is_offline : !online}, null, null,
@@ -264,7 +264,7 @@ var Database = (function()
   {
     if (this.local_db === null)
     {
-      error_callback('no-local-db', 'No local database.');
+      error_callback('no-local-db', gettext('no-local-db'));
       return;
     }
 
@@ -546,7 +546,7 @@ var Database = (function()
   {
     if (this.local_db === null)
     {
-      error_callback('no-local-db', 'No local database.');
+      error_callback('no-local-db', gettext('no-local-db'));
       return;
     }
 

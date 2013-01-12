@@ -109,7 +109,7 @@ var StudyLogic = (function()
                           //Create virtual box
                           _this.boxes.push({
                               'id' : null,
-                              'name' : 'No Box',
+                              'name' : gettext('no-box'),
                               'review' : true,
                               'cards' : cards
                             });
@@ -187,7 +187,7 @@ var StudyLogic = (function()
     function noBox()
     {
       //Create virtual box
-      _this.boxes.push({'id' : null, 'name' : 'No Box', 'review' : true});
+      _this.boxes.push({'id' : null, 'name' : gettext('no-box'), 'review' : true});
       database.GetCards({
           'parent_card_set' : _this.cardset['id'],
           'current_box' : null
@@ -221,7 +221,7 @@ var StudyLogic = (function()
         if (results.length > 0)
           _this.cardset = results[0];
         else
-          error_callback('server', 'Card set could not be found.');
+          error_callback('server', gettext('cardset-could-not-be-found'));
 
         if (_this.study_type == 'normal')
           normal();

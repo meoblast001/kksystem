@@ -84,9 +84,10 @@ var Pages =
         function(type, message)
         {
           if (type == 'no-local-db')
-            $('#offline_login').html('No offline mode supported.');
+            $('#offline_login').html(gettext('no-offline-mode-supported'));
           else
-            $('#offline_login').html('Offline mode error: ' + message);
+            $('#offline_login').html(gettext('offline-mode-error') + ': ' +
+                                     message);
         });
     },
 
@@ -124,13 +125,15 @@ var Pages =
     {
       var content =
         '<a href="javascript:Pages.StudyOptions()" ' +
-        'class="menu_item">Study</a>' +
+        'class="menu_item">' + gettext('study') + '</a>' +
         '<a href="javascript:Pages.EditSetSelect()" ' +
-        'class="menu_item">Edit</a>' +
-        '<a href="javascript:Pages.Settings()" class="menu_item">Settings</a>' +
-        '<a href="javascript:Pages.Logout()" class="menu_item">Exit</a>';
+        'class="menu_item">' + gettext('edit') + '</a>' +
+        '<a href="javascript:Pages.Settings()" class="menu_item">' +
+        gettext('settings') + '</a>' +
+        '<a href="javascript:Pages.Logout()" class="menu_item">' +
+        gettext('exit') + '</a>';
       $('#content').html(content);
-      $('#header_text').html('Centre');
+      $('#header_text').html(gettext('centre'));
       Pages.SetBackButtonFunction(null);
     },
 
@@ -151,7 +154,7 @@ var Pages =
             new Form(study_options_form_el, FORM_CONFIG.studyOptions(options));
 
           $('#content').html(study_options_form_el);
-          $('#header_text').html('Choose Study Options');
+          $('#header_text').html(gettext('choose-study-options'));
           Pages.SetBackButtonFunction(Pages.Centre);
         },
         function(type, message)
@@ -188,7 +191,7 @@ var Pages =
                          FORM_CONFIG.studyOptionsSingleBox(options));
 
               $('#content').html(study_options_form_el);
-              $('#header_text').html('Choose Box to Study');
+              $('#header_text').html(gettext('choose-box-to-study'));
               Pages.SetBackButtonFunction(Pages.StudyOptions);
             },
             function(type, message)
@@ -230,7 +233,7 @@ var Pages =
             new Form(set_select_form_el, FORM_CONFIG.editSetSelect(options));
 
           $('#content').html(set_select_form_el);
-          $('#header_text').html('Select Set to Edit');
+          $('#header_text').html(gettext('select-set-to-edit'));
           Pages.SetBackButtonFunction(Pages.Centre);
         },
         function(type, message)
@@ -262,17 +265,19 @@ var Pages =
 
           var menu_content =
             '<a href="javascript:Pages.EditCard(\'new\', ' + post_data.cardset +
-              ')" class="menu_item">New Card</a>' +
+              ')" class="menu_item">' + gettext('new-card') + '</a>' +
             '<a href="javascript:Pages.ViewCardsBySet(' + post_data.cardset +
-              ', 0)" class="menu_item">Edit Card</a>' +
+              ', 0)" class="menu_item">' + gettext('edit-card') + '</a>' +
             '<a href="javascript:Pages.EditBox(\'new\', ' + post_data.cardset +
-              ')" class="menu_item">New Box</a>' +
+              ')" class="menu_item">' + gettext('new-box') + '</a>' +
             '<a href="javascript:Pages.ViewBoxesBySet(' + post_data.cardset +
-              ', 0)" class="menu_item">Edit Box</a>' +
+              ', 0)" class="menu_item">' + gettext('edit-box') + '</a>' +
             '<a href="javascript:Pages.CheckOut(' + post_data.cardset +
-              ', Pages.CheckOutSuccess)" class="menu_item">Check Out Set</a>' +
+              ', Pages.CheckOutSuccess)" class="menu_item">' +
+              gettext('check-out-set') + '</a>' +
             '<a href="javascript:Pages.CheckIn(' + post_data.cardset +
-              ', Pages.CheckInSuccess)" class="menu_item">Check In Set</a>';
+              ', Pages.CheckInSuccess)" class="menu_item">' +
+              gettext('check-in-set') + '</a>';
           $('#menu').html(menu_content);
           $('#header_text').html('Edit Set - ' + result[0].name);
           Pages.SetBackButtonFunction(Pages.EditSetSelect);
@@ -309,7 +314,7 @@ var Pages =
                             ')">&lt;Next&gt;</a>';
 
           $('#content').html(menu_content);
-          $('#header_text').html('Cards by Set');
+          $('#header_text').html(gettext('cards-by-set'));
           Pages.SetBackButtonFunction(function()
             {
               Pages.EditSet({cardset : cardset_id});
@@ -351,7 +356,7 @@ var Pages =
               });
 
             $('#content').html(edit_card_form_el);
-            $('#header_text').html('Edit Card');
+            $('#header_text').html(gettext('edit-card'));
             Pages.SetBackButtonFunction(function()
             {
               Pages.EditSet({cardset : card_results[0]['parent_card_set']});
@@ -407,7 +412,7 @@ var Pages =
                             ')">&lt;Next&gt;</a>';
 
           $('#content').html(menu_content);
-          $('#header_text').html('Boxes by Set');
+          $('#header_text').html(gettext('boxes-by-set'));
           Pages.SetBackButtonFunction(function()
             {
               Pages.EditSet({cardset : cardset_id});
@@ -484,8 +489,8 @@ var Pages =
 
   CheckOutSuccess : function()
     {
-      $('#content').html('Success! Returning home...');
-      $('#header_text').html('Check Out Successful');
+      $('#content').html(gettext('success!') + gettext('returning-home'));
+      $('#header_text').html(gettext('check-out-successful'));
       setTimeout(Pages.Centre, 3000);
     },
 
@@ -502,8 +507,8 @@ var Pages =
 
   CheckInSuccess : function()
     {
-      $('#content').html('Success! Returning home...');
-      $('#header_text').html('Check In Successful');
+      $('#content').html(gettext('success!') + gettext('returning-home'));
+      $('#header_text').html(gettext('check-in-successful'));
       setTimeout(Pages.Centre, 3000);
     },
 
@@ -514,9 +519,9 @@ var Pages =
       var menu_content =
         (Pages.database.is_online ?
           '<a href="javascript:Pages.SwitchOnlineStatus(false)" ' +
-            'class="menu_item">Switch Offline</a>' :
+            'class="menu_item">' + gettext('switch-offline') + '</a>' :
           '<a href="javascript:Pages.SwitchOnlineStatus(true)" ' +
-            'class="menu_item">Switch Online</a>');
+            'class="menu_item">' + gettext('switch-online') + '</a>');
       $('#content').html(menu_content);
       $('#header_text').html('Settings');
       Pages.SetBackButtonFunction(Pages.Centre);
@@ -528,8 +533,9 @@ var Pages =
       {
         Pages.database.ToggleNetworkStatus(true, function()
           {
-            $('#content').html('Switched to online mode. Returning home...');
-            $('#header_text').html('Online Mode');
+            $('#content').html(gettext('switched-to-online-mode') +
+                               gettext('returning-home'));
+            $('#header_text').html(gettext('online-mode'));
             setTimeout(Pages.Centre, 3000);
           },
           function(type, message)
@@ -541,8 +547,9 @@ var Pages =
       {
         Pages.database.ToggleNetworkStatus(false, function()
           {
-            $('#content').html('Switched to offline mode. Returning home...');
-            $('#header_text').html('Offline Mode');
+            $('#content').html(gettext('switched-to-offline-mode') +
+                               gettext('returning-home'));
+            $('#header_text').html(gettext('offline-mode'));
             setTimeout(Pages.Centre, 3000);
           },
           function(type, message)
@@ -554,23 +561,25 @@ var Pages =
 
   FatalError : function(message)
     {
-      var content = '<p>A fatal error has occurred: ' + message + '</p>';
+      var content = '<p>' + gettext('fatal-error-occurred') + ': ' + message +
+                    '</p>';
       $('#content').html(content);
-      $('#header_text').html('Fatal Error');
+      $('#header_text').html(gettext('fatal-error'));
       Pages.SetBackButtonFunction(null);
     },
 
   NetworkError : function(message)
     {
       var content =
-        '<p>A network error has occurred: ' + message + '<br />' +
-        'Would you like to switch to offline mode? ' +
+        '<p>' + gettext('network-error-occurred') + ': ' + message + '<br />' +
+        gettext('would-you-like-to-switch-to-offline-mode?') + ' ' +
         '(No will return you to Centre)</p>' +
         '<a href="javascript:Pages.SwitchOnlineStatus(false)" ' +
-        'class="menu_item">Yes</a>' +
-        '<a href="javascript:Pages.Centre();" class="menu_item">No</a>';
+        'class="menu_item">' + gettext('yes') + '</a>' +
+        '<a href="javascript:Pages.Centre();" class="menu_item">' +
+        gettext('no') + '</a>';
       $('#content').html(content);
-      $('#header_text').html('Network Error');
+      $('#header_text').html(gettext('network-error'));
       Pages.SetBackButtonFunction(null);
     },
 
@@ -590,7 +599,8 @@ var Pages =
 
       Pages.database = new Database(true, success, function(type, message)
         {
-          Pages.FatalError(message + ' [Error type: ' + type + ']');
+          Pages.FatalError(message + ' [' + gettext('error-type') + ': ' +
+                           type + ']');
         });
     },
 };

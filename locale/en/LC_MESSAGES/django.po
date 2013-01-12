@@ -368,3 +368,96 @@ msgstr "Import Successful"
 
 msgid "import-failure"
 msgstr "Import Failure"
+
+msgid "online-login"
+msgstr "Online Login"
+
+msgid "offline-login"
+msgstr "Offline Login"
+
+msgid "no-local-db"
+msgstr "No local database"
+
+msgid "user-not-found"
+msgstr "User was not found"
+
+msgid "websql-not-available"
+msgstr "WebSQL not available"
+
+msgid "no-attributes"
+msgstr "No attributes"
+
+msgid "no-offline-mode-supported"
+msgstr "No offline mode supported."
+
+msgid "offline-mode-error"
+msgstr "Offline mode error"
+
+msgid "choose-study-options"
+msgstr "Choose Study Options"
+
+msgid "choose-box-to-study"
+msgstr "Choose Box to Study"
+
+msgid "select-set-to-edit"
+msgstr "Select Set to Edit"
+
+msgid "check-out-set"
+msgstr "Check Out Set"
+
+msgid "check-in-set"
+msgstr "Check In Set"
+
+msgid "success!"
+msgstr "Success!"
+
+msgid "returning-home"
+msgstr "Returning home..."
+
+msgid "check-out-successful"
+msgstr "Check Out Successful"
+
+msgid "check-in-successful"
+msgstr "Check In Successful"
+
+msgid "online-mode"
+msgstr "Online Mode"
+
+msgid "offline-mode"
+msgstr "Offline Mode"
+
+msgid "switch-offline"
+msgstr "Switch Offline"
+
+msgid "switch-online"
+msgstr "Switch Online"
+
+msgid "switched-to-online-mode"
+msgstr "Switched to online mode."
+
+msgid "switched-to-offline-mode"
+msgstr "Switched to offline mode."
+
+msgid "fatal-error"
+msgstr "Fatal Error"
+
+msgid "fatal-error-occurred"
+msgstr "A fatal error has occurred"
+
+msgid "network-error"
+msgstr "Network Error"
+
+msgid "network-error-occurred"
+msgstr "A network error has occurred"
+
+msgid "would-you-like-to-switch-to-offline-mode?"
+msgstr "Would you like to switch to offline mode?"
+
+msgid "error-type"
+msgstr "Error type"
+
+msgid "yes"
+msgstr "Yes"
+
+msgid "no"
+msgstr "No"

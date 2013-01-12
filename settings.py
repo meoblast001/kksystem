@@ -98,6 +98,10 @@ TEMPLATE_DIRS = (
     os.path.join(ROOT_PATH, 'templates')
   )
 
+LOCALE_PATHS = (
+    os.path.join(ROOT_PATH, 'locale'),
+  )
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -34,7 +34,7 @@ var LocalDatabaseWebSQL = (function()
         });
     }
     else
-      error_callback('not-supported', 'WebSQL not available');
+      error_callback('not-supported', gettext('websql-not-available'));
   }
 
   /**
@@ -174,7 +174,7 @@ var LocalDatabaseWebSQL = (function()
         ++num_attributes;
 
       if (num_attributes == 0)
-        error_callback('no-attributes', 'No attributes');
+        error_callback('no-attributes', gettext('no-attributes'));
 
       var fields = '';
       var values = '';

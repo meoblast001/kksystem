@@ -25,19 +25,19 @@ var FORM_CONFIG =
               {
                 type : 'text',
                 name : 'username',
-                label : 'Username'
+                label : gettext('username')
               },
               {
                 type : 'password',
                 name : 'password',
-                label : 'Password'
+                label : gettext('password')
               }
             ],
           buttons : [
               {
                 type : 'submit',
                 name : 'submit',
-                value : 'Online Login'
+                value : gettext('online-login')
               }
             ],
           on_submit : function(post_data, submit_event)
@@ -67,7 +67,8 @@ var FORM_CONFIG =
                     },
                   error : function(jq_xhr, text_status, error_thrown)
                     {
-                      submit_event.nonFieldError('Error: ' + text_status);
+                      submit_event.nonFieldError(gettext('error') + ': ' +
+                                                 text_status);
                     }
                 });
             }
@@ -89,7 +90,7 @@ var FORM_CONFIG =
               {
                 type : 'submit',
                 name : 'submit',
-                value : 'Offline Login'
+                value : gettext('offline-login')
               }
             ]
         };
@@ -103,17 +104,17 @@ var FORM_CONFIG =
               {
                 type : 'select',
                 name : 'set',
-                label : 'Cardset',
+                label : gettext('cardset'),
                 options : cardsets
               },
               {
                 type : 'radio',
                 name : 'study_type',
-                label : 'Study Type',
+                label : gettext('study-type'),
                 options : {
-                    normal : 'Normal',
-                    single_box : 'Practice Single Box',
-                    no_box : 'Practice Cards Currently in No Box'
+                    normal : gettext('study-type-normal'),
+                    single_box : gettext('study-type-single-box'),
+                    no_box : gettext('study-type-no-box')
                   }
               }
             ],
@@ -121,7 +122,7 @@ var FORM_CONFIG =
               {
                 type : 'submit',
                 name : 'submit',
-                value : 'Continue'
+                value : gettext('continue')
               }
             ]
         };
@@ -143,7 +144,7 @@ var FORM_CONFIG =
               {
                 type : 'submit',
                 name : 'submit',
-                value : 'Continue'
+                value : gettext('continue')
               }
             ]
         };
@@ -157,7 +158,7 @@ var FORM_CONFIG =
               {
                 type : 'select',
                 name : 'cardset',
-                label : 'Cardset',
+                label : gettext('cardset'),
                 options : cardsets
               }
             ],
@@ -165,7 +166,7 @@ var FORM_CONFIG =
               {
                 type : 'submit',
                 name : 'submit',
-                value : 'Edit'
+                value : gettext('edit')
               }
             ]
         };
@@ -182,14 +183,14 @@ var FORM_CONFIG =
               {
                 type : 'text',
                 name : 'name',
-                label : 'Name',
+                label : gettext('name'),
               }
             ],
           buttons : [
               {
                 type : 'submit',
                 name : 'submit',
-                value : 'Submit'
+                value : gettext('submit')
               }
             ],
           on_submit : function(post_data)

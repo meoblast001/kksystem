@@ -112,7 +112,7 @@ msgid "back"
 msgstr "Rückseite"
 
 msgid "no-box"
-msgstr "Keine Kasten"
+msgstr "Kein Kasten"
 
 msgid "login-failed"
 msgstr "Anmeldung fehlgeschlagen"
@@ -368,3 +368,96 @@ msgstr "Import erfolgreich"
 
 msgid "import-failure"
 msgstr "Importausfall"
+
+msgid "online-login"
+msgstr "Onlineanmelden"
+
+msgid "offline-login"
+msgstr "Offlineanmelden"
+
+msgid "no-local-db"
+msgstr "Keine Lokaldatenbank"
+
+msgid "user-not-found"
+msgstr "Benutzer wurde nicht gefunden"
+
+msgid "websql-not-available"
+msgstr "WebSQL nicht verfügbar"
+
+msgid "no-attributes"
+msgstr "Keine Attribute"
+
+msgid "no-offline-mode-supported"
+msgstr "Keinen Offlinemodus unterstützt."
+
+msgid "offline-mode-error"
+msgstr "Offlinemodus-Fehler"
+
+msgid "choose-study-options"
+msgstr "Lernwahl wählen"
+
+msgid "choose-box-to-study"
+msgstr "Kasten zu lernen wählen"
+
+msgid "select-set-to-edit"
+msgstr "Zusammenstellung zu bearbeiten wählen"
+
+msgid "check-out-set"
+msgstr "Zusammenstellung auschecken"
+
+msgid "check-in-set"
+msgstr "Zusammenstellung einchecken"
+
+msgid "success!"
+msgstr "Erfolg!"
+
+msgid "returning-home"
+msgstr "Kehrt heim zurück..."
+
+msgid "check-out-successful"
+msgstr "Auschecken erfolgreich"
+
+msgid "check-in-successful"
+msgstr "Einchecken erfolgreich"
+
+msgid "online-mode"
+msgstr "Onlinemodus"
+
+msgid "offline-mode"
+msgstr "Offlinemodus"
+
+msgid "switch-offline"
+msgstr "Offline schalten"
+
+msgid "switch-online"
+msgstr "Online schalten"
+
+msgid "switched-to-online-mode"
+msgstr "Zu Onlinemodus geschaltet."
+
+msgid "switched-to-offline-mode"
+msgstr "Zu Offlinemodus geschaltet."
+
+msgid "fatal-error"
+msgstr "Unbehebbarer Fehler"
+
+msgid "fatal-error-occurred"
+msgstr "Ein unbehebbarer Fehler ist geschehen"
+
+msgid "network-error"
+msgstr "Netzwerkausfall"
+
+msgid "network-error-occurred"
+msgstr "Ein Netzwerkausfall ist geschehen"
+
+msgid "would-you-like-to-switch-to-offline-mode?"
+msgstr "Möchten Sie zu Offlinemodus schlaten?"
+
+msgid "error-type"
+msgstr "Fehlerart"
+
+msgid "yes"
+msgstr "Ja"
+
+msgid "no"
+msgstr "Nein"
