@@ -24,8 +24,8 @@ class Card(models.Model):
     app_label = 'karteikarten'
     ordering = ('id',)
 
-  front = models.TextField(_('front'))
-  back = models.TextField(_('back'))
+  front = models.TextField(_('front-side'))
+  back = models.TextField(_('back-side'))
   owner = models.ForeignKey(User)
   parent_card_set = models.ForeignKey(CardSet)
   current_box = models.ForeignKey(CardBox, blank = True, null = True,

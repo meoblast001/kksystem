@@ -105,10 +105,10 @@ msgstr "Name"
 msgid "review-frequency-in-days"
 msgstr "Review Frequency (In Days)"
 
-msgid "front"
+msgid "front-side"
 msgstr "Front"
 
-msgid "back"
+msgid "back-side"
 msgstr "Back"
 
 msgid "no-box"
@@ -269,6 +269,9 @@ msgstr "In This Box"
 
 msgid "finish"
 msgstr "Finish"
+
+msgid "back"
+msgstr "Back"
 
 msgid "click-to-flip-card"
 msgstr "Click here to flip card."

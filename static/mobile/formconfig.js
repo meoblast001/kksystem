@@ -233,12 +233,12 @@ var FORM_CONFIG =
               {
                 type : 'textarea',
                 name : 'front',
-                label : gettext('front')
+                label : gettext('front-side')
               },
               {
                 type : 'textarea',
                 name : 'back',
-                label : gettext('back')
+                label : gettext('back-side')
               },
               {
                 type : 'select',

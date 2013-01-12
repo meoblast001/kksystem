@@ -105,10 +105,10 @@ msgstr "Name"
 msgid "review-frequency-in-days"
 msgstr "Überprüfungshäufigkeit (nach Tägen)"
 
-msgid "front"
+msgid "front-side"
 msgstr "Vorderseite"
 
-msgid "back"
+msgid "back-side"
 msgstr "Rückseite"
 
 msgid "no-box"
@@ -269,6 +269,9 @@ msgstr "In diesem Kasten"
 
 msgid "finish"
 msgstr "Fertig"
+
+msgid "back"
+msgstr "Zurück"
 
 msgid "click-to-flip-card"
 msgstr "Hier klicken, um die Karte zu flippen."

@@ -62,7 +62,7 @@ var Pages =
       offline_login_form_el.setAttribute('class', 'box_form');
       content[0].appendChild(offline_login_form_el);
 
-      $('#header_text').html('Welcome');
+      $('#header_text').html(gettext('welcome'));
       Pages.SetBackButtonFunction(null);
 
       var online_login_form =
@@ -111,7 +111,7 @@ var Pages =
             },
             error : function(jq_xhr, text_status, error_thrown)
             {
-              alert('Error: ' + text_status);
+              alert(gettext('error') + ': ' + text_status);
             }
           });
       }
@@ -279,7 +279,7 @@ var Pages =
               ', Pages.CheckInSuccess)" class="menu_item">' +
               gettext('check-in-set') + '</a>';
           $('#menu').html(menu_content);
-          $('#header_text').html('Edit Set - ' + result[0].name);
+          $('#header_text').html(gettext('edit-set') + ' - ' + result[0].name);
           Pages.SetBackButtonFunction(Pages.EditSetSelect);
         },
         function(type, message)
@@ -445,7 +445,7 @@ var Pages =
           });
 
         $('#content').html(edit_box_form_el);
-        $('#header_text').html('Edit Box');
+        $('#header_text').html(gettext('edit-box'));
         Pages.SetBackButtonFunction(function()
           {
             Pages.EditSet({cardset : box_results[0]['parent_card_set']});
@@ -523,7 +523,7 @@ var Pages =
           '<a href="javascript:Pages.SwitchOnlineStatus(true)" ' +
             'class="menu_item">' + gettext('switch-online') + '</a>');
       $('#content').html(menu_content);
-      $('#header_text').html('Settings');
+      $('#header_text').html(gettext('settings'));
       Pages.SetBackButtonFunction(Pages.Centre);
     },
 
