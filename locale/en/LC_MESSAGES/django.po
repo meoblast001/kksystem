@@ -479,3 +479,9 @@ msgstr "Cardset"
 
 msgid "cardbox"
 msgstr "Cardbox"
+
+msgid "finished"
+msgstr "Finished"
+
+msgid "finished-studying"
+msgstr "Finished studying."

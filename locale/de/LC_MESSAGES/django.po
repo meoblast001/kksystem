@@ -479,3 +479,9 @@ msgstr "Kartenzusammenstellung"
 
 msgid "cardbox"
 msgstr "Kartenkasten"
+
+msgid "finished"
+msgstr "Fertig"
+
+msgid "finished-studying"
+msgstr "Lernen fertig."

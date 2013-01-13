@@ -20,7 +20,7 @@ var Study =
   Begin : function(study_options, database)
     {
       $('#content').html('');
-      $('#header_text').html('Loading...');
+      $('#header_text').html(gettext('loading'));
       $('#back_button').hide();
       $('#study_finish_button').show();
 
@@ -32,7 +32,7 @@ var Study =
                 {
                   result = result.replace(/\$STATIC_ROOT\$/g, STATIC_ROOT);
                   $('#content').html(result);
-                  $('#header_text').html('Study');
+                  $('#header_text').html(gettext('study'));
                   Study.DisplayNextCard();
                 }
             });
@@ -46,8 +46,9 @@ var Study =
 
   Finish : function()
     {
-      $('#content').html('Finished studying. Returning to Centre...');
-      $('#header_text').html('Finished');
+      $('#content').html(gettext('finished-studying') + ' ' +
+                         gettext('returning-home'));
+      $('#header_text').html(gettext('finished'));
       $('#study_finish_button').hide();
       setTimeout(Pages.Centre, 3000);
     },
