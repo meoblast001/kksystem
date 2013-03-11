@@ -128,5 +128,24 @@ var LocalDatabaseIndexedDB = (function()
       };
   }
 
+  LocalDatabaseIndexedDB.prototype.Max = function(table, field,
+                                                  success_callback,
+                                                  error_callback)
+  {
+    var transaction = this.database.transaction([table], 'readonly').
+                      objectStore(table).index(field).openCursor(null, 'prev'
+                      /*Reverse order*/);
+    transaction.onsuccess = function(event)
+      {
+        var cursor = event.target.result;
+        //Value of field on last item in index, if exists. Else null.
+        success_callback(cursor !== null ? cursor.value[field] : null);
+      };
+    transaction.onerror = function(event)
+      {
+        error_callback('local-db', event.target.errorCode);
+      };
+  }
+
   return LocalDatabaseIndexedDB;
 })();
