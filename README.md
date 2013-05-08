@@ -3,10 +3,9 @@
 ## Developer Setup
 - Read CODING_STANDARDS.txt
 - Install dependencies
-- - Django
-- - South
-- Configure user_settings.py
-- - Copy user_settings.py.example to user_settings.py
+- - Run `pip install -r requirements.txt`
+- Configure settings_local.py
+- - Copy settings_local.example.py to settings_local.py
 - - Configure database and cache (Cache preconfigured to Memcached)
 - - Comment out FORCE_SCRIPT_NAME and STATIC_ROOT
 - - STATIC_URL should remain as '/static/' (Default)
