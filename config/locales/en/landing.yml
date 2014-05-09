@@ -1,0 +1,86 @@
+en:
+  landing:
+    sign-in: Sign In
+    register: Register
+
+    para-what-is-kksystem: >
+      Wondering what KKSystem is? It's a web application designed to help you
+      study, so you can say goodbye to paper flash cards. KKSystem makes flash
+      cards easier to write, organise, and study. The application provides a
+      simple interface to create and edit cards, organise existing cards, and
+      study the cards you've created using %{leitner_system}. In addition, all
+      of your data is stored in the cloud, so you can continue to write,
+      organise, and study from any PC or mobile device.
+    leitner-system: the Leitner system
+
+    documentation: Documentation
+    para-documentation-summary: >
+      Each page within the application has documentation explaining how to use
+      that page, but this information alone is not enough. Here you can read a
+      general description of how to use the software.
+
+    sets-boxes-cards: Sets, Boxes, Cards
+    para-sets-boxes-cards: >
+      KKSystem has three major types of entities: sets, boxes, and cards. You
+      will create your own, so it's important to know what they do:
+    para-cards: >
+      Cards - Contain the information to be studied. Each card has a front and
+      a back, containing text information.
+    para-boxes: >
+      Boxes - Define how well you know particular cards. The boxes specify the
+      frequency at which the cards within should be reviewed. Examples: Every
+      Day, Every Week
+    para-sets: >
+      Sets - Allow you to separate cards and boxes by their topic. Each set is
+      entirely independent of eachother. Examples: 19th century British History,
+      Arabic, Organic Chemistry
+
+    the-leitner-system: The Leitner System
+    para-leitner-1: >
+      KKSystem implements the Leitner system. Originally designed by Sebastian
+      Leitner, the system remains very popular today. The system makes cards
+      more difficult as you memorise it.
+    para-leitner-2: >
+      Boxes play an important role in the Leitner system. Each box signifies a
+      different difficulty, and is given a review frequency. Once you've
+      reviewed a box, you do not review that box again until the review
+      frequency has passed. Each card correctly memorized is moved to the next
+      box, which is reviewed less frequently. Once the card has left the final
+      box, it has escaped the system, and you should know the content. If a card
+      is not memorized, it is moved to the first box.
+
+    modifications: Modifications
+    para-modifications: >
+      KKSystem modifies the Leitner system. In addition to the normal Leitner
+      study model, you also have the option to review a specific box, or review
+      cards which have escaped the system. This allows you to do more training
+      or review cards you may not have reviewed for a while. In addition, you
+      may specify a reintroduction rate and frequency. When in use, each time
+      the review frequency passes, cards outside of the system are displayed
+      during normal study. The amount of cards is determined by the rate. If any
+      of these cards is no longer memorised, it enters the system again at the
+      first box.
+
+    development: Development
+    para-development-1: >
+      If you are a developer who would like to hack on KKSystem, go to the
+      %{project_page}. Clone the repository, make your changes, clone the remote
+      on Gitorious, push your changes there, and submit a pull request. For
+      small changes, you may also e-mail an active project member your patch if
+      you wish.
+    project-page: KKSystem GitHub project page
+    para-development-2: >
+      KKSystem is written in %{ruby} using %{rails}. Setup instructions for
+      developers and server administrators exists in the source tree.
+    ruby: Ruby
+    rails: the Ruby on Rails web framework
+
+    api: API
+    para-api: Not here yet!
+
+    copyright: Copyright (C) 2011 - 2013 Braden Walters
+    license: Licensed under the GNU Affero General Public License version 3+.
+    version:
+      kksystem: KKSystem Version
+      ruby: Ruby Version
+      rails: Rails Version

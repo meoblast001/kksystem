@@ -3,12 +3,10 @@
 ## Developer Setup
 - Read CODING_STANDARDS.txt
 - Install dependencies
-- - Run `pip install -r requirements.txt`
-- Configure settings_local.py
-- - Copy settings_local.example.py to settings_local.py
-- - Configure database and cache (Cache preconfigured to Memcached)
-- - Comment out FORCE_SCRIPT_NAME and STATIC_ROOT
-- - STATIC_URL should remain as '/static/' (Default)
-- - All other configuration options should be straightforward
-- Run `python manage.py runserver` to run the test server or
-  `python manage.py shell` to drop into the interactive shell
+  - Run `bundle`
+- Configure config/user_settings.rb
+  - Copy config/user_settings.example.py to config/user_settings.rb
+  - Configure database in config/database.yml from config/database.example.yml
+    - Migrate with `rake db:migrate`
+- Run `rails server` to run the test server or `rails console` to drop into the
+  interactive shell

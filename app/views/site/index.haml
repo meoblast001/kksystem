@@ -1,0 +1,90 @@
+-# Copyright (C) 2014 Braden Walters
+-#
+-# This program is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+!!! HTML
+!!!
+%html
+  %head
+    %title KKSystem
+    = stylesheet_link_tag 'application', :media => 'all'
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+  %body#landing
+    #header
+      = image_tag 'kksystem.png', :alt => 'KKSystem'
+
+    .navbar.navbar-default
+      .navbar-inner
+        %ul.nav.navbar-nav
+          %li.active
+            %a{ :href => '#' } KKSystem
+          %li
+            %a{ :href => '#documentation' }= t('landing.documentation')
+          %li
+            %a{ :href => '#development' }= t('landing.development')
+
+        %ul.nav.navbar-nav.pull-right
+          %li
+            %a{ :href => '#' }= t('landing.sign-in')
+          %li
+            %a{ :href => '#' }= t('landing.register')
+
+    #content
+      %h3#description KKSystem
+      %p= t('landing.para-what-is-kksystem', :leitner_system => "<a href=\"#leitner-system\">#{t('landing.leitner-system')}</a>").html_safe
+      %p{ :style => 'text-align: center' }
+        &lt;screenshots-go-here&gt;
+
+      %h3#documentation= t('landing.documentation')
+      %p= t('landing.para-documentation-summary')
+
+      %h4= t('landing.sets-boxes-cards')
+      %p
+        = t('landing.para-sets-boxes-cards')
+        %ul
+          %li= t('landing.para-cards')
+          %li= t('landing.para-boxes')
+          %li= t('landing.para-sets')
+
+      %h4#leitner-system= t('landing.the-leitner-system')
+      %p= t('landing.para-leitner-1')
+      %p= t('landing.para-leitner-2')
+
+      %h4= t('landing.modifications')
+      %p= t('landing.para-modifications')
+
+      %h3#development= t('landing.development')
+      %p= t('landing.para-development-1', :project_page => "<a href=\"http://development.kksystem.org\">#{t('landing.project-page')}</a>").html_safe
+
+      %p= t('landing.para-development-2', :ruby => "<a href=\"http://www.ruby-lang.org/\">#{t('landing.ruby')}</a>", |
+                                          :rails => "<a href=\"http://www.rubyonrails.org/\">#{t('landing.rails')}</a>").html_safe
+
+      %h4= t('landing.api')
+      %p= t('landing.para-api')
+
+    #footer
+      %table
+        %tr
+          %td
+            = t('landing.copyright')
+            %br
+            = t('landing.license')
+
+          %td
+            #{t('landing.version.kksystem')}: #{Kksystem::VERSION}
+            %br
+            #{t('landing.version.ruby')}: #{RUBY_VERSION}
+            %br
+            #{t('landing.version.rails')}: #{Rails.version}
