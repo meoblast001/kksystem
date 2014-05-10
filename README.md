@@ -1,7 +1,7 @@
-# Karteikartensystem
+# KKSystem
 
 ## Developer Setup
-- Read CODING_STANDARDS.txt
+- Read STYLE_GUIDE.md
 - Install dependencies
   - Run `bundle`
 - Configure config/user_settings.rb
