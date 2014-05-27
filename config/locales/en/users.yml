@@ -1,0 +1,9 @@
+en:
+  users:
+    username: 'Username'
+    email: 'E-mail Address'
+    password: 'Password'
+    password_confirmation: 'Confirm Password'
+
+    form:
+      register: 'Register'

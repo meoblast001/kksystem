@@ -20,6 +20,10 @@ module Kksystem
     config.i18n.load_path +=
       Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
 
+    #Mailer host.
+    config.action_mailer.default_url_options =
+      { :host => UserSettings::DEFAULT_URL }
+
     #Include all user-specified settings.
     include UserSettings::Application
   end

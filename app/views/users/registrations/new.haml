@@ -13,16 +13,11 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-!!! HTML
-!!!
-%html
-  %head
-    %title KKSystem
-    = stylesheet_link_tag 'application', :media => 'all'
-    = javascript_include_tag 'application'
-    = csrf_meta_tags
-  %body#main
-    #header
-      %a#return_home{ :href => '#' }
-        = image_tag 'kksystem_small.png', :alt => 'KKSystem'
-    = yield
+.page
+  %h2 Sign Up
+  = simple_form_for @user, :url => user_registration_path do |f|
+    = f.input :username, :label => t('users.username'), :class => 'input'
+    = f.input :email, :as => :email, :label => t('users.email')
+    = f.input :password, :as => :password, :label => t('users.password')
+    = f.input :password_confirmation, :as => :password, :label => t('users.password_confirmation')
+    = f.button :submit, :value => t('users.form.register'), :class => 'btn btn-primary'

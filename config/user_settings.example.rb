@@ -1,5 +1,7 @@
 module UserSettings
   SECRET_KEY_BASE = 'INSERT_SOME_LONG_SECRET_TEXT_HERE'
+  MAILER_SENDER = 'noreply@example.org'
+  DEFAULT_URL = 'localhost:3000'
 
   module Application
     #General application settings.

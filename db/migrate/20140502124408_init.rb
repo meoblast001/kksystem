@@ -7,8 +7,20 @@ class Init < ActiveRecord::Migration
       t.string :encrypted_password
       t.boolean :must_reset_password
 
+      t.string   :reset_password_token
+      t.datetime :reset_password_sent_at
+
+      t.string   :confirmation_token
+      t.datetime :confirmed_at
+      t.datetime :confirmation_sent_at
+
       t.timestamps
     end
+
+    add_index :users, :username, :unique => true
+    add_index :users, :email, :unique => true
+    add_index :users, :reset_password_token, :unique => true
+    add_index :users, :confirmation_token, :unique => true
 
     create_table :cardsets do |t|
       t.integer :user_id
