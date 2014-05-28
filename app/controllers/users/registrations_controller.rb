@@ -20,7 +20,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def create
     @user = User.new(user_params)
-    @user.save!
+    render :new unless @user.save
   end
 
   private

@@ -5,5 +5,13 @@ en:
     password: 'Password'
     password_confirmation: 'Confirm Password'
 
-    form:
-      register: 'Register'
+    registrations:
+      create:
+        header: 'Registration Almost Complete'
+        paragraph: >
+          Your registration is almost complete. You've been sent an email with
+          a confirmation link. Please follow that link to activate your account.
+
+      new:
+        header: 'Sign Up'
+        submit: 'Register'
