@@ -15,7 +15,18 @@
 
 class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :validatable,
-         :confirmable
+         :confirmable, :authentication_keys => [:login]
 
-  validates :username, :email, :uniqueness => true
+  validates :username, :email, :uniqueness => { :case_sensitive => false }
+
+  attr_accessor :login
+
+  def self.find_first_by_auth_conditions(conds)
+    unless conds[:login].nil?
+      User.where { (email == conds[:login]) | (username == conds[:login]) }.
+           first
+    else
+      User.where(conds).first
+    end
+  end
 end

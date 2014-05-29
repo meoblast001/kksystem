@@ -2,6 +2,7 @@ en:
   users:
     username: 'Username'
     email: 'E-mail Address'
+    login: 'Username or E-Mail Address'
     password: 'Password'
     password_confirmation: 'Confirm Password'
 
@@ -15,3 +16,8 @@ en:
       new:
         header: 'Sign Up'
         submit: 'Register'
+
+    sessions:
+      new:
+        header: 'Sign In'
+        submit: 'Sign In'

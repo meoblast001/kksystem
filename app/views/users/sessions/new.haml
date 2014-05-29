@@ -14,12 +14,10 @@
 -# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 .page
-  %h2= t('users.registrations.new.header')
+  %h2= t('users.sessions.new.header')
   - unless alert.nil?
     .error_box= alert
-  = simple_form_for @user, :url => user_registration_path do |f|
-    = f.input :username, :label => t('users.username'), :class => 'input'
-    = f.input :email, :as => :email, :label => t('users.email')
-    = f.input :password, :as => :password, :label => t('users.password')
-    = f.input :password_confirmation, :as => :password, :label => t('users.password_confirmation')
-    = f.button :submit, :value => t('users.registrations.new.submit'), :class => 'btn btn-primary'
+  = simple_form_for @user, :url => user_session_path do |f|
+    = f.input :login, :label => t('users.login')
+    = f.input :password, :label => t('users.password')
+    = f.button :submit, :value => t('users.sessions.new.submit'), :class => 'btn btn-primary'

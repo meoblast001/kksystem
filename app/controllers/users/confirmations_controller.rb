@@ -13,14 +13,5 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class Users::RegistrationsController < Devise::RegistrationsController
-  before_filter :configure_permitted_parameters
-
-  protected
-
-  def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) do |u|
-      u.permit :username, :email, :password, :password_confirmation
-    end
-  end
+class Users::ConfirmationsController < Devise::ConfirmationsController
 end
