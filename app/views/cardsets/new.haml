@@ -13,18 +13,6 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%table#site_index
-  %tr
-    %td
-      %a.menu_button.study{ :href => '#' }
-        .text= t('site.main_menu.study')
-    %td
-      %a.menu_button.edit{ :href => cardsets_path }
-        .text= t('site.main_menu.edit')
-  %tr
-    %td
-      %a.menu_button.settings{ :href => edit_user_registration_path }
-        .text= t('site.main_menu.settings')
-    %td
-      %a.menu_button.logout{ :href => destroy_user_session_path }
-        .text= t('site.main_menu.logout')
+.page
+  %h2= t('cardsets.new.header')
+  = render 'form'

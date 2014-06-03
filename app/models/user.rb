@@ -17,6 +17,10 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :validatable,
          :confirmable, :authentication_keys => [:login]
 
+  has_many :cardsets
+  has_many :cardboxes
+  has_many :cards
+
   validates :username, :email, :uniqueness => { :case_sensitive => false }
 
   attr_accessor :login

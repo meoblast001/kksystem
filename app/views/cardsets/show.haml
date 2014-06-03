@@ -13,18 +13,17 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%table#site_index
-  %tr
-    %td
-      %a.menu_button.study{ :href => '#' }
-        .text= t('site.main_menu.study')
-    %td
-      %a.menu_button.edit{ :href => cardsets_path }
-        .text= t('site.main_menu.edit')
-  %tr
-    %td
-      %a.menu_button.settings{ :href => edit_user_registration_path }
-        .text= t('site.main_menu.settings')
-    %td
-      %a.menu_button.logout{ :href => destroy_user_session_path }
-        .text= t('site.main_menu.logout')
+.page.container-fluid
+  .row
+    .col-md-4
+      .list-group
+        - @cardsets.each do |cardset|
+          - if cardset == @cardset
+            .list-group-item.active= cardset.name
+          - else
+            %a.list-group-item{ :href => url_for(cardset) }= cardset.name
+      %a.btn.btn-default.centred-block{ :href => new_cardset_path }= t('cardsets.show.create_link')
+    .col-md-8
+      %h2= "#{t('cardsets.show.header')}: #{@cardset.name}"
+      = render 'form'
+    .clearfloats

@@ -1,0 +1,17 @@
+en:
+  cardsets:
+    name: 'Name'
+    reintroduce_cards: 'Reintroduce Cards'
+    reintroduce_cards_amount: 'Amount of Cards to Reintroduce'
+    reintroduce_cards_frequency: 'Frequency of Card Reintroduction (Days)'
+
+    new:
+      header: 'Create Cardset'
+      submit: 'Create'
+
+    edit:
+      submit: 'Save Changes'
+
+    show:
+      header: 'Cardset Details'
+      create_link: 'Create New Cardset'

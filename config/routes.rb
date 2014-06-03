@@ -7,4 +7,6 @@ Kksystem::Application.routes.draw do
       :registrations => 'users/registrations',
       :confirmations => 'users/confirmations',
     }
+
+  resources :cardsets
 end
