@@ -1,0 +1,7 @@
+en:
+  site:
+    main_menu:
+      study: 'Study'
+      edit: 'Edit'
+      settings: 'Settings'
+      logout: 'Logout'

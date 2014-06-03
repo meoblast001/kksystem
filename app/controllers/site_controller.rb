@@ -15,6 +15,6 @@
 
 class SiteController < ApplicationController
   def index
-    render :layout => false
+    render :landing, :layout => false unless signed_in?
   end
 end
