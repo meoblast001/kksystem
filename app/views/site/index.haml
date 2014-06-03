@@ -23,7 +23,7 @@
         .text= t('site.main_menu.edit')
   %tr
     %td
-      %a.menu_button.settings{ :href => '#' }
+      %a.menu_button.settings{ :href => edit_user_registration_path }
         .text= t('site.main_menu.settings')
     %td
       %a.menu_button.logout{ :href => destroy_user_session_path }
