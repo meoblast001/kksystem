@@ -26,4 +26,33 @@
     .col-md-8
       %h2= "#{t('cardsets.show.header')}: #{@cardset.name}"
       = render 'form'
+      %h3= t('cardsets.show.actions')
+      %table.fixed-full-sized-table
+        %tr
+          %td
+            %a.btn.btn-default.full-width{ :href => '#' }
+              %span.glyphicon.glyphicon-plus
+              = t('cardboxes.new.header')
+          %td
+            %a.btn.btn-default.full-width{ :href => '#' }
+              %span.glyphicon.glyphicon-pencil
+              = t('cardboxes.edit.header')
+        %tr
+          %td
+            %a.btn.btn-default.full-width{ :href => '#' }
+              %span.glyphicon.glyphicon-plus
+              = t('cards.new.header')
+          %td
+            %a.btn.btn-default.full-width{ :href => '#' }
+              %span.glyphicon.glyphicon-pencil
+              = t('cards.edit.header')
+        %tr
+          %td
+            %a.btn.btn-default.full-width{ :href => '#' }
+              %span.glyphicon.glyphicon-import
+              = t('cardsets.import.header')
+          %td
+            %a.btn.btn-default.full-width{ :href => '#' }
+              %span.glyphicon.glyphicon-export
+              = t('cardsets.export.header')
     .clearfloats

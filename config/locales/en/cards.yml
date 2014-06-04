@@ -1,0 +1,7 @@
+en:
+  cards:
+    new:
+      header: 'Create Card'
+
+    edit:
+      header: 'Edit Card'

@@ -1,0 +1,7 @@
+en:
+  cardboxes:
+    new:
+      header: 'Create Box'
+
+    edit:
+      header: 'Edit Box'

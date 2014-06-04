@@ -15,3 +15,10 @@ en:
     show:
       header: 'Cardset Details'
       create_link: 'Create New Cardset'
+      actions: 'Actions'
+
+    import:
+      header: 'Import'
+
+    export:
+      header: 'Export'
