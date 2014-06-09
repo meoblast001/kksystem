@@ -17,6 +17,6 @@ class Cardbox < ActiveRecord::Base
   belongs_to :cardset
   has_many :cards
 
-  validates_presence_of :user_id, :cardset_id, :name
+  validates_presence_of :user_id, :cardset_id, :name, :review_frequency
   validates :review_frequency, :numericality => { :greater_than => 0 }
 end

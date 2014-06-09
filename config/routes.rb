@@ -9,4 +9,7 @@ Kksystem::Application.routes.draw do
     }
 
   resources :cardsets
+
+  resources :cardboxes, :except => :new
+  get "/cardboxes/new/:cardset_id" => "cardboxes#new", :as => :new_cardbox
 end

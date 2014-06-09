@@ -30,13 +30,13 @@
       %table.fixed-full-sized-table
         %tr
           %td
-            %a.btn.btn-default.full-width{ :href => '#' }
+            %a.btn.btn-default.full-width{ :href => new_cardbox_path(:cardset_id => @cardset.id) }
               %span.glyphicon.glyphicon-plus
               = t('cardboxes.new.header')
           %td
             %a.btn.btn-default.full-width{ :href => '#' }
               %span.glyphicon.glyphicon-pencil
-              = t('cardboxes.edit.header')
+              = t('cardboxes.show.header')
         %tr
           %td
             %a.btn.btn-default.full-width{ :href => '#' }

@@ -1,7 +1,15 @@
 en:
   cardboxes:
+    name: 'Name'
+    review_frequency: 'Review Frequency (Days)'
+
     new:
+      success_notice: 'Box created successfully.'
       header: 'Create Box'
+      submit: 'Create'
 
     edit:
+      submit: 'Save Changes'
+
+    show:
       header: 'Edit Box'
