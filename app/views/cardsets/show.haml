@@ -39,13 +39,13 @@
               = t('cardboxes.show.header')
         %tr
           %td
-            %a.btn.btn-default.full-width{ :href => '#' }
+            %a.btn.btn-default.full-width{ :href => new_card_path(:cardset_id => @cardset.id) }
               %span.glyphicon.glyphicon-plus
               = t('cards.new.header')
           %td
             %a.btn.btn-default.full-width{ :href => '#' }
               %span.glyphicon.glyphicon-pencil
-              = t('cards.edit.header')
+              = t('cards.show.header')
         %tr
           %td
             %a.btn.btn-default.full-width{ :href => '#' }

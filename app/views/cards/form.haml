@@ -13,13 +13,6 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-- unless alert.nil?
-  .error_box= alert
-- if flash[:notice] and flash[:type] == :success
-  .success_box= flash[:notice]
-= simple_form_for @entity do |f|
-  - if @entity.new_record?
-    = f.input :cardset_id, :as => :hidden
-  = f.input :name, :label => t('cardboxes.name')
-  = f.input :review_frequency, :as => :integer, :label => t('cardboxes.review_frequency')
-  = f.button :submit, :value => (@entity.new_record? ? t('cardboxes.new.submit') : t('cardboxes.edit.submit')), :class => 'btn btn-primary'
+.page
+  %h2= @entity.new_record? ? t('cards.new.header') : t('cards.show.header')
+  = render 'form'

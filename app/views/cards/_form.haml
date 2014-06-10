@@ -20,6 +20,7 @@
 = simple_form_for @entity do |f|
   - if @entity.new_record?
     = f.input :cardset_id, :as => :hidden
-  = f.input :name, :label => t('cardboxes.name')
-  = f.input :review_frequency, :as => :integer, :label => t('cardboxes.review_frequency')
-  = f.button :submit, :value => (@entity.new_record? ? t('cardboxes.new.submit') : t('cardboxes.edit.submit')), :class => 'btn btn-primary'
+  = f.input :front, :as => :text, :label => t('cards.front')
+  = f.input :back, :as => :text, :label => t('cards.back')
+  = f.input :current_cardbox_id, :label => t('cards.current_cardbox'), :collection => @cardboxes, :include_blank => t('cards.show.no_box')
+  = f.button :submit, :value => (@entity.new_record? ? t('cards.new.submit') : t('cards.edit.submit')), :class => 'btn btn-primary'

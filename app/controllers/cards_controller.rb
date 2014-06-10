@@ -13,17 +13,26 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class CardboxesController < BelongsToCardsetController
+class CardsController < BelongsToCardsetController
+  before_action :populate_cardboxes
+
   protected
 
   def entity_type
-    Cardbox
+    Card
+  end
+
+  # Protected: Called before action. Populates @cardboxes with the current
+  #   cardset's cardboxes for use in views.
+  def populate_cardboxes
+    @cardboxes = current_user.cardsets.where(:id => params[:cardset_id]).first.
+                 cardboxes
   end
 
   # Protected: Get params with required and permitted already specified.
   #
   # Returns parameters.
   def allowed_params
-    params.require(:cardbox).permit(:name, :review_frequency)
+    params.require(:card).permit(:front, :back, :current_cardbox_id)
   end
 end

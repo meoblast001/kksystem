@@ -14,4 +14,5 @@
 -# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 .page
+  %h2= @entity.new_record? ? t('cardboxes.new.header') : t('cardboxes.show.header')
   = render 'form'

@@ -1,7 +1,17 @@
 en:
   cards:
+    front: 'Front'
+    back: 'Back'
+    current_cardbox: 'Current Cardbox'
+
     new:
+      success_notice: 'Card created successfully.'
       header: 'Create Card'
+      submit: 'Create'
 
     edit:
+      submit: 'Save Changes'
+
+    show:
       header: 'Edit Card'
+      no_box: '[No Box]'
