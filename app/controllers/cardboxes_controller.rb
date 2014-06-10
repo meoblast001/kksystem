@@ -16,6 +16,7 @@
 class CardboxesController < ApplicationController
   def new
     @cardbox = Cardbox.new(:cardset_id => params[:cardset_id])
+    render :form
   end
 
   def create
@@ -32,7 +33,7 @@ class CardboxesController < ApplicationController
           flash[:type] = :success
           redirect_to :action => :new, :cardset_id => @cardbox.cardset_id
         else
-          render :new
+          render :form
         end
       end
 
@@ -43,6 +44,25 @@ class CardboxesController < ApplicationController
           { :success => false }
         end
       end
+    end
+  end
+
+  #When HTML, shows cardbox and also allows the user to edit the cardbox.
+  def show
+    @cardbox = current_user.cardboxes.where(:id => params[:id]).first
+    render :form
+  end
+
+  def update
+    @cardbox = current_user.cardboxes.where(:id => params[:id]).first
+    raise ActiveRecord::RecordNotFound if @cardbox.nil?
+    @cardbox.update_attributes(allowed_params)
+
+    if @cardbox.save
+      redirect_to :controller => :cardsets, :action => :show,
+                  :id => @cardbox.cardset_id
+    else
+      render :form
     end
   end
 
