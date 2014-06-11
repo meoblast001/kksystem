@@ -15,4 +15,17 @@
 
 .page
   %h2= @entity.new_record? ? t('cardboxes.new.header') : t('cardboxes.show.header')
+
+  -#For Javascript post.
+  #js-success-box.success_box{ :style => 'display: none' }
+  #js-error-box.error_box{ :style => 'display: none' }
+
   = render 'form'
+
+  - if @entity.new_record?
+    :coffeescript
+      kksystem.belongs_to_cardset.init_create_form(
+          entity_type: 'cardbox'
+          entity_type_plural: 'cardboxes'
+          submit_url: '#{url_for(:controller => :cardboxes, :action => :create, :format => :json)}'
+        )

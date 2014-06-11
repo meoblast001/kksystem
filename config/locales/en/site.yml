@@ -5,3 +5,6 @@ en:
       edit: 'Edit'
       settings: 'Settings'
       logout: 'Logout'
+
+    forms:
+      unknown_error_occurred: "An unknown error has occurred."

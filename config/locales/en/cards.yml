@@ -6,6 +6,7 @@ en:
 
     new:
       success_notice: 'Card created successfully.'
+      error_notice: 'Could not save card.'
       header: 'Create Card'
       submit: 'Create'
 

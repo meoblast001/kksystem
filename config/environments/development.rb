@@ -15,6 +15,7 @@ Kksystem::Application.configure do
   config.active_record.migration_error = :page_load
 
   config.assets.debug = true
+  config.assets.initialize_on_precompile = true
 
   #Include user settings.
   include UserSettings::Development

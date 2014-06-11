@@ -5,6 +5,7 @@ en:
 
     new:
       success_notice: 'Box created successfully.'
+      error_notice: 'Could not save box.'
       header: 'Create Box'
       submit: 'Create'
 

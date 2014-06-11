@@ -40,9 +40,9 @@ class BelongsToCardsetController < ApplicationController
 
       format.json do
         if saved
-          { :success => true }
+          render :json => { :success => true }
         else
-          { :success => false }
+          render :json => { :success => false, :errors => @entity.errors }
         end
       end
     end
