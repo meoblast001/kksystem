@@ -4,6 +4,10 @@ en:
     back: 'Back'
     current_cardbox: 'Current Cardbox'
 
+    index:
+      header: 'List of Cards'
+      none: 'No cards. Create some!'
+
     new:
       success_notice: 'Card created successfully.'
       error_notice: 'Could not save card.'

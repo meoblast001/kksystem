@@ -14,6 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class BelongsToCardsetController < ApplicationController
+  def index
+    @entities = current_user.send(entity_type.name.underscore.pluralize).
+                where(:cardset_id => params[:cardset_id])
+  end
+
   def new
     @entity = entity_type.new(:cardset_id => params[:cardset_id])
     render :form
@@ -62,8 +67,7 @@ class BelongsToCardsetController < ApplicationController
     @entity.update_attributes(allowed_params)
 
     if @entity.save
-      redirect_to :controller => :cardsets, :action => :show,
-                  :id => @entity.cardset_id
+      redirect_to :action => :index, :cardset_id => @entity.cardset_id
     else
       render :form
     end

@@ -24,3 +24,6 @@
 
 #Gemfile lock.
 /Gemfile.lock
+
+#Generated translations file
+/public/javascripts/translations.js

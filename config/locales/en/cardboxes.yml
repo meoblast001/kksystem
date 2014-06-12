@@ -3,6 +3,10 @@ en:
     name: 'Name'
     review_frequency: 'Review Frequency (Days)'
 
+    index:
+      header: 'List of Cardboxes'
+      none: 'No cardboxes. Create some!'
+
     new:
       success_notice: 'Box created successfully.'
       error_notice: 'Could not save box.'

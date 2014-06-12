@@ -25,8 +25,13 @@ class CardsController < BelongsToCardsetController
   # Protected: Called before action. Populates @cardboxes with the current
   #   cardset's cardboxes for use in views.
   def populate_cardboxes
-    @cardboxes = current_user.cardsets.where(:id => params[:cardset_id]).first.
-                 cardboxes
+    if params[:cardset_id]
+      @cardboxes = current_user.cardsets.where(:id => params[:cardset_id]).
+                   first.cardboxes
+    else
+      @cardboxes = current_user.cards.where(:id => params[:id]).first.cardset.
+                   cardboxes
+    end
   end
 
   # Protected: Get params with required and permitted already specified.
