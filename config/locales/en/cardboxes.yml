@@ -5,6 +5,7 @@ en:
 
     index:
       header: 'List of Cardboxes'
+      search: 'Search'
       none: 'No cardboxes. Create some!'
 
     new:

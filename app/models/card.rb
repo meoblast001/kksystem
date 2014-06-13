@@ -18,4 +18,8 @@ class Card < ActiveRecord::Base
   belongs_to :cardbox
 
   validates_presence_of :user_id, :cardset_id, :front, :back
+
+  def self.search(str)
+    where { front.matches("%#{str}%") | back.matches("%#{str}%") }
+  end
 end

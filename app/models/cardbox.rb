@@ -19,4 +19,8 @@ class Cardbox < ActiveRecord::Base
 
   validates_presence_of :user_id, :cardset_id, :name, :review_frequency
   validates :review_frequency, :numericality => { :greater_than => 0 }
+
+  def self.search(str)
+    where { name.matches("%#{str}%") | (review_frequency == str) }
+  end
 end

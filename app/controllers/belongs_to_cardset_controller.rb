@@ -17,6 +17,8 @@ class BelongsToCardsetController < ApplicationController
   def index
     @entities = current_user.send(entity_type.name.underscore.pluralize).
                 where(:cardset_id => params[:cardset_id])
+
+    @entities = @entities.search(params[:search]) if params[:search]
   end
 
   def new

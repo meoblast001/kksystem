@@ -15,6 +15,15 @@
 
 .page
   %h2= t('cards.index.header')
+
+  %table.table-search
+    %form{ :method => 'GET' }
+      %tr
+        %td
+          %input.search-box{ :name => 'search', :value => params[:search] }
+        %td.button-col
+          %input.btn.btn-default{ :type => 'submit', :value => t('cards.index.search') }
+
   -if @entities.count > 0
     .display-table.fixed-full-sized-table.styled-table
       .display-thead

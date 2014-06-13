@@ -6,6 +6,7 @@ en:
 
     index:
       header: 'List of Cards'
+      search: 'Search'
       none: 'No cards. Create some!'
 
     new:
