@@ -22,3 +22,16 @@ en:
 
     export:
       header: 'Export'
+
+    study:
+      types:
+        normal: 'Normal'
+        single_box: 'Practice Single Box'
+        no_box: 'Practice Cards Currently in No Box'
+
+      options:
+        header: 'Choose Study Options'
+        cardset: 'Cardset'
+        study_type: 'Study Type'
+        cardbox: 'Cardbox'
+        submit: 'Start Studying'

@@ -57,6 +57,16 @@ class CardsetsController < ApplicationController
     end
   end
 
+  def study
+    @cardsets = current_user.cardsets.order(:created_at)
+    @study_types = [
+        { :id => 'normal', :name => I18n.t('cardsets.study.types.normal') },
+        { :id => 'single-box',
+          :name => I18n.t('cardsets.study.types.single_box') },
+        { :id => 'no-box', :name => I18n.t('cardsets.study.types.no_box') },
+      ]
+  end
+
   protected
 
   # Protected: Get params with required and permitted already specified.

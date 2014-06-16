@@ -8,6 +8,7 @@ Kksystem::Application.routes.draw do
       :confirmations => 'users/confirmations',
     }
 
+  get '/cardsets/study' => 'cardsets#study', :as => :cardsets_study
   resources :cardsets
 
   resources :cardboxes, :except => [:index, :new, :edit]

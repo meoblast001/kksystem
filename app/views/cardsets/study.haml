@@ -1,0 +1,43 @@
+-# Copyright (C) 2014 Braden Walters
+-#
+-# This program is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#options.page
+  %h2= t('cardsets.study.options.header')
+  %form{ :id => 'options-form' }
+    %label= t('cardsets.study.options.cardset')
+    %select{ :id => 'options-form-cardset', :name => 'cardset' }
+      - @cardsets.each do |cardset|
+        %option{ :value => cardset.id }= cardset.name
+
+    %label= t('cardsets.study.options.study_type')
+    .list-group
+      - @study_types.each do |type|
+        %label.list-group-item{ :for => "options-form-study-type-#{type[:id]}" }
+          %input{ :type => 'radio', :id => "options-form-study-type-#{type[:id]}", :name => 'study-type', :value => type[:id]}
+          = type[:name]
+
+    #options-cardbox-section{ :style => 'display: none;' }
+      %label= t('cardsets.study.options.cardbox')
+      - @cardsets.each do |cardset|
+        %select{ :id => "cardbox-for-cardset-#{cardset.id}", :name => 'cardbox' }
+          - cardset.cardboxes.each do |cardbox|
+            %option{ :value => cardbox.id }= cardbox.name
+
+    %a#options-form-submit.btn.btn-primary.full-width{ :href => '#' }= t('cardsets.study.options.submit')
+
+  :coffeescript
+    kksystem.cardsets.study.initOptions()
+
+#study{ :style => 'display: none;' }
