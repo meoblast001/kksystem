@@ -67,6 +67,15 @@ class CardsetsController < ApplicationController
       ]
   end
 
+  def model
+    respond_to do |format|
+      format.json do
+        #TODO: Write actual JSON model action.
+        render :text => ''
+      end
+    end
+  end
+
   protected
 
   # Protected: Get params with required and permitted already specified.

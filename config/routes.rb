@@ -9,6 +9,7 @@ Kksystem::Application.routes.draw do
     }
 
   get '/cardsets/study' => 'cardsets#study', :as => :cardsets_study
+  post '/cardsets/model' => 'cardsets#model', :as => :cardsets_model
   resources :cardsets
 
   resources :cardboxes, :except => [:index, :new, :edit]
