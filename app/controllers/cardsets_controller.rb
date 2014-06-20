@@ -70,8 +70,8 @@ class CardsetsController < ApplicationController
   def model
     respond_to do |format|
       format.json do
-        #TODO: Write actual JSON model action.
-        render :text => ''
+        render :json => ClientModel::process(Cardset, request.params,
+                                             current_user)
       end
     end
   end

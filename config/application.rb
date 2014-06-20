@@ -16,6 +16,9 @@ module Kksystem
     #here. Application configuration should go into files in config/initializers
     #All .rb files in that directory are automatically loaded.
 
+    #Load any Ruby file in app/.
+    config.autoload_paths += Dir[Rails.root.join('app', '**', '*.rb').to_s]
+
     #Load all locales from config/locales/**/*.rb,yml.
     config.i18n.load_path +=
       Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]

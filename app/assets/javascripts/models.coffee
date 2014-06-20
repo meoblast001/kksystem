@@ -58,17 +58,17 @@ class Model
     $.ajax(@url(),
         method: 'POST',
         data:
-          action: 'load'
+          operation: 'load'
           conditions: for condition in conditions
             result = {
                 attribute: condition[0]
                 operator: condition[1]
                 value: condition[2]
               }
-        success: (result) ->
-          if result.status == 'success'
+        success: (result) =>
+          if result.success
             callback(for record_attrs in result.records
-                new @classType()(record_attrs)
+                new (@classType())(record_attrs)
               )
           else
             callback(false)
@@ -83,15 +83,22 @@ class Model
     $.ajax(@constructor.url(),
         method: 'POST'
         data:
-          action: 'save'
+          operation: 'save'
           attributes: do =>
-            ({ key, value } for key, value of this when @changed[key] == true).
+            #Needs all changed attributes and ID as an object.
+            ({ key, value } for key, value of this when @changed[key] == true or
+                                                        key == 'id').
               reduce (prev, next) ->
                 prev[next.key] = next.value
                 prev
               , {}
-        success: (result) ->
-          if result.status == 'success'
+        success: (result) =>
+          if result.success
+            #Update attributes with the values the server gives, and mark as
+            #unchanged.
+            for key, value of result.attributes
+              this[key] = value
+              @changed[key] = false
             @general_error = undefined
             @field_errors = {}
             callback(true)

@@ -14,6 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Cardset < ActiveRecord::Base
+  CLIENT_MODEL_ATTRIBUTES = [:name, :reintroduce_cards,
+    :reintroduce_cards_amount, :reintroduce_cards_frequency]
+
   has_many :cardboxes
   has_many :cards
 
