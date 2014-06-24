@@ -25,7 +25,7 @@
     .list-group
       - @study_types.each do |type|
         %label.list-group-item{ :for => "options-form-study-type-#{type[:id]}" }
-          %input{ :type => 'radio', :id => "options-form-study-type-#{type[:id]}", :name => 'study-type', :value => type[:id]}
+          %input{ :type => 'radio', :id => "options-form-study-type-#{type[:id]}", :name => 'study_type', :value => type[:id]}
           = type[:name]
 
     #options-cardbox-section{ :style => 'display: none;' }
@@ -41,3 +41,19 @@
     kksystem.cardsets.study.initOptions()
 
 #study{ :style => 'display: none;' }
+  .container-fluid
+    .col-md-4
+      .statistics
+        .js-loading= t('cardsets.study.loading')
+        .js-statistics.js-hide-on-load.js-show-on-ready
+    .col-md-8
+      .card.js-front
+        %span.contents
+          .js-loading= image_tag 'ajax-loader-1.gif', :alt => t('cardsets.study.loading')
+          .js-card-text.js-hide-on-load.js-show-on-ready
+      .card.js-back.js-hide-on-load
+        %span.contents
+          .js-card-text
+      %a.card.card-not-visible.js-hide-back.js-hide-on-load.js-show-on-ready{ :href => '#' }
+        %span.text
+          = t('cardsets.study.cards.click_to_flip')

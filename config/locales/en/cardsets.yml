@@ -24,6 +24,8 @@ en:
       header: 'Export'
 
     study:
+      loading: 'Loading...'
+
       types:
         normal: 'Normal'
         single_box: 'Practice Single Box'
@@ -35,3 +37,6 @@ en:
         study_type: 'Study Type'
         cardbox: 'Cardbox'
         submit: 'Start Studying'
+
+      cards:
+        click_to_flip: 'Click here to flip card.'

@@ -37,10 +37,18 @@ namespace 'kksystem.cardsets.study', (ns) ->
     switchCardboxDropdown()
 
     $('#options-form-submit').click (e) ->
-      ns.initStudy($('#options-form').serializeArray())
+      ns.initStudy($('#options-form').serializeArray().reduce (obj, param)->
+          obj[param.name] = param.value
+          obj
+        , {})
       e.preventDefault()
       return false
 
   ns.initStudy = (params) ->
     #TODO: Implement actual study initialisation.
     console.log params
+    $('#study .js-hide-on-load').hide()
+    $('#study .js-loading').show()
+
+    $('#options').hide('fast')
+    $('#study').show('fast')
