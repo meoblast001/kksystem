@@ -1,5 +1,18 @@
 # KKSystem
 
+The free and open source cloud flash card system accessed through your web
+browser. KKSystem uses a modified version of the Leitner system. All card data
+is stored on a central server which can be operated by someone else or by you.
+The choice is yours.
+
+KKSystem is written using the
+[Ruby on Rails web framework](http://rubyonrails.org/) on the server-side and
+[CoffeeScript](http://coffeescript.org/) on the client-side. Stylesheets are
+written in [Sass](http://sass-lang.com/).
+
+If you are curious about KKSystem and want to use the official deployal, go to
+[kksystem.org](http://kksystem.org/).
+
 ## Developer Setup
 - Read STYLE_GUIDE.md
 - Install dependencies
