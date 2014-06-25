@@ -14,6 +14,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class CardboxesController < BelongsToCardsetController
+  def model
+    respond_to do |format|
+      format.json do
+        render :json => ClientModel::process(Cardbox, request.params,
+                                             current_user)
+      end
+    end
+  end
+
   protected
 
   def entity_type

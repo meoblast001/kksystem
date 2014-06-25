@@ -16,6 +16,15 @@
 class CardsController < BelongsToCardsetController
   before_action :populate_cardboxes
 
+  def model
+    respond_to do |format|
+      format.json do
+        render :json => ClientModel::process(Card, request.params,
+                                             current_user)
+      end
+    end
+  end
+
   protected
 
   def entity_type

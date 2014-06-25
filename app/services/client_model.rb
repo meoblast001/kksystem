@@ -68,9 +68,9 @@ module ClientModel
       when 'save'
         #New attribute if no ID provided, else existing.
         if params[:attributes][:id].nil?
-          record = Cardset.new
+          record = klass.new
         else
-          record = Cardset.where(:id => params[:attributes][:id]).first
+          record = klass.where(:id => params[:attributes][:id]).first
         end
 
         #Only update attributes which are not the ID and are listed as a client

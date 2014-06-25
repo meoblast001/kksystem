@@ -14,6 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Card < ActiveRecord::Base
+  CLIENT_MODEL_ATTRIBUTES = [:front, :back, :current_cardbox_id]
+
   belongs_to :cardset
   belongs_to :cardbox
 

@@ -16,3 +16,7 @@
 :coffeescript
   namespace 'kksystem.cardsets', (ns) ->
     ns.MODEL_URL = '#{cardsets_model_path(:format => :json)}'
+  namespace 'kksystem.cardboxes', (ns) ->
+    ns.MODEL_URL = '#{cardboxes_model_path(:format => :json)}'
+  namespace 'kksystem.cards', (ns) ->
+    ns.MODEL_URL = '#{cards_model_path(:format => :json)}'

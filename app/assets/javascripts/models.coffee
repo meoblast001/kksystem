@@ -116,5 +116,15 @@ class Cardset extends Model
   @classType: -> Cardset
   @url: -> kksystem.cardsets.MODEL_URL
 
+class Cardbox extends Model
+  @classType: -> Cardbox
+  @url: -> kksystem.cardboxes.MODEL_URL
+
+class Card extends Model
+  @classType: -> Card
+  @url: -> kksystem.cards.MODEL_URL
+
 namespace 'kksystem.models', (ns) ->
   ns.Cardset = Cardset
+  ns.Cardbox = Cardbox
+  ns.Card = Card
