@@ -45,10 +45,38 @@ namespace 'kksystem.cardsets.study', (ns) ->
       return false
 
   ns.initStudy = (params) ->
-    #TODO: Implement actual study initialisation.
-    console.log params
     $('#study .js-hide-on-load').hide()
     $('#study .js-loading').show()
 
     $('#options').hide('fast')
     $('#study').show('fast')
+
+    switch params.study_type
+      when 'normal' then kksystem.cardsets.study.normal.init(params)
+      when 'single-box' then kksystem.cardsets.study.single_box.init(params)
+      when 'no-box' then kksystem.cardsets.study.no_box.init(params)
+
+namespace 'kksystem.cardsets.study.normal', (ns) ->
+  ns.init = (params) ->
+    kksystem.models.Cardset.load [['id', 'eq', params.cardset]], (cardsets) =>
+      if cardsets.length > 0
+        @cardset = cardsets[0]
+      else
+        return
+      kksystem.models.Cardbox.load [['cardset_id', 'eq', params.cardset]], \
+          (cardboxes) =>
+        now = new Date()
+        @cardboxes = cardboxes.filter (item)->
+          item.last_reviewed = 0 unless item.last_reviewed
+          next_review = new Date(item.last_reviewed)
+          next_review.setDate(next_review.getDate() + item.review_frequency)
+          next_review.setHours(next_review.getHours() - 6)
+          next_review < now
+
+namespace 'kksystem.cardsets.study.single_box', (ns) ->
+  ns.init = (params) ->
+    console.log('single_box')
+
+namespace 'kksystem.cardsets.study.no_box', (ns) ->
+  ns.init = (params) ->
+    console.log('no_box')
