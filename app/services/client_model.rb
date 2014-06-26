@@ -44,6 +44,17 @@ module ClientModel
             when 'lt'
               query = query.where { send(klass.table_name).send(attribute) <
                                     value }
+            when 'order'
+              case value
+                when 'asc', 'desc'
+                  query = query.order("#{attribute} #{value}")
+                when 'rand'
+                  query = query.order_by_rand
+                else
+                  return { :success => false }
+              end
+            when 'limit'
+              query = query.limit(value)
             else
               return { :success => false }
           end

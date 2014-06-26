@@ -49,9 +49,10 @@ class Model
   # Public: Loads an array of models of one type from the server.
   #
   # conditions - Array of condition arrays describing what to return.
-  #   [0] - Attribute on left-hand side of binary operation.
-  #   [1] - Binary operation: 'eq', 'gt', 'lt'
-  #   [2] - Value on right-hand side of binary operation.
+  #   [0] - Attribute on left-hand side of binary operation. For limit: null.
+  #   [1] - Binary operation: 'eq', 'gt', 'lt', 'order', 'limit'.
+  #   [2] - Value on right-hand side of binary operation. For order: 'asc',
+  #     'desc', or 'rand'.
   # callback - Function called when completed. Given one parameter if
   #   successful: array of models loaded. Else false.
   @load: (conditions, callback) ->
