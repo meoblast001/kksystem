@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class CardsController < BelongsToCardsetController
-  before_action :populate_cardboxes
+  before_action :populate_cardboxes, :only => [:new, :create, :edit, :update]
 
   def model
     respond_to do |format|
