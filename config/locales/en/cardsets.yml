@@ -38,5 +38,12 @@ en:
         cardbox: 'Cardbox'
         submit: 'Start Studying'
 
+      statistics:
+        study_mode: 'Study Mode'
+        current_set: 'Current Set'
+        current_box: 'Current Box'
+        cards: 'Cards (In This Box)'
+        finish_btn: 'Finish'
+
       cards:
         click_to_flip: 'Click here to flip card.'

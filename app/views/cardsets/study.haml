@@ -46,6 +46,20 @@
       .statistics
         .js-loading= t('cardsets.study.loading')
         .js-statistics.js-hide-on-load.js-show-on-ready
+          %b= t('cardsets.study.statistics.study_mode') + ':'
+          %span#statistics-study-mode
+          %br
+          %b= t('cardsets.study.statistics.current_set') + ':'
+          %span#statistics-current-set
+          %br
+          %b= t('cardsets.study.statistics.current_box') + ':'
+          %span#statistics-current-box
+          %br
+          %b= t('cardsets.study.statistics.cards') + ':'
+          %span#statistics-cards
+          %br
+          %br
+          %a#finish-btn.btn.btn-default.full-width{ :href => '#' }= t('cardsets.study.statistics.finish_btn')
     .col-md-8
       .card.js-front
         %span.contents

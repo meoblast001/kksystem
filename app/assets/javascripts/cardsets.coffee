@@ -53,13 +53,23 @@ namespace 'kksystem.cardsets.study', (ns) ->
     $('#study .js-loading').show()
 
     #Flip the card.
-    $('.js-hide-back').click ->
+    $('.js-hide-back').click (e) ->
       $('.js-hide-back').hide()
       $('.js-back').show()
+      e.preventDefault()
+      return false
 
     $('#options').hide('fast')
     $('#study').show('fast')
 
+    #Finish button.
+    $('#finish-btn').click (e) ->
+      ns.finishStudy()
+      e.preventDefault()
+      return false
+
+    $('#statistics-study-mode').text(
+      I18n.t("cardsets.study.types.#{params.study_type}"))
     switch params.study_type
       when 'normal' then kksystem.cardsets.study.normal.init(params)
       when 'single-box' then kksystem.cardsets.study.single_box.init(params)
@@ -92,6 +102,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
         @cardset = cardsets[0]
       else
         return
+      $('#statistics-current-set').text(@cardset.name)
       kksystem.models.Cardbox.load [['cardset_id', 'eq', params.cardset], \
           ['review_frequency', 'order', 'asc']], (cardboxes) =>
         now = new Date()
@@ -110,6 +121,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
       #Always work from the last incomplete box (that which has the highest
       #review frequency).
       current_box = incomplete_boxes[incomplete_boxes.length - 1]
+      $('#statistics-current-box').text(current_box.name)
       #If this cardbox's cards have not been loaded, load them now and call this
       #function again.
       unless current_box.cards
@@ -122,6 +134,9 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
         #branch again.
         return
       incomplete_cards = current_box.cards.filter (card) => not card.done
+      $('#statistics-cards').text(
+        current_box.cards.length - incomplete_cards.length + ' / ' +
+        current_box.cards.length)
       #If incomplete cards, study them, else move to the next box.
       if incomplete_cards.length > 0
         @use_card = incomplete_cards[0]
