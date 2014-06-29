@@ -71,3 +71,6 @@
       %a.card.card-not-visible.js-hide-back.js-hide-on-load.js-show-on-ready{ :href => '#' }
         %span.text
           = t('cardsets.study.cards.click_to_flip')
+      .corectness-buttons
+        %a#correct.btn.btn-primary{ :href => '#' }= t('cardsets.study.correctness_buttons.correct')
+        %a#incorrect.btn.btn-danger{ :href => '#' }= t('cardsets.study.correctness_buttons.incorrect')

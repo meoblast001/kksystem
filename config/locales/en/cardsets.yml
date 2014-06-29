@@ -47,3 +47,7 @@ en:
 
       cards:
         click_to_flip: 'Click here to flip card.'
+
+      corectness_buttons:
+        correct: 'Correct'
+        incorrect: 'Incorrect'
