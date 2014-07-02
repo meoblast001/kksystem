@@ -49,8 +49,7 @@ namespace 'kksystem.cardsets.study', (ns) ->
   #
   # params - Object representing serialised data from options form.
   ns.initStudy = (params) ->
-    $('#study .js-hide-on-load').hide()
-    $('#study .js-loading').show()
+    ns.startLoading()
 
     #Flip the card.
     $('.js-hide-back').click (e) ->
@@ -84,6 +83,25 @@ namespace 'kksystem.cardsets.study', (ns) ->
     $('#study .js-front .js-card-text').text(config.front)
     $('#study .js-back .js-card-text').text(config.back)
 
+  # Public: Prepares the correct and incorrect buttons in the study view.
+  #
+  # correct_callback - Called when correct button is clicked.
+  # incorrect_callback - Called when incorrect button is clicked.
+  ns.hookupCorrectnessButtons = (correct_callback, incorrect_callback) ->
+    $('#correct').unbind('click').click (e) ->
+      correct_callback()
+      e.preventDefault()
+      return false
+    $('#incorrect').unbind('click').click (e) ->
+      incorrect_callback()
+      e.preventDefault()
+      return false
+
+  # Public: Starts showing loading status indicators and hides the ready view.
+  ns.startLoading = ->
+    $('#study .js-hide-on-load').hide()
+    $('#study .js-loading').show()
+
   # Public: Stops showing loading status indicators and shows the ready view.
   ns.stopLoading = ->
     $('#study .js-loading').hide()
@@ -115,6 +133,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
         ns.displayNextCard()
 
   ns.displayNextCard = ->
+    kksystem.cardsets.study.startLoading()
     incomplete_boxes = @cardboxes.filter (cardbox) => not cardbox.done
     #If incomplete boxes, continue studying, else end study.
     if incomplete_boxes.length > 0
@@ -143,12 +162,32 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
         kksystem.cardsets.study.setCardText
           front: @use_card.front
           back: @use_card.back
+        kksystem.cardsets.study.hookupCorrectnessButtons(ns.correct,
+                                                         ns.incorrect)
         kksystem.cardsets.study.stopLoading()
       else
         current_box.done = true
         ns.displayNextCard()
     else
       kksystem.cardsets.study.finishStudy()
+
+  ns.correct = ->
+    index = ((if ns.use_card.current_cardbox_id == cardbox.id then \
+              true else false) for cardbox in ns.cardboxes).indexOf(true)
+    new_cardbox = if index == -1
+                    ns.cardboxes[0]
+                  else
+                    ns.cardboxes[index + 1] || null
+    ns.use_card.set('current_cardbox_id',
+                    if new_cardbox then new_cardbox.id else null)
+    ns.use_card.save ->
+      ns.displayNextCard()
+
+  ns.incorrect = ->
+    ns.use_card.set('current_cardbox_id', if ns.cardboxes[0] \
+                                          then ns.cardboxes[0].id else null)
+    ns.use_card.save ->
+      ns.displayNextCard()
 
 namespace 'kksystem.cardsets.study.single_box', (ns) ->
   ns.init = (params) ->
