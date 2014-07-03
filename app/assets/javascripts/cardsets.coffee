@@ -53,6 +53,7 @@ namespace 'kksystem.cardsets.study', (ns) ->
 
     #Flip the card.
     $('.js-hide-back').click (e) ->
+      $('.correctness-buttons').show()
       $('.js-hide-back').hide()
       $('.js-back').show()
       e.preventDefault()
@@ -181,12 +182,14 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
     ns.use_card.set('current_cardbox_id',
                     if new_cardbox then new_cardbox.id else null)
     ns.use_card.save ->
+      ns.use_card.done = true
       ns.displayNextCard()
 
   ns.incorrect = ->
     ns.use_card.set('current_cardbox_id', if ns.cardboxes[0] \
                                           then ns.cardboxes[0].id else null)
     ns.use_card.save ->
+      ns.use_card.done = true
       ns.displayNextCard()
 
 namespace 'kksystem.cardsets.study.single_box', (ns) ->
