@@ -15,7 +15,8 @@
 
 class Cardset < ActiveRecord::Base
   CLIENT_MODEL_ATTRIBUTES = [:name, :reintroduce_cards,
-    :reintroduce_cards_amount, :reintroduce_cards_frequency]
+    :reintroduce_cards_amount, :reintroduce_cards_frequency,
+    :last_reintroduced_cards]
 
   has_many :cardboxes
   has_many :cards

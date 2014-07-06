@@ -37,13 +37,16 @@ module ClientModel
 
           case operator
             when 'eq'
-              query = query.where(attribute => value)
+              unless value.empty?
+                query = query.where(attribute => value)
+              else
+                #If empty string provided, could be either empty or nil.
+                query = query.where { __send__(attribute) >> [value, nil] }
+              end
             when 'gt'
-              query = query.where { send(klass.table_name).send(attribute) >
-                                    value }
+              query = query.where { __send__(attribute) > value }
             when 'lt'
-              query = query.where { send(klass.table_name).send(attribute) <
-                                    value }
+              query = query.where { __send__(attribute) < value }
             when 'order'
               case value
                 when 'asc', 'desc'

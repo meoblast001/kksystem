@@ -131,7 +131,19 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
           next_review.setDate(next_review.getDate() + item.review_frequency)
           next_review.setHours(next_review.getHours() - 6)
           next_review < now
-        ns.displayNextCard()
+        if @cardset.reintroduce_cards
+          next_reintroduce = new Date(@cardset.last_reintroduced_cards)
+          next_reintroduce.setDate(next_reintroduce.getDate() +
+                                   @cardset.reintroduce_cards_frequency)
+          next_reintroduce.setHours(next_reintroduce.getHours() - 6)
+          if next_reintroduce < now
+            kksystem.models.Card.load [['cardset_id', 'eq', params.cardset], \
+                ['current_cardbox_id', 'eq', null], \
+                [null, 'order', 'rand']], (cards) =>
+              @cardboxes.push({cards})
+              ns.displayNextCard()
+          else
+            ns.displayNextCard()
 
   ns.displayNextCard = ->
     kksystem.cardsets.study.startLoading()
@@ -176,7 +188,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
     index = ((if ns.use_card.current_cardbox_id == cardbox.id then \
               true else false) for cardbox in ns.cardboxes).indexOf(true)
     new_cardbox = if index == -1
-                    ns.cardboxes[0]
+                    null
                   else
                     ns.cardboxes[index + 1] || null
     ns.use_card.set('current_cardbox_id',
