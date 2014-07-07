@@ -180,7 +180,16 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
         kksystem.cardsets.study.stopLoading()
       else
         current_box.done = true
-        ns.displayNextCard()
+        #Actual box.
+        if current_box.id
+          current_box.set('last_reviewed', new Date())
+          current_box.save ->
+            ns.displayNextCard()
+        #Pseudo-box for no-box cards.
+        else
+          ns.cardset.set('last_reintroduced_cards', new Date())
+          ns.cardset.save ->
+            ns.displayNextCard()
     else
       kksystem.cardsets.study.finishStudy()
 
