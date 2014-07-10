@@ -115,8 +115,8 @@ namespace 'kksystem.cardsets.study', (ns) ->
 
   # Public: When studying is completed, exits the study view.
   ns.finishStudy = ->
-    #TODO: Implement.
-    console.log 'Finished'
+    $('#study').hide()
+    $('#finished').show()
 
 #TODO: Handle kksystem.models error scenarios.
 namespace 'kksystem.cardsets.study.normal', (ns) ->

@@ -51,3 +51,7 @@ en:
       corectness_buttons:
         correct: 'Correct'
         incorrect: 'Incorrect'
+
+      finished:
+        notice: "You've finished studying."
+        home_link: 'Back to Home'

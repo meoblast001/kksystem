@@ -75,3 +75,10 @@
       .correctness-buttons.js-hide-on-load
         %a#correct.btn.btn-primary{ :href => '#' }= t('cardsets.study.correctness_buttons.correct')
         %a#incorrect.btn.btn-danger{ :href => '#' }= t('cardsets.study.correctness_buttons.incorrect')
+
+#finished.page{ :style => 'display: none;' }
+  = t('cardsets.study.finished.notice')
+  %br
+  [
+  %a{ :href => root_path }= t('cardsets.study.finished.home_link')
+  ]
