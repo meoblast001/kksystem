@@ -38,7 +38,8 @@
     %a#options-form-submit.btn.btn-primary.full-width{ :href => '#' }= t('cardsets.study.options.submit')
 
   :coffeescript
-    kksystem.cardsets.study.initOptions()
+    $(document).ready ->
+      kksystem.cardsets.study.initOptions()
 
 #study{ :style => 'display: none;' }
   .container-fluid

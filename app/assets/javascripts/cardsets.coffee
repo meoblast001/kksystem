@@ -16,12 +16,17 @@
 namespace 'kksystem.cardsets.study', (ns) ->
   # Public: Initialises the options view.
   ns.initOptions = ->
-    $('#options-form input[name=study-type]').click ->
+    showExtraOptions = ->
+      checked_study_type = $('#options-form input[name=study_type]').
+                           filter(':checked')
       cardbox_section = $('#options-cardbox-section')
-      if $(this).val() == 'single-box'
+      if checked_study_type.val() == 'single-box'
         cardbox_section.show()
       else
         cardbox_section.hide()
+
+    $('#options-form input[name=study_type]').click -> showExtraOptions()
+    showExtraOptions()
 
     switchCardboxDropdown = ->
       cardset_id = $('#options-form-cardset').val()
