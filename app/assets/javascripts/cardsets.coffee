@@ -118,17 +118,24 @@ namespace 'kksystem.cardsets.study', (ns) ->
     $('#study').hide()
     $('#finished').show()
 
-#TODO: Handle kksystem.models error scenarios.
+  ns.error = ->
+    $('#study').hide()
+    $('#error').show()
+
 namespace 'kksystem.cardsets.study.normal', (ns) ->
   ns.init = (params) ->
     kksystem.models.Cardset.load [['id', 'eq', params.cardset]], (cardsets) =>
-      if cardsets.length > 0
+      if cardsets and cardsets.length > 0
         @cardset = cardsets[0]
       else
+        kksystem.cardsets.study.error()
         return
       $('#statistics-current-set').text(@cardset.name)
       kksystem.models.Cardbox.load [['cardset_id', 'eq', params.cardset], \
           ['review_frequency', 'order', 'asc']], (cardboxes) =>
+        unless cardboxes
+          kksystem.cardsets.study.error()
+          return
         now = new Date()
         @cardboxes = cardboxes.filter (item)->
           item.last_reviewed = 0 unless item.last_reviewed
@@ -164,6 +171,9 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
       unless current_box.cards
         kksystem.models.Card.load([['current_cardbox_id', 'eq', current_box.id],
           [null, 'order', 'rand']], (cards) ->
+            unless cards
+              kksystem.cardsets.study.error()
+              return
             current_box.cards = cards
             ns.displayNextCard()
           )
@@ -207,14 +217,20 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
                     ns.cardboxes[index + 1] || null
     ns.use_card.set('current_cardbox_id',
                     if new_cardbox then new_cardbox.id else null)
-    ns.use_card.save ->
+    ns.use_card.save (success) ->
+      unless success
+        kksystem.cardsets.study.error()
+        return
       ns.use_card.done = true
       ns.displayNextCard()
 
   ns.incorrect = ->
     ns.use_card.set('current_cardbox_id', if ns.cardboxes[0] \
                                           then ns.cardboxes[0].id else null)
-    ns.use_card.save ->
+    ns.use_card.save (success) ->
+      unless success
+        kksystem.cardsets.study.error()
+        return
       ns.use_card.done = true
       ns.displayNextCard()
 

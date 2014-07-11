@@ -25,6 +25,7 @@ en:
 
     study:
       loading: 'Loading...'
+      error: 'Sorry, an error occurred.'
 
       types:
         normal: 'Normal'
