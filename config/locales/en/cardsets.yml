@@ -45,6 +45,7 @@ en:
         current_box: 'Current Box'
         cards: 'Cards (In This Box)'
         finish_btn: 'Finish'
+        no_cardbox: 'No Cardbox'
 
       cards:
         click_to_flip: 'Click here to flip card.'

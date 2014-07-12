@@ -74,7 +74,7 @@ namespace 'kksystem.cardsets.study', (ns) ->
       return false
 
     $('#statistics-study-mode').text(
-      I18n.t("cardsets.study.types.#{params.study_type}"))
+      I18n.t("cardsets.study.types.#{params.study_type}".replace('-', '_')))
     switch params.study_type
       when 'normal' then kksystem.cardsets.study.normal.init(params)
       when 'single-box' then kksystem.cardsets.study.single_box.init(params)
@@ -165,7 +165,8 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
       #Always work from the last incomplete box (that which has the highest
       #review frequency).
       current_box = incomplete_boxes[incomplete_boxes.length - 1]
-      $('#statistics-current-box').text(current_box.name)
+      $('#statistics-current-box').text(if current_box.name then \
+        current_box.name else I18n.t('cardsets.study.statistics.no_cardbox'))
       #If this cardbox's cards have not been loaded, load them now and call this
       #function again.
       unless current_box.cards
@@ -249,6 +250,7 @@ namespace 'kksystem.cardsets.study.single_box', (ns) ->
           kksystem.cardsets.study.error()
           return
         @cardbox = cardboxes[0]
+        $('#statistics-current-box').text(@cardbox.name)
         kksystem.models.Card.load [['current_cardbox_id', 'eq', @cardbox.id], \
             [null, 'order', 'rand']], (cards) =>
           unless cards
@@ -260,6 +262,9 @@ namespace 'kksystem.cardsets.study.single_box', (ns) ->
   ns.displayNextCard = ->
     kksystem.cardsets.study.startLoading()
     incomplete_cards = @cardbox.cards.filter (card) => not card.done
+    $('#statistics-cards').text(
+      @cardbox.cards.length - incomplete_cards.length + ' / ' +
+      @cardbox.cards.length)
     #If incomplete cards, continue studying, else end study.
     if incomplete_cards.length > 0
       @use_card = incomplete_cards[0]
@@ -281,4 +286,61 @@ namespace 'kksystem.cardsets.study.single_box', (ns) ->
 
 namespace 'kksystem.cardsets.study.no_box', (ns) ->
   ns.init = (params) ->
-    console.log('no_box')
+    $('#statistics-current-box').text(I18n.t('cardsets.study.statistics.' +
+                                             'no_cardbox'))
+    kksystem.models.Cardset.load [['id', 'eq', params.cardset]], (cardsets) =>
+      if cardsets or cardsets.length > 0
+        @cardset = cardsets[0]
+      else
+        kksystem.cardsets.study.error()
+        return
+      $('#statistics-current-set').text(@cardset.name)
+      kksystem.models.Card.load [['cardset_id', 'eq', @cardset.id], \
+          ['current_cardbox_id', 'eq', null], [null, 'order', 'rand']], \
+          (cards) =>
+        unless cards
+          kksystem.cardsets.study.error()
+          return
+        @cards = cards
+        #Get the cardbox with the lowest review frequency. Incorrect cards will
+        #be moved there.
+        kksystem.models.Cardbox.load [['cardset_id', 'eq', @cardset.id],
+            ['review_frequency', 'order', 'asc']], (cardboxes) =>
+          unless cardboxes
+            kksystem.cardsets.study.error()
+            return
+          @lowest_cardbox = if cardboxes.length > 0 then cardboxes[0] \
+                                                    else null
+          ns.displayNextCard()
+
+  ns.displayNextCard = ->
+    kksystem.cardsets.study.startLoading()
+    incomplete_cards = @cards.filter (card) => not card.done
+    $('#statistics-cards').text(@cards.length - incomplete_cards.length +
+                                ' / ' + @cards.length)
+    #If incomplete cards, continue studying, else end study.
+    if incomplete_cards.length > 0
+      @use_card = incomplete_cards[0]
+      kksystem.cardsets.study.setCardText
+        front: @use_card.front
+        back: @use_card.back
+      kksystem.cardsets.study.hookupCorrectnessButtons(ns.correct, ns.incorrect)
+      kksystem.cardsets.study.stopLoading()
+    else
+      kksystem.cardsets.study.finishStudy()
+
+  ns.correct = ->
+    ns.use_card.done = true
+    ns.displayNextCard()
+
+  ns.incorrect = ->
+    ns.use_card.done = true
+    if ns.lowest_cardbox
+      ns.use_card.set('current_cardbox_id', ns.lowest_cardbox.id)
+      ns.use_card.save (success)   ->
+        unless success
+          kksystem.cardsets.study.error()
+          return
+        ns.displayNextCard()
+    else
+      ns.displayNextCard()
