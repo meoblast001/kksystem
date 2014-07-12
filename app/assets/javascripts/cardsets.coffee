@@ -236,7 +236,48 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
 
 namespace 'kksystem.cardsets.study.single_box', (ns) ->
   ns.init = (params) ->
-    console.log('single_box')
+    kksystem.models.Cardset.load [['id', 'eq', params.cardset]], (cardsets) =>
+      if cardsets or cardsets.length > 0
+        @cardset = cardsets[0]
+      else
+        kksystem.cardsets.study.error()
+        return
+      $('#statistics-current-set').text(@cardset.name)
+      kksystem.models.Cardbox.load [['id', 'eq', params.cardbox]], \
+          (cardboxes) =>
+        unless cardboxes or cardboxes.length > 0
+          kksystem.cardsets.study.error()
+          return
+        @cardbox = cardboxes[0]
+        kksystem.models.Card.load [['current_cardbox_id', 'eq', @cardbox.id], \
+            [null, 'order', 'rand']], (cards) =>
+          unless cards
+            kksystem.cardsets.study.error()
+            return
+          @cardbox.cards = cards
+          ns.displayNextCard()
+
+  ns.displayNextCard = ->
+    kksystem.cardsets.study.startLoading()
+    incomplete_cards = @cardbox.cards.filter (card) => not card.done
+    #If incomplete cards, continue studying, else end study.
+    if incomplete_cards.length > 0
+      @use_card = incomplete_cards[0]
+      kksystem.cardsets.study.setCardText
+        front: @use_card.front
+        back: @use_card.back
+      kksystem.cardsets.study.hookupCorrectnessButtons(ns.correct, ns.incorrect)
+      kksystem.cardsets.study.stopLoading()
+    else
+      kksystem.cardsets.study.finishStudy()
+
+  ns.correct = ->
+    ns.use_card.done = true
+    ns.displayNextCard()
+
+  ns.incorrect = ->
+    ns.use_card.done = true
+    ns.displayNextCard()
 
 namespace 'kksystem.cardsets.study.no_box', (ns) ->
   ns.init = (params) ->
