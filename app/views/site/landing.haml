@@ -23,7 +23,10 @@
     = csrf_meta_tags
   %body#landing
     #header
-      = image_tag 'kksystem.png', :alt => 'KKSystem'
+      %table.logo-table
+        %tbody
+          %td
+            = image_tag 'kksystem.png', :alt => 'KKSystem'
 
     .navbar.navbar-default
       .navbar-inner
@@ -35,7 +38,7 @@
           %li
             %a{ :href => '#development' }= t('landing.development')
 
-        %ul.nav.navbar-nav.pull-right
+        %ul.nav.navbar-nav.navbar-right
           %li
             %a{ :href => new_user_session_path }= t('landing.sign-in')
           %li
@@ -75,14 +78,13 @@
       %p= t('landing.para-api')
 
     #footer
-      %table
-        %tr
-          %td
+      .container-fluid
+        .row
+          .col-md-6.license
             = t('landing.copyright')
             %br
             = t('landing.license')
-
-          %td
+          .col-md-6.system-info
             #{t('landing.version.kksystem')}: #{Kksystem::VERSION}
             %br
             #{t('landing.version.ruby')}: #{RUBY_VERSION}
