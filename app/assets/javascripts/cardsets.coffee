@@ -86,8 +86,12 @@ namespace 'kksystem.cardsets.study', (ns) ->
   #   :front - Text on the front of the card.
   #   :back - Text on the back of the card.
   ns.setCardText = (config) ->
-    $('#study .js-front .js-card-text').text(config.front)
-    $('#study .js-back .js-card-text').text(config.back)
+    front_html = $('<span>').text(config.front).html()
+    back_html = $('<span>').text(config.back).html()
+    $('#study .js-front .js-card-text').html(front_html.
+      replace(/\r\n|\r|\n/g, '<br />'))
+    $('#study .js-back .js-card-text').html(back_html.
+      replace(/\r\n|\r|\n/g, '<br />'))
 
   # Public: Prepares the correct and incorrect buttons in the study view.
   #
