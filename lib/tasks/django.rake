@@ -82,10 +82,10 @@ namespace :django do
           user.id = dj_record.id
           user.username = dj_record.username
           user.email = dj_record.email
-          user.encrypted_password = nil
-          user.must_reset_password = true
+          user.encrypted_password = dj_record.password
           user.created_at = dj_record.date_joined
           user.updated_at = dj_record.last_login
+          user.skip_confirmation!
         end.save!
       end
 

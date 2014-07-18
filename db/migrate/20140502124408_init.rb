@@ -6,7 +6,6 @@ class Init < ActiveRecord::Migration
       t.string :unconfirmed_email
 
       t.string :encrypted_password
-      t.boolean :must_reset_password
 
       t.string   :reset_password_token
       t.datetime :reset_password_sent_at

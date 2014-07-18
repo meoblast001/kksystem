@@ -25,6 +25,22 @@ class User < ActiveRecord::Base
 
   attr_accessor :login
 
+  #Overrides password validation to handle Devise and Django passwords.
+  def valid_password?(password)
+    #Try Devise password validation.
+    begin
+      super(password)
+    #If that fails, try Django password validation.
+    rescue
+      pass_parts = self.encrypted_password.split '$'
+      begin
+        Digest::SHA1.hexdigest(pass_parts[1] + password) == pass_parts[2]
+      rescue
+        false
+      end
+    end
+  end
+
   def self.find_first_by_auth_conditions(conds)
     unless conds[:login].nil?
       User.where { (email == conds[:login]) | (username == conds[:login]) }.
