@@ -128,6 +128,7 @@ namespace 'kksystem.cardsets.study', (ns) ->
 
 namespace 'kksystem.cardsets.study.normal', (ns) ->
   ns.init = (params) ->
+    @card_ids_studied = []
     kksystem.models.Cardset.load [['id', 'eq', params.cardset]], (cardsets) =>
       if cardsets and cardsets.length > 0
         @cardset = cardsets[0]
@@ -156,10 +157,15 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
             kksystem.models.Card.load [['cardset_id', 'eq', params.cardset], \
                 ['current_cardbox_id', 'eq', null], \
                 [null, 'order', 'rand']], (cards) =>
+              unless cards
+                kksystem.cardsets.study.error()
+                return
               @cardboxes.push({cards})
               ns.displayNextCard()
           else
             ns.displayNextCard()
+        else
+          ns.displayNextCard()
 
   ns.displayNextCard = ->
     kksystem.cardsets.study.startLoading()
@@ -179,7 +185,9 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
             unless cards
               kksystem.cardsets.study.error()
               return
-            current_box.cards = cards
+            #Cardbox contains fetched cards which have not yet been studied.
+            current_box.cards = cards.filter (card) ->
+              ns.card_ids_studied.indexOf(card.id) == -1
             ns.displayNextCard()
           )
         #Abort. Function will be re-run asynchronously and will not take this
@@ -227,6 +235,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
         kksystem.cardsets.study.error()
         return
       ns.use_card.done = true
+      ns.card_ids_studied.push(ns.use_card.id)
       ns.displayNextCard()
 
   ns.incorrect = ->
@@ -237,6 +246,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
         kksystem.cardsets.study.error()
         return
       ns.use_card.done = true
+      ns.card_ids_studied.push(ns.use_card.id)
       ns.displayNextCard()
 
 namespace 'kksystem.cardsets.study.single_box', (ns) ->
