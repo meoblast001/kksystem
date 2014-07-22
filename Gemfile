@@ -16,6 +16,14 @@ group :doc do
   gem 'sdoc', :require => false
 end
 
+group :test do
+  gem 'rspec-rails', '~> 3.0.2'
+  gem 'database_cleaner', '~> 1.3.0'
+  gem 'factory_girl_rails', '~> 4.4.1'
+  gem 'capybara', '~> 2.4.1'
+  gem 'selenium-webdriver', '~> 2.42.0'
+end
+
 gem 'sqlite3'
 gem 'pg'
 gem 'mysql'
