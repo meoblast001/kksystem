@@ -19,6 +19,9 @@ Kksystem::Application.configure do
 
   config.active_support.deprecation = :stderr
 
+  config.assets.debug = true
+  config.assets.initialize_on_precompile = true
+
   #Include user settings.
   include UserSettings::Test
 end
