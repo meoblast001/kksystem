@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :user do
+    before(:create) { |user| user.confirm! }
     username 'example'
     email 'testing@example.org'
     password 'password'
