@@ -37,5 +37,27 @@ describe 'study' do
 
       expect(subject_card.reload.current_cardbox_id).to eql(box3.id)
     end
+
+    it 'should move cards to the lowest box if incorrect and currently in a ' +
+       'box', :js => true do
+      #Put in the top box to make sure the card isn't just being moved down one
+      #box, but to the lowest box, when incorrect.
+      subject_card.current_cardbox = box3
+      subject_card.save!
+
+      login_as cardset.user, :scope => :user
+
+      visit cardsets_study_path
+      find("#options-form-cardset option[value='#{cardset.id}']").select_option
+      find('#options-form-study-type-normal').click
+      find('#options-form-submit').click
+      expect(page).to have_css('#study')
+
+      find('.card-not-visible').click
+      find('#incorrect').click
+      expect(page).to have_css('#finished')
+
+      expect(subject_card.reload.current_cardbox_id).to eql(box1.id)
+    end
   end
 end
