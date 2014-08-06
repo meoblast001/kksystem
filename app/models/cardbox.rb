@@ -16,6 +16,7 @@
 class Cardbox < ActiveRecord::Base
   CLIENT_MODEL_ATTRIBUTES = [:name, :review_frequency, :last_reviewed]
 
+  belongs_to :user
   belongs_to :cardset
   has_many :cards
 

@@ -16,8 +16,9 @@
 class Card < ActiveRecord::Base
   CLIENT_MODEL_ATTRIBUTES = [:front, :back, :current_cardbox_id]
 
+  belongs_to :user
   belongs_to :cardset
-  belongs_to :cardbox
+  belongs_to :current_cardbox, :class_name => 'Cardbox'
 
   validates_presence_of :user_id, :cardset_id, :front, :back
 

@@ -18,6 +18,7 @@ class Cardset < ActiveRecord::Base
     :reintroduce_cards_amount, :reintroduce_cards_frequency,
     :last_reintroduced_cards]
 
+  belongs_to :user
   has_many :cardboxes
   has_many :cards
 
