@@ -11,6 +11,14 @@ Kksystem::Application.routes.draw do
   get '/cardsets/study' => 'cardsets#study', :as => :cardsets_study
   post '/cardsets/model' => 'cardsets#model', :as => :cardsets_model
   resources :cardsets
+  get '/cardsets/import/:cardset_id' => 'cardsets#import',
+      :as => :cardsets_import
+  post '/cardsets/import/:cardset_id' => 'cardsets#importSubmit',
+       :as => :cardsets_import_submit
+  get '/cardsets/export/:cardset_id' => 'cardsets#export',
+      :as => :cardsets_export
+  post '/cardsets/export/:cardset_id' => 'cardsets#exportSubmit',
+       :as => :cardsets_export_submit
 
   post '/cardboxes/model' => 'cardboxes#model', :as => :cardboxes_model
   resources :cardboxes, :except => [:index, :new, :edit]

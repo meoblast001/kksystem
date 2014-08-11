@@ -67,6 +67,20 @@ class CardsetsController < ApplicationController
       ]
   end
 
+  def import
+  end
+
+  def importSubmit
+    #TODO: Implement.
+  end
+
+  def export
+  end
+
+  def exportSubmit
+    #TODO: Implement.
+  end
+
   def model
     respond_to do |format|
       format.json do

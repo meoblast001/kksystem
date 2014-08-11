@@ -17,11 +17,24 @@ en:
       create_link: 'Create New Cardset'
       actions: 'Actions'
 
+    import_export:
+      type: 'Type'
+      types:
+        select: '-- Please Select --'
+        anki_text: 'Anki Text File (Front; Back)'
+
     import:
       header: 'Import'
 
+      form:
+        file: 'File'
+        submit: 'Import'
+
     export:
       header: 'Export'
+
+      form:
+        submit: 'Export'
 
     study:
       loading: 'Loading...'

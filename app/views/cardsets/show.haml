@@ -48,11 +48,11 @@
               = t('cards.show.header')
         %tr
           %td
-            %a.btn.btn-default.full-width{ :href => '#' }
+            %a.btn.btn-default.full-width{ :href => cardsets_import_path(:cardset_id => @cardset.id) }
               %span.glyphicon.glyphicon-import
               = t('cardsets.import.header')
           %td
-            %a.btn.btn-default.full-width{ :href => '#' }
+            %a.btn.btn-default.full-width{ :href => cardsets_export_path(:cardset_id => @cardset.id) }
               %span.glyphicon.glyphicon-export
               = t('cardsets.export.header')
     .clearfloats
