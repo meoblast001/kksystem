@@ -78,7 +78,11 @@ class CardsetsController < ApplicationController
   end
 
   def exportSubmit
-    #TODO: Implement.
+    cardset = current_user.cardsets.where(:id => params[:cardset_id]).first
+    filename = "cardset-#{cardset.id}." +
+               ImportExport.extension(params[:export_type])
+    send_data ImportExport.export(params[:export_type], cardset),
+              :filename => filename
   end
 
   def model
