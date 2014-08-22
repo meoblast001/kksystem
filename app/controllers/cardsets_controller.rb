@@ -71,7 +71,13 @@ class CardsetsController < ApplicationController
   end
 
   def importSubmit
-    #TODO: Implement.
+    cardset = current_user.cardsets.where(:id => params[:cardset_id]).first
+    content = File.read(params[:import_file].path)
+    begin
+      ImportExport.import(params[:import_type], cardset, content)
+    rescue ImportExport::ImportFailureError => e
+      @error = e.message
+    end
   end
 
   def export

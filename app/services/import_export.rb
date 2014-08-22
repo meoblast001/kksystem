@@ -19,6 +19,19 @@ require 'csv'
 #   formats.
 class ImportExport
   class InvalidTypeError < RuntimeError; end
+  class ImportFailureError < RuntimeError; end
+
+  # Public: Import some type of data file into a cardset.
+  #
+  # type - Name of the file type from which to import.
+  # cardset - Cardset model to which to import.
+  # content - Contents of file to import.
+  def self.import(type, cardset, content)
+    case type
+      when 'anki_text' then importAnkiText(cardset, content)
+      else raise InvalidTypeError.new
+    end
+  end
 
   # Public: Export a cardset to some type of data file.
   #
@@ -46,6 +59,28 @@ class ImportExport
   end
 
   protected
+
+  #Protected: Imports an ANKI TXT file.
+  def self.importAnkiText(cardset, content)
+    ActiveRecord::Base.transaction do
+      CSV.parse(content, :col_sep => "\t").each_with_index do |row, i|
+        if row.length < 2
+          raise ImportFailureError.new(I18n.t('cardsets.import.errors.' +
+            'anki_text.not_enough_columns', :row_num => i + 1))
+        end
+
+        card = Card.new(:cardset => cardset, :user => cardset.user,
+                        :current_cardbox => cardset.cardboxes.
+                          order { review_frequency.asc }.first,
+                        :front => row[0], :back => row[1])
+        unless card.save
+          raise ImportFailureError.new(I18n.t('cardsets.import.errors.' +
+            'anki_text.row_invalid', :row_num => i + 1,
+            :reason => card.errors.full_messages.join(';')))
+        end
+      end
+    end
+  end
 
   # Protected: Exports to the ANKI TXT file format.
   def self.exportAnkiText(cardset)

@@ -25,10 +25,16 @@ en:
 
     import:
       header: 'Import'
+      success: 'The cardset was successfully imported.'
 
       form:
         file: 'File'
         submit: 'Import'
+
+      errors:
+        anki_text:
+          not_enough_columns: "Not enough columns on row %{row_num}."
+          row_invalid: "Row %{row_num} invalid: %{reason}"
 
     export:
       header: 'Export'
