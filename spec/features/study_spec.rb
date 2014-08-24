@@ -59,5 +59,52 @@ describe 'study' do
 
       expect(subject_card.reload.current_cardbox_id).to eql(box1.id)
     end
+
+    it 'should reintroduce no more cards than the reintroduction amount',
+       :js => true do
+      #Cardset only has a reintroduction of 5, and is ready to reintroduce
+      #cards.
+      cardset.reintroduce_cards = true
+      cardset.reintroduce_cards_amount = 5
+      cardset.reintroduce_cards_frequency = 1
+      cardset.last_reintroduced_cards = 10.days.ago
+      cardset.save!
+      #Create 10 cards in no box.
+      10.times { FactoryGirl.create(:card, :cardset => cardset,
+                                    :current_cardbox => nil) }
+
+      login_as cardset.user, :scope => :user
+
+      visit cardsets_study_path
+      find("#options-form-cardset option[value='#{cardset.id}']").select_option
+      find('#options-form-study-type-normal').click
+      find('#options-form-submit').click
+      expect(page).to have_css('#study')
+
+      expect(find('#statistics-cards')).to have_content('0 / 5')
+    end
+
+    it 'should reintroduce all cards if the reintroduction amount is higher ' +
+       'than the amount of cards in no box', :js => true do
+      #Cardset has a reintroduction of 5, and is ready to reintroduce cards.
+      cardset.reintroduce_cards = true
+      cardset.reintroduce_cards_amount = 5
+      cardset.reintroduce_cards_frequency = 1
+      cardset.last_reintroduced_cards = 10.days.ago
+      cardset.save!
+      #Create 2 cards in no box.
+      2.times { FactoryGirl.create(:card, :cardset => cardset,
+                                   :current_cardbox => nil) }
+
+      login_as cardset.user, :scope => :user
+
+      visit cardsets_study_path
+      find("#options-form-cardset option[value='#{cardset.id}']").select_option
+      find('#options-form-study-type-normal').click
+      find('#options-form-submit').click
+      expect(page).to have_css('#study')
+
+      expect(find('#statistics-cards')).to have_content('0 / 2')
+    end
   end
 end

@@ -142,7 +142,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
           kksystem.cardsets.study.error()
           return
         now = new Date()
-        @cardboxes = cardboxes.filter (item)->
+        @cardboxes = cardboxes.filter (item) ->
           item.last_reviewed = 0 unless item.last_reviewed
           next_review = new Date(item.last_reviewed)
           next_review.setDate(next_review.getDate() + item.review_frequency)
@@ -156,6 +156,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
           if next_reintroduce < now
             kksystem.models.Card.load [['cardset_id', 'eq', params.cardset], \
                 ['current_cardbox_id', 'eq', null], \
+                [null, 'limit', @cardset.reintroduce_cards_amount], \
                 [null, 'order', 'rand']], (cards) =>
               unless cards
                 kksystem.cardsets.study.error()
