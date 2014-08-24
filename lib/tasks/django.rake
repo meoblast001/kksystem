@@ -77,7 +77,7 @@ namespace :django do
     Django::Card.connect(django_env)
 
     ActiveRecord::Base.transaction do
-      Django::User.all.each do |dj_record|
+      Django::User.order { id.asc }.all.each do |dj_record|
         User.new.tap do |user|
           user.id = dj_record.id
           user.username = dj_record.username
@@ -89,7 +89,7 @@ namespace :django do
         end.save!
       end
 
-      Django::Cardset.all.each do |dj_record|
+      Django::Cardset.order { id.asc }.all.each do |dj_record|
         Cardset.new.tap do |cardset|
           cardset.id = dj_record.id
           cardset.user_id = dj_record.owner_id
@@ -104,7 +104,7 @@ namespace :django do
         end.save!
       end
 
-      Django::Cardbox.all.each do |dj_record|
+      Django::Cardbox.order { id.asc }.all.each do |dj_record|
         Cardbox.new.tap do |cardbox|
           cardbox.id = dj_record.id
           cardbox.user_id = dj_record.owner_id
@@ -115,7 +115,7 @@ namespace :django do
         end.save!
       end
 
-      Django::Card.all.each do |dj_record|
+      Django::Card.order { id.asc }.all.each do |dj_record|
         Card.new.tap do |card|
           card.id = dj_record.id
           card.user_id = dj_record.owner_id
