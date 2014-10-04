@@ -1,0 +1,10 @@
+en:
+  site:
+    main_menu:
+      study: 'Lernen'
+      edit: 'Bearbeiten'
+      settings: 'Einstellungen'
+      logout: 'Abmelden'
+
+    forms:
+      unknown_error_occurred: "Ein unbekannter Fehler ist aufgetreten."

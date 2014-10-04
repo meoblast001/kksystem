@@ -1,0 +1,49 @@
+en:
+  landing:
+    sign-in: Anmelden
+    register: Registrieren
+
+    para-what-is-kksystem: >
+      Bist du neugierig, was KKSystem (ausgesprochen wie im Englischen:
+      Kej-Kej-Sistem) ist? Es ist eine Webanwendung, die Dir hilft,
+      Papier-Flashkarten in den Wind zu schreiben. KKSystem macht es einfacher,
+      Flashkarten zu verfassen, ordnen und lernen. Die Anwendung bietet ein
+      einfaches Interface für die Erstellung und Bearbeitung von Karten, für die
+      Ordnung von vorhandenen Karten und für das Lernen von Karten mit dem
+      %{leitner_system}. Außerdem sind alle deine Karten in der Cloud
+      gespeichert, damit Du mit irgendwelchem PC oder Mobilgerät weiter
+      verfassen, ordnen, und lernen kannst.
+    leitner-system: Leitnersystem
+
+    documentation: Dokumentation
+    para-documentation-summary: >
+      Jede Seite der Anwendung enthält Dokumentation, die erklärt, wie man die
+      Seite benutzt, aber diese Informationen sind allein nicht genug. Hier
+      befindet sich im allgemein eine Anleitung zur Benutzung der Software.
+
+    #TODO: Complete documentation section.
+
+    development: Entwicklung
+    para-development-1: >
+      Wenn Du ein Entwickler bist, der KKSystem entwickeln willst, gehe zur
+      %{project_page}. Klone das Repository, verändere den Code, forke das
+      Remoterepository in GitHub, pushe deine Veränderungen dorthin und
+      reiche einen Pull-Request ein. Für kleine Veränderungen, darfst Du auch
+      einem aktiven Projektmitglied eine E-Mail mit deinem Patch schicken, wenn
+      Du willst.
+    project-page: KKSystem-GitHub-Projektseite
+    para-development-2: >
+      KKSystem ist in %{ruby} mit ${rails} geschrieben. Einrichtungsanleitungen
+      für Entwickler und Server-Administrator existieren im Source-Tree.
+    ruby: Ruby
+    rails: das Ruby on Rails Webframework
+
+    api: API
+    para-api: Noch nicht hier!
+
+    copyright: Copyright (C) 2011 - 2014 Braden Walters
+    license: Unter GNU Affero General Public License Version 3+ lizensiert.
+    version:
+      kksystem: KKSystem-Version
+      ruby: Ruby-Version
+      rails: Rails-Version

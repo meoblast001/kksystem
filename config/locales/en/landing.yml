@@ -8,10 +8,10 @@ en:
       study, so you can say goodbye to paper flash cards. KKSystem makes flash
       cards easier to write, organise, and study. The application provides a
       simple interface to create and edit cards, organise existing cards, and
-      study the cards you've created using %{leitner_system}. In addition, all
-      of your data is stored in the cloud, so you can continue to write,
+      study the cards you've created using the %{leitner_system}. In addition,
+      all of your data is stored in the cloud, so you can continue to write,
       organise, and study from any PC or mobile device.
-    leitner-system: the Leitner system
+    leitner-system: Leitner system
 
     documentation: Documentation
     para-documentation-summary: >
@@ -64,8 +64,8 @@ en:
     development: Development
     para-development-1: >
       If you are a developer who would like to hack on KKSystem, go to the
-      %{project_page}. Clone the repository, make your changes, clone the remote
-      on Gitorious, push your changes there, and submit a pull request. For
+      %{project_page}. Clone the repository, make your changes, fork the remote
+      on GitHub, push your changes there, and submit a pull request. For
       small changes, you may also e-mail an active project member your patch if
       you wish.
     project-page: KKSystem GitHub project page
