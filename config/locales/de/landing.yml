@@ -1,4 +1,4 @@
-en:
+de:
   landing:
     sign-in: Anmelden
     register: Registrieren
@@ -17,9 +17,28 @@ en:
 
     documentation: Dokumentation
     para-documentation-summary: >
-      Jede Seite der Anwendung enthält Dokumentation, die erklärt, wie man die
-      Seite benutzt, aber diese Informationen sind allein nicht genug. Hier
-      befindet sich im allgemein eine Anleitung zur Benutzung der Software.
+      Jede Seite der Anwendung enthält eine Dokumentation, die erklärt, wie man
+      die Seite benutzt, aber diese Informationen sind alleine nicht
+      ausreichend. Hier befindet sich eine allgemeine Anleitung zur Benutzung
+      der Software.
+
+    sets-boxes-cards: Zusammenstellungen, Kästen, Karten
+    para-sets-boxes-cards: >
+      KKSystem enthält drei grundlegende Entitätstypen: Zusammenstellungen,
+      Kästen und Karten. Du wirst deine eigenen erstellen, also ist es wichtig,
+      dass du weißt, was sie tun:
+    para-cards: >
+      Karten - Enthalten die zu lernenden Informationen. Jede Karte hat eine
+      Vorderseite und eine Rückseite, die Textinformationen beinhalten.
+    para-boxes: >
+      Kästen - Beschreiben, wie gut deine Kentnisse bestimmter Karten sind. Die
+      Kästen geben die Häufigkeit an, zu der die Karten darin wiederholt
+      werden sollen. Beispiele: Jeden Tag, Jede Woche
+    para-sets: >
+      Zusammenstellungen - Erlauben dir, Karten und Kästen nach Themen zu
+      unterteilen. Jede Zusammenstellung ist völlig unabhängig voneinander.
+      Beispiele: Britische Geschichte ders 19ten Jahrhunderts, Arabisch,
+      organische Chemie
 
     #TODO: Complete documentation section.
 
@@ -33,7 +52,7 @@ en:
       Du willst.
     project-page: KKSystem-GitHub-Projektseite
     para-development-2: >
-      KKSystem ist in %{ruby} mit ${rails} geschrieben. Einrichtungsanleitungen
+      KKSystem ist in %{ruby} mit %{rails} geschrieben. Einrichtungsanleitungen
       für Entwickler und Server-Administrator existieren im Source-Tree.
     ruby: Ruby
     rails: das Ruby on Rails Webframework
