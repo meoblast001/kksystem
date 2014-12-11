@@ -1,0 +1,23 @@
+de:
+  cards:
+    front: 'Vorderseite'
+    back: 'Rückseite'
+    current_cardbox: 'Aktueller Kasten'
+
+    index:
+      header: 'Kartenliste'
+      search: 'Suchen'
+      none: 'Keine Karten. Verfasse einige!'
+
+    new:
+      success_notice: 'Karte erfolgreich verfasst.'
+      error_notice: 'Konnte die Karte nicht speichern.'
+      header: 'Karte verfassen'
+      submit: 'Verfassen'
+
+    edit:
+      submit: 'Änderungen speichern'
+
+    show:
+      header: 'Karte bearbeiten'
+      no_box: '[Kein Kasten]'

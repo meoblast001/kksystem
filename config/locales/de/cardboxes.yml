@@ -1,0 +1,21 @@
+de:
+  cardboxes:
+    name: 'Name'
+    review_frequency: 'Lernfrequenz (Tage)'
+
+    index:
+      header: 'Kastenliste'
+      search: 'Suchen'
+      none: 'Keine Kästen. Erstelle einige!'
+
+    new:
+      success_notice: 'Kasten erfolgreich erstellt.'
+      error_notice: 'Konnte Kasten nicht speichern.'
+      header: 'Kasten erstellen'
+      submit: 'Erstellen'
+
+    edit:
+      submit: 'Änderungen speichern'
+
+    show:
+      header: 'Kasten bearbeiten'

@@ -1,0 +1,78 @@
+de:
+  cardsets:
+    name: 'Name'
+    reintroduce_cards: 'Karten wiedereinführen'
+    reintroduce_cards_amount: 'Anteil Karten wiedereinzuführen'
+    reintroduce_cards_frequency: 'Häufigkeit der Kartenwiedereinführung (Tage)'
+
+    new:
+      header: 'Zusammenstellung erstellen'
+      submit: 'Erstellen'
+
+    edit:
+      submit: 'Änderungen speichern'
+
+    show:
+      header: 'Zusammenstellung-Einzelheiten'
+      create_link: 'Neue Zusammenstellung erstellen'
+      actions: 'Actions'
+
+    import_export:
+      type: 'Art'
+      types:
+        select: '-- Bitte auswählen --'
+        anki_text: 'Anki Text-Datei (Vorderseite; Rückseite)'
+
+    import:
+      header: 'Importieren'
+      success: 'Die Zusammenstellung wurde erfolgreich importiert.'
+
+      form:
+        file: 'Datei'
+        submit: 'Importieren'
+
+      errors:
+        anki_text:
+          not_enough_columns: "Nicht genug Spalten auf Zeile %{row_num}."
+          row_invalid: "Zeile %{row_num} ungültig: %{reason}"
+
+    export:
+      header: 'Exportieren'
+
+      form:
+        submit: 'Exportieren'
+
+    study:
+      loading: 'Lädt...'
+      error: 'Entschuldigung, ein Fehler ist geschehen.'
+
+      types:
+        normal: 'Normal'
+        single_box: 'Einzelnen Kasten überprüfen'
+        no_box: 'Karten überprüfen, die gerade in keinem Kasten sind'
+
+      options:
+        header: 'Lerneinstellungen setzen'
+        cardset: 'Zusammenstellung'
+        study_type: 'Lernart'
+        cardbox: 'Kasten'
+        submit: 'Anfangen, zu lernen'
+
+      statistics:
+        study_mode: 'Lernmodus'
+        current_set: 'Aktuelle Zusammenstellung'
+        current_box: 'Aktueller Kasten'
+        cards: 'Kasten (in diesem Kasten)'
+        finish_btn: 'Fertig'
+        no_cardbox: 'Kein Kasten'
+
+      cards:
+        click_to_flip: 'Hier klicken, um die Karte zu wenden.'
+
+      corectness_buttons:
+        correct: 'Korrekt'
+        incorrect: 'Falsch'
+
+      finished:
+        notice: "Du hast das Lernen abgeschlossen."
+        home_link: 'Zurück zur Startseite'
