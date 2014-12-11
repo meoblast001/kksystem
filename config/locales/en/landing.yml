@@ -38,8 +38,8 @@ en:
     the-leitner-system: The Leitner System
     para-leitner-1: >
       KKSystem implements the Leitner system. Originally designed by Sebastian
-      Leitner, the system remains very popular today. The system makes cards
-      more difficult as you memorise it.
+      Leitner, the system remains very popular today. The system makes each card
+      more difficult as you memorise the content.
     para-leitner-2: >
       Boxes play an important role in the Leitner system. Each box signifies a
       different difficulty, and is given a review frequency. Once you've
@@ -56,10 +56,10 @@ en:
       cards which have escaped the system. This allows you to do more training
       or review cards you may not have reviewed for a while. In addition, you
       may specify a reintroduction rate and frequency. When in use, each time
-      the review frequency passes, cards outside of the system are displayed
-      during normal study. The amount of cards is determined by the rate. If any
-      of these cards is no longer memorised, it enters the system again at the
-      first box.
+      the reintroduction frequency passes, cards outside of the system are
+      displayed during normal study. The amount of cards is determined by the
+      rate. If any of these cards is no longer memorised, it enters the system
+      again at the first box.
 
     development: Development
     para-development-1: >

@@ -40,7 +40,35 @@ de:
       Beispiele: Britische Geschichte ders 19ten Jahrhunderts, Arabisch,
       organische Chemie
 
-    #TODO: Complete documentation section.
+    the-leitner-system: Das Leitnersystem
+    para-leitner-1: >
+      KKSystem setzt das Leitnersystem um. Das System wurde ursprünglich von
+      Sebastian Leitner entwickelt und bleibt heute noch sehr beliebt. Das
+      System macht jede Karte schwieriger, als Du den Inhalt merkst.
+    para-leitner-2: >
+      Kästen spielen eine wichtige Rolle im Leitnersystem. Jeder Kasten bedeutet
+      eine unterschiedliche Schwierigkeit und bekommt eine
+      Überprüfungshäufigkeit. Nachdem Du einen Kasten überprüft hast, überprüfst
+      du den Kasten nicht mehr bis diese Zeit (die Überprüfungshäufigkeit)
+      vergeht. Jede Karte, die richtig geraten wird, wird in den nächsten Kasten
+      verschoben, der seltener überprüft wird. Nachdem die Karte den letzten
+      Kasten verlässt, hat sie das System entkommen, und Du solltest den Inhalt
+      wissen. Wenn eine Karte nicht gemerkt wird, dann ist sie in den ersten
+      Kasten verschoben.
+
+    modifications: Änderungen
+    para-modifications: >
+      KKSystem verändert das Leitnersystem. Zusätzlich dem normalen
+      Leitnerlernmodell, hast Du auch die Option, einen einzelnen Kasten zu
+      überprüfen, oder Karten, die das System entkommen sind, zu überprüfen.
+      Dies erlaubt dir, mehr zu lernen oder Karten zu überprüfen, die Du seit
+      Lange nicht überprüft hast. Zusätzlich darfst Du einen
+      Wiedereinführungsanteil und eine Wiedereinführungshäfigkeit einstellen.
+      Wenn eingegeben, werden Karten außerhalb des Systems während normalen
+      Lernen wieder gezeigt, jedes Mal die Wiedereinführungszeit (die
+      Häufigkeit) vergeht. Der Anteil Karten, die gezeigt werden, sind vom
+      Wiedereinführungsanteil festgelegt. Wenn irgendeine dieser Karten nicht
+      gemerkt ist, dann wird sie wieder in den ersten Kasten verschoben.
 
     development: Entwicklung
     para-development-1: >
