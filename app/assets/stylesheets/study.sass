@@ -36,6 +36,7 @@
     background-color: #dce1e5
 
   .card
+    position: relative
     display: block
     color: #000000
     text-decoration: none
@@ -51,6 +52,14 @@
       display: inline-block
       vertical-align: middle
       line-height: normal
+
+    .edit-button, .save-button
+      position: absolute
+      bottom: 2px
+      right: 2px
+
+    .edit-text-field
+      border: 1px solid #000000
 
   .card-not-visible
     background-image: image-url("card_not_visible.png")

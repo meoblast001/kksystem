@@ -66,9 +66,19 @@
         %span.contents
           .js-loading= image_tag 'ajax-loader-1.gif', :alt => t('cardsets.study.loading')
           .js-card-text.js-hide-on-load.js-show-on-ready
+          %textarea.edit-text-field.js-edit-card-text.js-hide-on-load
+        .edit-button.btn.btn-default.js-show-on-ready
+          .glyphicon.glyphicon-pencil
+        .save-button.btn.btn-primary.js-hide-on-load
+          .glyphicon.glyphicon-floppy-disk
       .card.js-back.js-hide-on-load
         %span.contents
-          .js-card-text
+          .js-card-text.js-show-on-ready
+          %textarea.edit-text-field.js-edit-card-text.js-hide-on-load
+        .edit-button.btn.btn-default.js-show-on-ready
+          .glyphicon.glyphicon-pencil
+        .save-button.btn.btn-primary.js-hide-on-load
+          .glyphicon.glyphicon-floppy-disk
       %a.card.card-not-visible.js-hide-back.js-hide-on-load.js-show-on-ready{ :href => '#' }
         %span.text
           = t('cardsets.study.cards.click_to_flip')

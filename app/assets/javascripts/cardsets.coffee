@@ -64,6 +64,46 @@ namespace 'kksystem.cardsets.study', (ns) ->
       e.preventDefault()
       return false
 
+    #Edit card button.
+    $('.js-front .edit-button, .js-back .edit-button').click (e) ->
+      card = $(e.target).closest('.card')
+      card.find('.js-card-text').hide()
+      card.find('.js-edit-card-text').show()
+      card.find('.edit-button').hide()
+      card.find('.save-button').show()
+
+    #Save card button.
+    $('.js-front .save-button, .js-back .save-button').click (e) ->
+      return unless ns.use_card #Shouldn't happen, but safety first.
+      card = $(e.target).closest('.card')
+      side = if card.hasClass('js-front') then 'front' \
+             else if card.hasClass('js-back') then 'back' \
+             else null
+      unless side
+        ns.error()
+        return
+
+      switch side
+        when 'front'
+          ns.use_card.set('front', card.find('.js-edit-card-text').val())
+        when 'back'
+          ns.use_card.set('back', card.find('.js-edit-card-text').val())
+
+      cleanup = ->
+        card.find('.js-edit-card-text').hide()
+        card.find('.js-card-text').show()
+        card.find('.save-button').hide()
+        card.find('.edit-button').show()
+
+      ns.use_card.save (success) ->
+        if success
+          ns.setCardText(switch side
+                         when 'front' then { front: ns.use_card.front }
+                         when 'back' then { back: ns.use_card.back })
+          cleanup()
+        else
+          ns.error()
+
     $('#options').hide('fast')
     $('#study').show('fast')
 
@@ -80,7 +120,13 @@ namespace 'kksystem.cardsets.study', (ns) ->
       when 'single-box' then kksystem.cardsets.study.single_box.init(params)
       when 'no-box' then kksystem.cardsets.study.no_box.init(params)
 
-  # Public: Sets front and back card text.
+  # Public: Sets the current card being displayed.
+  #
+  # card - Client model containing card data.
+  ns.setCurrentCard = (card) ->
+    ns.use_card = card
+
+  # Public: Sets front and back card text including edit text areas.
   #
   # config - Configuration options.
   #   :front - Text on the front of the card.
@@ -88,10 +134,14 @@ namespace 'kksystem.cardsets.study', (ns) ->
   ns.setCardText = (config) ->
     front_html = $('<span>').text(config.front).html()
     back_html = $('<span>').text(config.back).html()
-    $('#study .js-front .js-card-text').html(front_html.
-      replace(/\r\n|\r|\n/g, '<br />'))
-    $('#study .js-back .js-card-text').html(back_html.
-      replace(/\r\n|\r|\n/g, '<br />'))
+    if config.front
+      $('#study .js-front .js-card-text').html(front_html.
+        replace(/\r\n|\r|\n/g, '<br />'))
+      $('#study .js-front .edit-text-field').val(config.front)
+    if config.back
+      $('#study .js-back .js-card-text').html(back_html.
+        replace(/\r\n|\r|\n/g, '<br />'))
+      $('#study .js-back .edit-text-field').val(config.back)
 
   # Public: Prepares the correct and incorrect buttons in the study view.
   #
@@ -201,6 +251,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
       #If incomplete cards, study them, else move to the next box.
       if incomplete_cards.length > 0
         @use_card = incomplete_cards[0]
+        kksystem.cardsets.study.setCurrentCard @use_card
         kksystem.cardsets.study.setCardText
           front: @use_card.front
           back: @use_card.back
@@ -283,6 +334,7 @@ namespace 'kksystem.cardsets.study.single_box', (ns) ->
     #If incomplete cards, continue studying, else end study.
     if incomplete_cards.length > 0
       @use_card = incomplete_cards[0]
+      kksystem.cardsets.study.setCurrentCard @use_card
       kksystem.cardsets.study.setCardText
         front: @use_card.front
         back: @use_card.back
@@ -336,6 +388,7 @@ namespace 'kksystem.cardsets.study.no_box', (ns) ->
     #If incomplete cards, continue studying, else end study.
     if incomplete_cards.length > 0
       @use_card = incomplete_cards[0]
+      kksystem.cardsets.study.setCurrentCard @use_card
       kksystem.cardsets.study.setCardText
         front: @use_card.front
         back: @use_card.back
