@@ -29,6 +29,7 @@ gem 'pg'
 gem 'mysql'
 
 gem 'devise', '~> 3.2'
+gem 'devise-i18n', '~> 0.11.2'
 gem 'squeel', '~> 1.1'
 gem 'foreigner', '~> 1.6'
 gem 'simple_form', '~> 3.0'
