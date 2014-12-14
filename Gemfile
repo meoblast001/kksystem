@@ -24,6 +24,10 @@ group :test do
   gem 'selenium-webdriver', '~> 2.42.0'
 end
 
+group :production do
+  gem 'dalli', '~> 2.7.2'
+end
+
 gem 'sqlite3'
 gem 'pg'
 gem 'mysql'
