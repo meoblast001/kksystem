@@ -22,5 +22,5 @@
     = f.input :cardset_id, :as => :hidden
   = f.input :front, :as => :text, :label => t('cards.front')
   = f.input :back, :as => :text, :label => t('cards.back')
-  = f.input :current_cardbox_id, :label => t('cards.current_cardbox'), :collection => @cardboxes, :include_blank => t('cards.show.no_box')
+  = f.input :current_cardbox_id, :label => t('cards.current_cardbox'), :collection => @cardboxes, :include_blank => t('cards.show.no_box'), :selected => (if @entity.id then @entity.current_cardbox_id else (if @cardboxes.length.zero? then nil else @cardboxes.first.id end) end)
   = f.button :submit, :value => (@entity.new_record? ? t('cards.new.submit') : t('cards.edit.submit')), :class => 'btn btn-primary'

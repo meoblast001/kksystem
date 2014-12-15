@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class CardsController < BelongsToCardsetController
-  before_action :populate_cardboxes, :only => [:new, :create, :edit, :update]
+  before_action :populate_cardboxes, :only => [:new, :create, :show, :update]
 
   def model
     respond_to do |format|
@@ -39,7 +39,7 @@ class CardsController < BelongsToCardsetController
                    first.cardboxes
     else
       @cardboxes = current_user.cards.where(:id => params[:id]).first.cardset.
-                   cardboxes
+                   cardboxes.order(:review_frequency)
     end
   end
 
