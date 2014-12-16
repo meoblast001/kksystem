@@ -75,6 +75,13 @@ class BelongsToCardsetController < ApplicationController
     end
   end
 
+  def destroy
+    @entity = current_user.send(entity_type.name.underscore.pluralize).
+              where(:id  => params[:id]).first
+    @entity.destroy unless @entity.nil?
+    redirect_to :action => :index, :cardset_id => @entity.cardset_id
+  end
+
   protected
 
   # Protected: Abstract. Define in child controller as entity class.

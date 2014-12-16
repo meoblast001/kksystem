@@ -19,3 +19,7 @@ en:
 
     show:
       header: 'Edit Box'
+
+    delete:
+      button: 'Delete Box'
+      sure: 'Are you sure you would like to delete this box?'

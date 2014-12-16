@@ -21,3 +21,7 @@ de:
     show:
       header: 'Karte bearbeiten'
       no_box: '[Kein Kasten]'
+
+    delete:
+      button: 'Karte löschen'
+      sure: 'Bist Du sicher, dass Du diese Karte löschen möchtest?'

@@ -21,3 +21,7 @@ en:
     show:
       header: 'Edit Card'
       no_box: '[No Box]'
+
+    delete:
+      button: 'Delete Card'
+      sure: 'Are you sure you would like to delete this card?'

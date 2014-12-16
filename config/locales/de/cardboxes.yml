@@ -19,3 +19,7 @@ de:
 
     show:
       header: 'Kasten bearbeiten'
+
+    delete:
+      button: 'Kasten löschen'
+      sure: 'Bist Du sicher, dass Du diesen Kasten löschen möchtest?'

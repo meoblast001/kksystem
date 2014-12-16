@@ -13,6 +13,14 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+:coffeescript
+  $(document).ready ->
+    $('#delete').click (e) ->
+      unless confirm(I18n.t('cards.delete.sure'))
+        e.preventDefault()
+        return false
+      return true
+
 - unless alert.nil?
   .error_box= alert
 - if flash[:notice] and flash[:type] == :success
@@ -24,3 +32,8 @@
   = f.input :back, :as => :text, :label => t('cards.back')
   = f.input :current_cardbox_id, :label => t('cards.current_cardbox'), :collection => @cardboxes, :include_blank => t('cards.show.no_box'), :selected => (if @entity.id then @entity.current_cardbox_id else (if @cardboxes.length.zero? then nil else @cardboxes.first.id end) end)
   = f.button :submit, :value => (@entity.new_record? ? t('cards.new.submit') : t('cards.edit.submit')), :class => 'btn btn-primary'
+
+- if @entity.id
+  = simple_form_for @entity, :url => card_url(@entity), :method => :delete do |f|
+    .delete-container
+      = f.button :submit, :value => t('cards.delete.button'), :id => 'delete', :class => 'btn btn-danger full-width'
