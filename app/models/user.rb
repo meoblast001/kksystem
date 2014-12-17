@@ -17,9 +17,9 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :validatable,
          :confirmable, :authentication_keys => [:login]
 
-  has_many :cardsets
-  has_many :cardboxes
-  has_many :cards
+  has_many :cardsets, :dependent => :destroy
+  has_many :cardboxes, :dependent => :destroy
+  has_many :cards, :dependent => :destroy
 
   validates :username, :email, :uniqueness => { :case_sensitive => false }
 

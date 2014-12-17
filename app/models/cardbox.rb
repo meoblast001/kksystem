@@ -18,7 +18,7 @@ class Cardbox < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :cardset
-  has_many :cards
+  has_many :cards, :foreign_key => 'current_cardbox_id', :dependent => :destroy
 
   validates_presence_of :user_id, :cardset_id, :name, :review_frequency
   validates :review_frequency, :numericality => { :greater_than => 0 }

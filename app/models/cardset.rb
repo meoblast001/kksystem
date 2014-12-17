@@ -19,8 +19,8 @@ class Cardset < ActiveRecord::Base
     :last_reintroduced_cards]
 
   belongs_to :user
-  has_many :cardboxes
-  has_many :cards
+  has_many :cardboxes, :dependent => :destroy
+  has_many :cards, :dependent => :destroy
 
   validates_presence_of :user_id, :name
   validates_inclusion_of :reintroduce_cards, :in => [true, false]
