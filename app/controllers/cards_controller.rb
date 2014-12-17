@@ -36,7 +36,7 @@ class CardsController < BelongsToCardsetController
   def populate_cardboxes
     if params[:cardset_id]
       @cardboxes = current_user.cardsets.where(:id => params[:cardset_id]).
-                   first.cardboxes
+                   first.cardboxes.order(:review_frequency)
     else
       @cardboxes = current_user.cards.where(:id => params[:id]).first.cardset.
                    cardboxes.order(:review_frequency)
