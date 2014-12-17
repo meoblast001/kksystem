@@ -46,6 +46,8 @@ namespace 'kksystem.belongs_to_cardset', (ns) ->
 
               #Reset form.
               this.reset()
+              #Focus on first visible input.
+              $(this).find(':input:visible').first().focus()
             else
               #Show error box on failure.
               js_error_box.text(I18n.t(options.entity_type_plural +
