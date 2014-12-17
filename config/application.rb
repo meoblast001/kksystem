@@ -9,7 +9,7 @@ Bundler.require(:default, Rails.env)
 require File.expand_path('../user_settings', __FILE__)
 
 module Kksystem
-  VERSION = '3.0.0'
+  VERSION = '3.0.1'
 
   class Application < Rails::Application
     #Settings in config/environments/* take precedence over those specified
