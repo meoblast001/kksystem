@@ -17,6 +17,10 @@ de:
       create_link: 'Neue Zusammenstellung erstellen'
       actions: 'Actions'
 
+    delete:
+      button: 'Zusammenstellung löschen'
+      sure: 'Bist Du sicher, dass Du diese Zusammenstellung löschen möchtest?'
+
     import_export:
       type: 'Art'
       types:

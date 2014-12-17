@@ -57,6 +57,12 @@ class CardsetsController < ApplicationController
     end
   end
 
+  def destroy
+    @cardset = current_user.cardsets.where(:id  => params[:id]).first
+    @cardset.destroy unless @cardset.nil?
+    redirect_to :action => :index
+  end
+
   def study
     @cardsets = current_user.cardsets.order(:created_at)
     @study_types = [

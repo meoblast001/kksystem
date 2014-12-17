@@ -17,6 +17,10 @@ en:
       create_link: 'Create New Cardset'
       actions: 'Actions'
 
+    delete:
+      button: 'Delete Cardset'
+      sure: 'Are you sure you would like to delete this cardset?'
+
     import_export:
       type: 'Type'
       types:

@@ -13,6 +13,14 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+:coffeescript
+  $(document).ready ->
+    $('#delete').click (e) ->
+      unless confirm(I18n.t('cardsets.delete.sure'))
+        e.preventDefault()
+        return false
+      return true
+
 - unless alert.nil?
   .error_box= alert
 = simple_form_for @cardset do |f|
@@ -21,3 +29,8 @@
   = f.input :reintroduce_cards_amount, :label => t('cardsets.reintroduce_cards_amount')
   = f.input :reintroduce_cards_frequency, :label => t('cardsets.reintroduce_cards_frequency')
   = f.button :submit, :value => (@cardset.new_record? ? t('cardsets.new.submit') : t('cardsets.edit.submit')), :class => 'btn btn-primary'
+
+- if @cardset.id
+  = simple_form_for @cardset, :url => cardset_url(@cardset), :method => :delete do |f|
+    .delete-container
+      = f.button :submit, :value => t('cardsets.delete.button'), :id => 'delete', :class => 'btn btn-danger full-width'
