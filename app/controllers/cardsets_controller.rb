@@ -15,7 +15,7 @@
 
 class CardsetsController < ApplicationController
   def index
-    cardset = current_user.cardsets.first
+    cardset = current_user.cardsets.order(:created_at).first
     if cardset.nil?
       redirect_to new_cardset_path
     else

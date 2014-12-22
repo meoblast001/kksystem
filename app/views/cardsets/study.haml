@@ -32,7 +32,7 @@
       %label= t('cardsets.study.options.cardbox')
       - @cardsets.each do |cardset|
         %select{ :id => "cardbox-for-cardset-#{cardset.id}", :name => 'cardbox' }
-          - cardset.cardboxes.each do |cardbox|
+          - cardset.cardboxes.order(:review_frequency).each do |cardbox|
             %option{ :value => cardbox.id }= cardbox.name
 
     %a#options-form-submit.btn.btn-primary.full-width{ :href => '#' }= t('cardsets.study.options.submit')
