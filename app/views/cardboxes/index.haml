@@ -25,6 +25,15 @@
           %input.btn.btn-default{ :type => 'submit', :value => t('cardboxes.index.search') }
 
   - if @entities.count > 0
+    %table.prev-next-buttons
+      %tr
+        %td
+          - if @prev[:offset]
+            %a{ :href => list_cardboxes_path(@cardset_id, @prev) }= t('cardboxes.index.prev')
+        %td
+          - if @next[:offset]
+            %a{ :href => list_cardboxes_path(@cardset_id, @next) }= t('cardboxes.index.next')
+
     .display-table.fixed-full-sized-table.styled-table
       .display-thead
         .display-td= t('cardboxes.name')
@@ -34,5 +43,15 @@
           %a.display-tr{ :href => cardbox_path(cardbox) }
             .display-td= cardbox.name
             .display-td= cardbox.review_frequency
+
+    %table.prev-next-buttons
+      %tr
+        %td
+          - if @prev[:offset]
+            %a{ :href => list_cardboxes_path(@cardset_id, @prev) }= t('cardboxes.index.prev')
+        %td
+          - if @next[:offset]
+            %a{ :href => list_cardboxes_path(@cardset_id, @next) }= t('cardboxes.index.next')
+
   - else
     %h5= t('cardboxes.index.none')

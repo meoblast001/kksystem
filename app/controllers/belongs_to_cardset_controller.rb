@@ -14,9 +14,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class BelongsToCardsetController < ApplicationController
+  INDEX_ITEM_LIMIT = 50
+
   def index
-    @entities = current_user.send(entity_type.name.underscore.pluralize).
-                where(:cardset_id => params[:cardset_id])
+    @cardset_id = params[:cardset_id]
+    all_entities = current_user.send(entity_type.name.underscore.pluralize).
+                   where(:cardset_id => @cardset_id)
+    @entities = all_entities.offset(params[:offset] || 0).
+                limit(INDEX_ITEM_LIMIT)
+    #Determine previous and next offsets.
+    offset = params[:offset].to_i
+    prev_off = if offset - INDEX_ITEM_LIMIT > 0 then offset - INDEX_ITEM_LIMIT
+               elsif offset > 0 then 0 else nil end
+    next_off = if offset + INDEX_ITEM_LIMIT < all_entities.count
+               then offset + INDEX_ITEM_LIMIT else nil end
+    @prev = { :offset => prev_off }
+    @next = { :offset => next_off }
+    if params[:search]
+      @prev[:search] = @next[:search] = params[:search]
+    end
 
     @entities = @entities.search(params[:search]) if params[:search]
   end

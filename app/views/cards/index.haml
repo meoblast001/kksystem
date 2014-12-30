@@ -25,6 +25,15 @@
           %input.btn.btn-default{ :type => 'submit', :value => t('cards.index.search') }
 
   -if @entities.count > 0
+    %table.prev-next-buttons
+      %tr
+        %td
+          - if @prev[:offset]
+            %a{ :href => list_cards_path(@cardset_id, @prev) }= t('cards.index.prev')
+        %td
+          - if @next[:offset]
+            %a{ :href => list_cards_path(@cardset_id, @next) }= t('cards.index.next')
+
     .display-table.fixed-full-sized-table.styled-table
       .display-thead
         .display-td= t('cards.front')
@@ -34,5 +43,15 @@
           %a.display-tr{ :href => card_path(card) }
             .display-td= card.front
             .display-td= card.back
+
+    %table.prev-next-buttons
+      %tr
+        %td
+          - if @prev[:offset]
+            %a{ :href => list_cards_path(@cardset_id, @prev) }= t('cards.index.prev')
+        %td
+          - if @next[:offset]
+            %a{ :href => list_cards_path(@cardset_id, @next) }= t('cards.index.next')
+
   - else
     %h5= t('cardboxes.index.none')

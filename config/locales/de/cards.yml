@@ -8,6 +8,8 @@ de:
       header: 'Kartenliste'
       search: 'Suchen'
       none: 'Keine Karten. Verfasse einige!'
+      prev: 'Vorherige'
+      next: 'Nächste'
 
     new:
       success_notice: 'Karte erfolgreich verfasst.'

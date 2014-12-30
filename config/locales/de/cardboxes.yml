@@ -7,6 +7,8 @@ de:
       header: 'Kastenliste'
       search: 'Suchen'
       none: 'Keine Kästen. Erstelle einige!'
+      prev: 'Vorherige'
+      next: 'Nächste'
 
     new:
       success_notice: 'Kasten erfolgreich erstellt.'

@@ -8,6 +8,8 @@ en:
       header: 'List of Cards'
       search: 'Search'
       none: 'No cards. Create some!'
+      prev: 'Previous'
+      next: 'Next'
 
     new:
       success_notice: 'Card created successfully.'
