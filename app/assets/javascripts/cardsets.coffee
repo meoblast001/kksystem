@@ -191,13 +191,14 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
         unless cardboxes
           kksystem.cardsets.study.error()
           return
+        @cardboxes = cardboxes
         now = new Date()
-        @cardboxes = cardboxes.filter (item) ->
+        for item in @cardboxes
           item.last_reviewed = 0 unless item.last_reviewed
           next_review = new Date(item.last_reviewed)
           next_review.setDate(next_review.getDate() + item.review_frequency)
           next_review.setHours(next_review.getHours() - 6)
-          next_review < now
+          item.done = true if next_review >= now
         if @cardset.reintroduce_cards
           next_reintroduce = new Date(@cardset.last_reintroduced_cards)
           next_reintroduce.setDate(next_reintroduce.getDate() +
@@ -211,7 +212,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
               unless cards
                 kksystem.cardsets.study.error()
                 return
-              @cardboxes.push({cards})
+              @cardboxes.push({id: null, cards})
               ns.displayNextCard()
           else
             ns.displayNextCard()
