@@ -47,6 +47,7 @@ de:
         submit: 'Exportieren'
 
     study:
+      title: 'Lernen'
       loading: 'Lädt...'
       error: 'Entschuldigung, ein Fehler ist geschehen.'
 

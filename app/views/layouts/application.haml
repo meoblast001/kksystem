@@ -28,4 +28,6 @@
     #header
       %a#return_home{ :href => root_url }
         = image_tag 'kksystem_small.png', :alt => 'KKSystem'
+    #breadcrumbs
+      = render_breadcrumbs :separator => ' &#10132; '
     = yield

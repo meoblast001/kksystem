@@ -35,10 +35,15 @@ class BelongsToCardsetController < ApplicationController
     end
 
     @entities = @entities.search(params[:search]) if params[:search]
+
+    @cardset = current_user.cardsets.where(:id => params[:cardset_id]).first
+    entity_breadcrumbs
   end
 
   def new
     @entity = entity_type.new(:cardset_id => params[:cardset_id])
+    @cardset = current_user.cardsets.where(:id => params[:cardset_id]).first
+    entity_breadcrumbs
     render :form
   end
 
@@ -57,6 +62,9 @@ class BelongsToCardsetController < ApplicationController
           flash[:type] = :success
           redirect_to :action => :new, :cardset_id => @entity.cardset_id
         else
+          @cardset = current_user.cardsets.where(:id => params[:cardset_id]).
+                     first
+          entity_breadcrumbs
           render :form
         end
       end
@@ -75,6 +83,8 @@ class BelongsToCardsetController < ApplicationController
   def show
     @entity = current_user.send(entity_type.name.underscore.pluralize).
               where(:id => params[:id]).first
+    @cardset = @entity.cardset
+    entity_breadcrumbs
     render :form
   end
 
@@ -87,6 +97,8 @@ class BelongsToCardsetController < ApplicationController
     if @entity.save
       redirect_to :action => :index, :cardset_id => @entity.cardset_id
     else
+      @cardset = @entity.cardset
+      entity_breadcrumbs
       render :form
     end
   end

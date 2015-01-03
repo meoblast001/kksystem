@@ -49,4 +49,23 @@ class CardsController < BelongsToCardsetController
   def allowed_params
     params.require(:card).permit(:front, :back, :current_cardbox_id)
   end
+
+  def entity_breadcrumbs
+    #Cardset page.
+    add_breadcrumb I18n.t('cardsets.show.header') + ': ' + @cardset.name,
+                   cardset_path(@cardset.id)
+
+    #Current page.
+    case action_name.to_sym
+      when :index
+        add_breadcrumb I18n.t('cards.index.header'),
+                       list_cards_path(@cardset.id)
+      when :new, :create
+        add_breadcrumb I18n.t('cards.new.header'), new_card_path(@cardset.id)
+      when :show, :update
+        add_breadcrumb I18n.t('cards.index.header'),
+                       list_cards_path(@cardset.id)
+        add_breadcrumb I18n.t('cards.show.header'), card_path(@entity.id)
+    end
+  end
 end

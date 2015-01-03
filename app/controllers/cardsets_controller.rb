@@ -24,6 +24,8 @@ class CardsetsController < ApplicationController
   end
 
   def new
+    root_breadcrumb
+    add_breadcrumb I18n.t('cardsets.new.header'), new_cardset_path
     @cardset = Cardset.new
   end
 
@@ -34,6 +36,8 @@ class CardsetsController < ApplicationController
     if @cardset.save
       redirect_to @cardset
     else
+      root_breadcrumb
+      add_breadcrumb I18n.t('cardsets.new.header'), new_cardset_path
       render :new
     end
   end
@@ -42,6 +46,7 @@ class CardsetsController < ApplicationController
   def show
     @cardsets = current_user.cardsets.order(:created_at)
     @cardset = @cardsets.where(:id => params[:id]).first
+    root_breadcrumb
   end
 
   def update
@@ -53,6 +58,7 @@ class CardsetsController < ApplicationController
       redirect_to @cardset
     else
       @cardsets = current_user.cardsets.order(:created_at)
+      root_breadcrumb
       render :show
     end
   end
@@ -64,6 +70,7 @@ class CardsetsController < ApplicationController
   end
 
   def study
+    add_breadcrumb I18n.t('cardsets.study.title'), cardsets_study_path
     @cardsets = current_user.cardsets.order(:created_at)
     @study_types = [
         { :id => 'normal', :name => I18n.t('cardsets.study.types.normal') },
@@ -74,19 +81,26 @@ class CardsetsController < ApplicationController
   end
 
   def import
+    @cardset = current_user.cardsets.where(:id  => params[:cardset_id]).first
+    root_breadcrumb
+    add_breadcrumb I18n.t('cardsets.import.header')
   end
 
   def importSubmit
-    cardset = current_user.cardsets.where(:id => params[:cardset_id]).first
+    @cardset = current_user.cardsets.where(:id => params[:cardset_id]).first
     content = File.read(params[:import_file].path)
     begin
       ImportExport.import(params[:import_type], cardset, content)
     rescue ImportExport::ImportFailureError => e
       @error = e.message
     end
+    root_breadcrumb
   end
 
   def export
+    @cardset = current_user.cardsets.where(:id  => params[:cardset_id]).first
+    root_breadcrumb
+    add_breadcrumb I18n.t('cardsets.export.header')
   end
 
   def exportSubmit
@@ -114,5 +128,15 @@ class CardsetsController < ApplicationController
   def allowed_params
     params.require(:cardset).permit(:name, :reintroduce_cards,
       :reintroduce_cards_amount, :reintroduce_cards_frequency)
+  end
+
+  def root_breadcrumb
+    case action_name.to_sym
+      when :new, :create
+        add_breadcrumb I18n.t('cardsets.show.header'), cardsets_path
+      when :show, :update, :import, :export
+        add_breadcrumb I18n.t('cardsets.show.header') + ': ' + @cardset.name,
+                       cardset_path(@cardset.id)
+    end
   end
 end

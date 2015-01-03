@@ -1,6 +1,7 @@
 de:
   site:
     main_menu:
+      title: 'Hauptseite'
       study: 'Lernen'
       edit: 'Bearbeiten'
       settings: 'Einstellungen'

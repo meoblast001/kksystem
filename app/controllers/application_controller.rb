@@ -20,6 +20,8 @@ class ApplicationController < ActionController::Base
 
   before_action :setLocale
 
+  add_breadcrumb I18n.t('site.main_menu.title'), :root_path
+
   private
 
   def setLocale

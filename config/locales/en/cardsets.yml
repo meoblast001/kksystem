@@ -47,6 +47,7 @@ en:
         submit: 'Export'
 
     study:
+      title: 'Study'
       loading: 'Loading...'
       error: 'Sorry, an error occurred.'
 

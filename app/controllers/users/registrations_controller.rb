@@ -16,6 +16,18 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_filter :configure_permitted_parameters
 
+  def edit
+    add_breadcrumb I18n.t('users.registrations.edit.header'),
+                   edit_user_registration_path
+    super
+  end
+
+  def update
+    add_breadcrumb I18n.t('users.registrations.edit.header'),
+                   edit_user_registration_path
+    super
+  end
+
   protected
 
   def configure_permitted_parameters

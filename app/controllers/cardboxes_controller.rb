@@ -35,4 +35,24 @@ class CardboxesController < BelongsToCardsetController
   def allowed_params
     params.require(:cardbox).permit(:name, :review_frequency)
   end
+
+  def entity_breadcrumbs
+    #Cardset page.
+    add_breadcrumb I18n.t('cardsets.show.header') + ': ' + @cardset.name,
+                   cardset_path(@cardset.id)
+
+    #Current page.
+    case action_name.to_sym
+      when :index
+        add_breadcrumb I18n.t('cardboxes.index.header'),
+                       list_cardboxes_path(@cardset.id)
+      when :new, :create
+        add_breadcrumb I18n.t('cardboxes.new.header'),
+                       new_cardbox_path(@cardset.id)
+      when :show, :update
+        add_breadcrumb I18n.t('cardboxes.index.header'),
+                       list_cardboxes_path(@cardset.id)
+        add_breadcrumb I18n.t('cardboxes.show.header'), cardbox_path(@entity.id)
+    end
+  end
 end

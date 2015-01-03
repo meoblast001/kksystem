@@ -1,6 +1,7 @@
 en:
   site:
     main_menu:
+      title: 'Main Menu'
       study: 'Study'
       edit: 'Edit'
       settings: 'Settings'
