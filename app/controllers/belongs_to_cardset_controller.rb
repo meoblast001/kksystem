@@ -20,8 +20,10 @@ class BelongsToCardsetController < ApplicationController
     @cardset_id = params[:cardset_id]
     all_entities = current_user.send(entity_type.name.underscore.pluralize).
                    where(:cardset_id => @cardset_id)
+    all_entities = all_entities.search(params[:search]) if params[:search]
     @entities = all_entities.offset(params[:offset] || 0).
                 limit(INDEX_ITEM_LIMIT)
+
     #Determine previous and next offsets.
     offset = params[:offset].to_i
     prev_off = if offset - INDEX_ITEM_LIMIT > 0 then offset - INDEX_ITEM_LIMIT
@@ -33,8 +35,6 @@ class BelongsToCardsetController < ApplicationController
     if params[:search]
       @prev[:search] = @next[:search] = params[:search]
     end
-
-    @entities = @entities.search(params[:search]) if params[:search]
 
     @cardset = current_user.cardsets.where(:id => params[:cardset_id]).first
     entity_breadcrumbs
