@@ -275,6 +275,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
       kksystem.cardsets.study.finishStudy()
 
   ns.correct = ->
+    kksystem.cardsets.study.startLoading()
     index = ((if ns.use_card.current_cardbox_id == cardbox.id then \
               true else false) for cardbox in ns.cardboxes).indexOf(true)
     new_cardbox = if index == -1
@@ -292,6 +293,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
       ns.displayNextCard()
 
   ns.incorrect = ->
+    kksystem.cardsets.study.startLoading()
     ns.use_card.set('current_cardbox_id', if ns.cardboxes[0] \
                                           then ns.cardboxes[0].id else null)
     ns.use_card.save (success) ->
@@ -345,10 +347,12 @@ namespace 'kksystem.cardsets.study.single_box', (ns) ->
       kksystem.cardsets.study.finishStudy()
 
   ns.correct = ->
+    kksystem.cardsets.study.startLoading()
     ns.use_card.done = true
     ns.displayNextCard()
 
   ns.incorrect = ->
+    kksystem.cardsets.study.startLoading()
     ns.use_card.done = true
     ns.displayNextCard()
 
@@ -399,10 +403,12 @@ namespace 'kksystem.cardsets.study.no_box', (ns) ->
       kksystem.cardsets.study.finishStudy()
 
   ns.correct = ->
+    kksystem.cardsets.study.startLoading()
     ns.use_card.done = true
     ns.displayNextCard()
 
   ns.incorrect = ->
+    kksystem.cardsets.study.startLoading()
     ns.use_card.done = true
     if ns.lowest_cardbox
       ns.use_card.set('current_cardbox_id', ns.lowest_cardbox.id)
