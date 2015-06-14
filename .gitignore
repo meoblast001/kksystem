@@ -27,3 +27,6 @@
 
 #Generated translations file
 /public/javascripts/translations.js
+
+#Uploads.
+/public/uploads/*

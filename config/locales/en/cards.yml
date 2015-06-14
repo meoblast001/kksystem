@@ -3,6 +3,8 @@ en:
     front: 'Front'
     back: 'Back'
     current_cardbox: 'Current Cardbox'
+    attachment_front: 'Attachment on Front'
+    attachment_back: 'Attachment on Back'
 
     index:
       header: 'List of Cards'

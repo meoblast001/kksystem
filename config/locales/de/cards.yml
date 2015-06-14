@@ -3,6 +3,8 @@ de:
     front: 'Vorderseite'
     back: 'Rückseite'
     current_cardbox: 'Aktueller Kasten'
+    attachment_front: 'Anhang auf der Vorderseite'
+    attachment_back: 'Anhang auf der Rückseite'
 
     index:
       header: 'Kartenliste'

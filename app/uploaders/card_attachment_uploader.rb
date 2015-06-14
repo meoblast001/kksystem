@@ -1,4 +1,4 @@
-# Copyright (C) 2014 Braden Walters
+# Copyright (C) 2015 Braden Walters
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -13,25 +13,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class Card < ActiveRecord::Base
-  CLIENT_MODEL_ATTRIBUTES = [:front, :back, :current_cardbox_id]
+class CardAttachmentUploader < CarrierWave::Uploader::Base
+  storage :file
 
-  belongs_to :user
-  belongs_to :cardset
-  belongs_to :current_cardbox, :class_name => 'Cardbox'
-  has_many :attachments, :class_name => 'CardAttachment', :dependent => :destroy
-
-  validates_presence_of :user_id, :cardset_id, :front, :back
-
-  def self.search(str)
-    where { front.matches("%#{str}%") | back.matches("%#{str}%") }
+  def store_dir
+    "#{Rails.root}/public/uploads/#{model.class.to_s.underscore}/" +
+    "#{mounted_as}/#{model.id}"
   end
 
-  def front_attachment
-    attachments.where(:side => CardAttachment::FRONT).first
-  end
-
-  def back_attachment
-    attachments.where(:side => CardAttachment::BACK).first
+  def extension_white_list
+    %w(jpg jpeg gif png)
   end
 end

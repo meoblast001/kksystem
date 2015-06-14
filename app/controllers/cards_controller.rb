@@ -25,6 +25,26 @@ class CardsController < BelongsToCardsetController
     end
   end
 
+  def post_save(card)
+    if params[:attachment_front]
+      attachment = card.attachments.
+                   where(:side => CardAttachment::FRONT).first ||
+                   CardAttachment.new(:card_id => card.id,
+                                      :side => CardAttachment::FRONT)
+      attachment.file = params[:attachment_front]
+      attachment.save!
+    end
+
+    if params[:attachment_back]
+      attachment = card.attachments.
+                   where(:side => CardAttachment::BACK).first ||
+                   CardAttachment.new(:card_id => card.id,
+                                      :side => CardAttachment::BACK)
+      attachment.file = params[:attachment_back]
+      attachment.save!
+    end
+  end
+
   protected
 
   def entity_type

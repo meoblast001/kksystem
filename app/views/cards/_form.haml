@@ -25,12 +25,25 @@
   .error_box= alert
 - if flash[:notice] and flash[:type] == :success
   .success_box= flash[:notice]
-= simple_form_for @entity do |f|
+= simple_form_for @entity, :html => { :multipart => true } do |f|
   - if @entity.new_record?
     = f.input :cardset_id, :as => :hidden
   = f.input :front, :as => :text, :label => t('cards.front')
   = f.input :back, :as => :text, :label => t('cards.back')
   = f.input :current_cardbox_id, :label => t('cards.current_cardbox'), :collection => @cardboxes, :include_blank => t('cards.show.no_box'), :selected => (if @entity.id then @entity.current_cardbox_id else (if @cardboxes.length.zero? then nil else @cardboxes.first.id end) end)
+  #card-attachments
+    .input.attachment-front
+      %label.text= t('cards.attachment_front')
+      %input{ :name => 'attachment_front', :type => 'file' }
+    - if @entity.front_attachment
+      .attachment-thumb
+        = image_tag @entity.front_attachment.file.url
+    .input.attachment-back
+      %label.text= t('cards.attachment_back')
+      %input{ :name => 'attachment_back', :type => 'file' }
+    - if @entity.back_attachment
+      .attachment-thumb
+        = image_tag @entity.back_attachment.file.url
   = f.button :submit, :value => (@entity.new_record? ? t('cards.new.submit') : t('cards.edit.submit')), :class => 'btn btn-primary'
 
 - if @entity.id

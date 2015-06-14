@@ -53,6 +53,8 @@ class BelongsToCardsetController < ApplicationController
     #TODO: Handle case where cardset_id is not provided.
     @entity.cardset_id = params[entity_type.name.underscore][:cardset_id]
     saved = @entity.save
+    #Entity-specific post-save method.
+    post_save @entity if respond_to? :post_save and saved
 
     respond_to do |format|
       format.html do
@@ -95,6 +97,8 @@ class BelongsToCardsetController < ApplicationController
     @entity.update_attributes(allowed_params)
 
     if @entity.save
+      #Entity-specific post-save method.
+      post_save @entity if respond_to? :post_save
       redirect_to :action => :index, :cardset_id => @entity.cardset_id
     else
       @cardset = @entity.cardset

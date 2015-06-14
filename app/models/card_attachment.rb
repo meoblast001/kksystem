@@ -1,4 +1,4 @@
-# Copyright (C) 2014 Braden Walters
+# Copyright (C) 2015 Braden Walters
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -13,25 +13,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class Card < ActiveRecord::Base
-  CLIENT_MODEL_ATTRIBUTES = [:front, :back, :current_cardbox_id]
+class CardAttachment < ActiveRecord::Base
+  belongs_to :card
 
-  belongs_to :user
-  belongs_to :cardset
-  belongs_to :current_cardbox, :class_name => 'Cardbox'
-  has_many :attachments, :class_name => 'CardAttachment', :dependent => :destroy
+  validates_presence_of :card_id, :side
 
-  validates_presence_of :user_id, :cardset_id, :front, :back
+  mount_uploader :file, CardAttachmentUploader
 
-  def self.search(str)
-    where { front.matches("%#{str}%") | back.matches("%#{str}%") }
-  end
-
-  def front_attachment
-    attachments.where(:side => CardAttachment::FRONT).first
-  end
-
-  def back_attachment
-    attachments.where(:side => CardAttachment::BACK).first
-  end
+  FRONT = 'front'
+  BACK = 'back'
 end
