@@ -41,17 +41,23 @@
     color: #000000
     text-decoration: none
     width: 95%
-    height: 200px
+    min-height: 200px
     line-height: 200px
     margin: 10px auto
     border: 1px solid #000000
     text-align: center
     background-color: #ffffff
+    overflow: hidden
 
     .contents
       display: inline-block
       vertical-align: middle
       line-height: normal
+
+      .attachment
+        img
+          width: 50%
+          height: auto
 
     .edit-button, .save-button
       position: absolute

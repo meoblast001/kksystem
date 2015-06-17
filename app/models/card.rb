@@ -14,7 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Card < ActiveRecord::Base
-  CLIENT_MODEL_ATTRIBUTES = [:front, :back, :current_cardbox_id]
+  CLIENT_MODEL_ATTRIBUTES = [:front, :back, :current_cardbox_id,
+                             :front_attachment_url, :back_attachment_url]
 
   belongs_to :user
   belongs_to :cardset
@@ -27,11 +28,23 @@ class Card < ActiveRecord::Base
     where { front.matches("%#{str}%") | back.matches("%#{str}%") }
   end
 
+  #Attachments.
   def front_attachment
     attachments.where(:side => CardAttachment::FRONT).first
   end
 
   def back_attachment
     attachments.where(:side => CardAttachment::BACK).first
+  end
+
+  #Attachment URLs.
+  def front_attachment_url
+    attachment = front_attachment
+    if attachment.nil? then nil else attachment.file.url end
+  end
+
+  def back_attachment_url
+    attachment = back_attachment
+    if attachment.nil? then nil else attachment.file.url end
   end
 end

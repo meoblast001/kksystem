@@ -97,9 +97,7 @@ namespace 'kksystem.cardsets.study', (ns) ->
 
       ns.use_card.save (success) ->
         if success
-          ns.setCardText(switch side
-                         when 'front' then { front: ns.use_card.front }
-                         when 'back' then { back: ns.use_card.back })
+          ns.setCardContent(ns.use_card)
           cleanup()
         else
           ns.error()
@@ -126,12 +124,18 @@ namespace 'kksystem.cardsets.study', (ns) ->
   ns.setCurrentCard = (card) ->
     ns.use_card = card
 
-  # Public: Sets front and back card text including edit text areas.
+  # Public: Sets front and back card text including edit text areas and
+  #   attachments.
   #
   # config - Configuration options.
   #   :front - Text on the front of the card.
   #   :back - Text on the back of the card.
-  ns.setCardText = (config) ->
+  #   :front_attachment_url - URL to attachment on front side of card, or null.
+  #   :back_attachment_url - URL to attachment on back side of card, or null.
+  ns.setCardContent = (config) ->
+    #Clear everything.
+    $('#study').find('.js-front, js-back').
+                find('.js-card-text, .js-card-attachment').html('')
     front_html = $('<span>').text(config.front).html()
     back_html = $('<span>').text(config.back).html()
     if config.front
@@ -142,6 +146,12 @@ namespace 'kksystem.cardsets.study', (ns) ->
       $('#study .js-back .js-card-text').html(back_html.
         replace(/\r\n|\r|\n/g, '<br />'))
       $('#study .js-back .edit-text-field').val(config.back)
+    if config.front_attachment_url
+      image = $('<img>').attr('src', config.front_attachment_url)
+      $('#study .js-front .js-card-attachment').html(image)
+    if config.back_attachment_url
+      image = $('<img>').attr('src', config.back_attachment_url)
+      $('#study .js-back .js-card-attachment').html(image)
 
   # Public: Prepares the correct and incorrect buttons in the study view.
   #
@@ -253,9 +263,7 @@ namespace 'kksystem.cardsets.study.normal', (ns) ->
       if incomplete_cards.length > 0
         @use_card = incomplete_cards[0]
         kksystem.cardsets.study.setCurrentCard @use_card
-        kksystem.cardsets.study.setCardText
-          front: @use_card.front
-          back: @use_card.back
+        kksystem.cardsets.study.setCardContent @use_card
         kksystem.cardsets.study.hookupCorrectnessButtons(ns.correct,
                                                          ns.incorrect)
         kksystem.cardsets.study.stopLoading()
@@ -338,9 +346,7 @@ namespace 'kksystem.cardsets.study.single_box', (ns) ->
     if incomplete_cards.length > 0
       @use_card = incomplete_cards[0]
       kksystem.cardsets.study.setCurrentCard @use_card
-      kksystem.cardsets.study.setCardText
-        front: @use_card.front
-        back: @use_card.back
+      kksystem.cardsets.study.setCardContent @use_card
       kksystem.cardsets.study.hookupCorrectnessButtons(ns.correct, ns.incorrect)
       kksystem.cardsets.study.stopLoading()
     else
@@ -394,9 +400,7 @@ namespace 'kksystem.cardsets.study.no_box', (ns) ->
     if incomplete_cards.length > 0
       @use_card = incomplete_cards[0]
       kksystem.cardsets.study.setCurrentCard @use_card
-      kksystem.cardsets.study.setCardText
-        front: @use_card.front
-        back: @use_card.back
+      kksystem.cardsets.study.setCardContent @use_card
       kksystem.cardsets.study.hookupCorrectnessButtons(ns.correct, ns.incorrect)
       kksystem.cardsets.study.stopLoading()
     else
