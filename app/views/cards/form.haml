@@ -15,11 +15,6 @@
 
 .page
   %h2= @entity.new_record? ? t('cards.new.header') : t('cards.show.header')
-
-  -#For Javascript post.
-  #js-success-box.success_box{ :style => 'display: none' }
-  #js-error-box.error_box{ :style => 'display: none' }
-
   = render 'form'
 
   - if @entity.new_record?

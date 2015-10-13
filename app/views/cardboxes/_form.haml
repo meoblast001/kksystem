@@ -21,10 +21,15 @@
         return false
       return true
 
-- unless alert.nil?
-  .error_box= alert
-- if flash[:notice] and flash[:type] == :success
-  .success_box= flash[:notice]
+- if not alert.nil?
+  #js-success-box.success_box{ :style => 'display: none' }
+  #js-error-box.error_box= alert
+- elsif flash[:notice] and flash[:type] == :success
+  #js-success-box.success_box= flash[:notice]
+  #js-error-box.error_box{ :style => 'display: none' }
+- else
+  #js-success-box.success_box{ :style => 'display: none' }
+  #js-error-box.error_box{ :style => 'display: none' }
 = simple_form_for @entity do |f|
   - if @entity.new_record?
     = f.input :cardset_id, :as => :hidden
