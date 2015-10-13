@@ -24,7 +24,21 @@ namespace 'kksystem.belongs_to_cardset', (ns) ->
   #   :entity_type_plural - Pluralised underscore name of entity.
   #   :submit_url - URL to which to post.
   ns.init_create_form = (options) ->
+    attachments = $("#new_#{options.entity_type} .js-attachment")
+
+    #Make note of attachments that are already added on page load. For example
+    #if an error or page reload occurs.
+    ns.contains_attachment = attachments.filter(-> $(this).val() != '').
+                             length > 0
+
+    #Make note of attachments being added.
+    attachments.change (event) -> ns.contains_attachment = true
+
     $("#new_#{options.entity_type}").submit (event) ->
+      #Adding attachments forces a full page post instead of AJAX.
+      if ns.contains_attachment
+        return true
+
       js_success_box = $('#js-success-box')
       js_error_box = $('#js-error-box')
 
