@@ -29,4 +29,6 @@ Kksystem::Application.routes.draw do
   resources :cards, :except => [:index, :new, :edit]
   get '/cards/list/:cardset_id' => 'cards#index', :as => :list_cards
   get '/cards/new/:cardset_id' => 'cards#new', :as => :new_card
+
+  get '/admin/statistics' => 'admin#statistics', :as => :admin_statistics
 end

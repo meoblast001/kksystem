@@ -17,5 +17,6 @@
 //= require bootstrap
 //= require i18n
 //= require i18n/translations
+//= require Chart
 //= require namespace
 //= require_tree .

@@ -1,0 +1,5 @@
+de:
+  admin:
+    statistics:
+      card_daily_creation:
+        label: 'Täglich verfasste Karten'

@@ -1,0 +1,5 @@
+en:
+  admin:
+    statistics:
+      card_daily_creation:
+        label: 'Card Daily Creation'
