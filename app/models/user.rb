@@ -49,4 +49,51 @@ class User < ActiveRecord::Base
       User.where(conds).first
     end
   end
+
+  # Public: Get statistics about how many users registered in a specific time
+  #   period.
+  #
+  # start_time - Time object containing the first week in the statistics.
+  # end_time - Time object containing the last week in the statistics.
+  #
+  # Returns a hash from date strings (format: 'YYYY-MM-DD') representing a day
+  # (usually the first) in the week to the amount of users created.
+  def self.weekly_creation_stats(start_time, end_time)
+    #Query data.
+    counts = User.group('CAST(created_at AS DATE)').where { created_at != nil }.
+             count
+
+    #Build statistics for each week. Sum query results for each day in that
+    #week, because the query returns statistics for dates, not weeks.
+    results = Hash.new
+    current_week = start_time.to_date
+    while current_week <= end_time.to_date
+      current_day = current_week.clone
+      current_count = 0
+      for current_day in self.week_of current_week
+        current_count += counts[current_day] if counts.has_key? current_day
+        current_day += 1.days
+      end
+      results[current_week.to_s] = current_count
+      current_week = self.week_of(current_week).last + 1.days
+    end
+
+    #Convert dates to strings.
+    results.inject(Hash.new) do |has, (key, value)|
+      results[key.to_s] = value
+      results
+    end
+  end
+
+  private
+
+  def self.week_of(date)
+    results = [date]
+    current_date = date + 1.days
+    while current_date.wday != 0
+      results.push current_date
+      current_date += 1.days
+    end
+    return results
+  end
 end

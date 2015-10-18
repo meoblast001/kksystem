@@ -15,6 +15,7 @@
 
 class AdminController < ApplicationController
   def statistics
+    @user_weekly_creation = User.weekly_creation_stats(1.years.ago, 0.years.ago)
     @card_daily_creation = Card.daily_creation_stats(1.months.ago, 0.months.ago)
   end
 end

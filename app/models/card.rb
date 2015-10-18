@@ -49,7 +49,7 @@ class Card < ActiveRecord::Base
   end
 
   # Public: Get statistics about how many cards have been created in a time
-  #     period.
+  #   period.
   #
   # start_time - Time object containing the first day in the statistics.
   # end_time - Time object containing the last day in the statistics.
@@ -65,7 +65,7 @@ class Card < ActiveRecord::Base
     #days with no created cards.
     results = Hash.new
     current_day = start_time.to_date
-    while current_day != end_time.to_date
+    while current_day <= end_time.to_date
       results[current_day.to_s] =
         if counts.has_key? current_day then counts[current_day] else 0 end
       current_day += 1.days

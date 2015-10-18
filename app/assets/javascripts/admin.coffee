@@ -16,7 +16,21 @@
 namespace 'kksystem.admin.statistics', (ns) ->
   # Public: Initialise admin statistics.
   ns.init = ->
+    initUserWeeklyCreationStats()
     initCardDailyCreationStats()
+
+  # Private: Load user weekly registration data and create a bar chart with the
+  #   data.
+  initUserWeeklyCreationStats = ->
+    raw_data = JSON.parse($('#data input[name=user_weekly_creation]').val())
+    data =
+      labels: (date for date, amount of raw_data)
+      datasets: [data: (amount for date, amount of raw_data)]
+    options =
+      animationSteps: 1
+
+    canvas = $('#user_weekly_creation').get(0)
+    chart = new Chart(canvas.getContext('2d')).Bar(data, options)
 
   # Private: Load card daily creation data and create a bar chart with the data.
   initCardDailyCreationStats = ->
