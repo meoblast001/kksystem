@@ -28,3 +28,8 @@
     %td
       %a.menu_button.logout{ :href => destroy_user_session_path }
         .text= t('site.main_menu.logout')
+  - if current_user.is_admin
+    %tr
+      %td{ :colspan => 2 }
+        %a.menu_button.admin{ :href => admin_statistics_path }
+          .text= t('site.main_menu.admin')

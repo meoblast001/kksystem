@@ -6,6 +6,7 @@ en:
       edit: 'Edit'
       settings: 'Settings'
       logout: 'Logout'
+      admin: 'Admin'
 
     forms:
       unknown_error_occurred: "An unknown error has occurred."
