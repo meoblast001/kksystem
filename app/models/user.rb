@@ -87,6 +87,12 @@ class User < ActiveRecord::Base
 
   private
 
+  # Private: Get the dates of all days remaining in a week.
+  #
+  # date - First date to consider in the week.
+  #
+  # Returns an array containing the parameter date and all days following it
+  # until the end of the week.
   def self.week_of(date)
     results = [date]
     current_date = date + 1.days
