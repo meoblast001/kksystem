@@ -1,7 +1,12 @@
 de:
   admin:
+    header: 'Verwaltung'
+
     statistics:
+      header: 'Statistik'
+
       user_weekly_creation:
         label: 'Wochentlich registrierte Benutzer'
+
       card_daily_creation:
         label: 'Täglich verfasste Karten'

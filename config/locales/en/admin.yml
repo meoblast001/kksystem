@@ -1,7 +1,12 @@
 en:
   admin:
+    header: 'Administration'
+
     statistics:
+      header: 'Statistics'
+
       user_weekly_creation:
         label: 'Weekly Registered Users'
+
       card_daily_creation:
         label: 'Card Daily Creation'
