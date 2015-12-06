@@ -14,6 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class AdminController < ApplicationController
+  before_action :generate_navlinks
+
   def statistics
     #Statistics page.
     add_breadcrumb I18n.t('admin.header'), admin_statistics_path
@@ -21,5 +23,15 @@ class AdminController < ApplicationController
 
     @user_weekly_creation = User.weekly_creation_stats(1.years.ago, 0.years.ago)
     @card_daily_creation = Card.daily_creation_stats(1.months.ago, 0.months.ago)
+  end
+
+  private
+
+  # Private: Method called before action to generate the navigation bar on the
+  #   side of every admin page.
+  def generate_navlinks
+    @admin_navlinks = {
+        admin_statistics_path => I18n.t('admin.statistics.header'),
+      }
   end
 end

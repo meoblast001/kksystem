@@ -17,14 +17,13 @@
   $(document).ready ->
     kksystem.admin.statistics.init()
 
-.page
-  %h2= t('admin.statistics.header')
+%h2= t('admin.statistics.header')
 
-  #statistics
-    %h2= t('admin.statistics.user_weekly_creation.label') + ':'
-    %canvas#user_weekly_creation
-    %h2= t('admin.statistics.card_daily_creation.label') + ':'
-    %canvas#card_daily_creation
-    #data
-      %input{ :type => 'hidden', :name => 'user_weekly_creation', :value => @user_weekly_creation.to_json }
-      %input{ :type => 'hidden', :name => 'card_daily_creation', :value => @card_daily_creation.to_json }
+#statistics
+  %h2= t('admin.statistics.user_weekly_creation.label') + ':'
+  %canvas#user_weekly_creation
+  %h2= t('admin.statistics.card_daily_creation.label') + ':'
+  %canvas#card_daily_creation
+  #data
+    %input{ :type => 'hidden', :name => 'user_weekly_creation', :value => @user_weekly_creation.to_json }
+    %input{ :type => 'hidden', :name => 'card_daily_creation', :value => @card_daily_creation.to_json }

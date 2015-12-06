@@ -1,4 +1,4 @@
--# Copyright (C) 2014 Braden Walters
+-# Copyright (C) 2015 Braden Walters
 -#
 -# This program is free software: you can redistribute it and/or modify
 -# it under the terms of the GNU Affero General Public License as published by
@@ -13,21 +13,17 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-!!! HTML
-!!!
-%html
-  %head
-    %title KKSystem
-    = stylesheet_link_tag 'application', :media => 'all'
-    = javascript_include_tag 'application'
-    = render 'shared/models'
-    = csrf_meta_tags
-    %link{ :href => image_path("favicon.ico"), :rel => 'shortcut icon' }
-    %meta{ :name => 'viewport', :content => 'width=device-width, user-scalable=no'}
-  %body#main
-    #header
-      %a#return_home{ :href => root_url }
-        = image_tag 'kksystem_small.png', :alt => 'KKSystem'
-    #breadcrumbs
-      = render_breadcrumbs :separator => ' &#10132; '
-    = if content_for? :content then yield :content else yield end
+- content_for :content do
+  .page.container-fluid
+    .row
+      .col-md-2
+        .list-group
+          - @admin_navlinks.each do |link, title|
+            - if request.fullpath == link
+              .list-group-item.active= title
+            - else
+              %a.list-group-item{ :href => link }= title
+      .col-md-10
+        = yield
+
+= render :template => 'layouts/application'
