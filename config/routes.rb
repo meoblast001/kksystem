@@ -1,6 +1,8 @@
 Kksystem::Application.routes.draw do
   root 'site#index'
 
+  get '/privacy_policy' => 'site#privacy_policy', :as => :privacy_policy
+
   devise_for :users, :controllers => {
       :sessions => 'users/sessions',
       :passwords => 'users/passwords',

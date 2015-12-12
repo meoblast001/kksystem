@@ -9,3 +9,6 @@ en:
 
     forms:
       unknown_error_occurred: "An unknown error has occurred."
+
+    privacy_policy:
+      header: 'Privacy Policy'

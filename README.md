@@ -21,5 +21,7 @@ If you are curious about KKSystem and want to use the official deployal, go to
   - Copy config/user_settings.example.rb to config/user_settings.rb
   - Configure database in config/database.yml from config/database.example.yml
     - Migrate with `rake db:migrate`
+- Configure config/privacy_policy for each language and symlink the fallback
+  as config/privacy_policy/default.md
 - Run `rails server` to run the test server or `rails console` to drop into the
   interactive shell

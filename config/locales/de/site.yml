@@ -9,3 +9,6 @@ de:
 
     forms:
       unknown_error_occurred: "Ein unbekannter Fehler ist aufgetreten."
+
+    privacy_policy:
+      header: 'Datenschutzerklärung'

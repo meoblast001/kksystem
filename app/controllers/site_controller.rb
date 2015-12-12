@@ -17,4 +17,15 @@ class SiteController < ApplicationController
   def index
     render :landing, :layout => false unless signed_in?
   end
+
+  # Public: Render privacy policy out of configuration.
+  def privacy_policy
+    policy_dir = Rails.root.join('config', 'privacy_policy')
+    if File.exists? policy_dir.join("#{I18n.locale}.md")
+      policy_file = open policy_dir.join("#{I18n.locale}.md")
+    else
+      policy_file = open policy_dir.join('default.md')
+    end
+    @policy_html = Kramdown::Document.new(policy_file.read).to_html
+  end
 end
