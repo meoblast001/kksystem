@@ -22,3 +22,43 @@
         %input.search-box{ :name => 'search', :value => params[:search] }
       %td.button-col
         %input.btn.btn-default{ :type => 'submit', :value => t('admin.users.search') }
+
+  -if @users.count > 0
+    %table.prev-next-buttons
+      %tr
+        %td
+          - if @prev[:offset]
+            %a{ :href => admin_users_path(@prev) }= t('admin.users.prev')
+        %td
+          - if @next[:offset]
+            %a{ :href => admin_users_path(@next) }= t('admin.users.next')
+
+    .display-table.fixed-full-sized-table.styled-table
+      .display-thead
+        .display-td= t('users.username')
+        .display-td= t('users.email')
+        .display-td= t('users.login')
+        .display-td= t('users.created_at')
+        .display-td= t('users.confirmed_at')
+        .display-td= t('users.is_admin')
+      .display-tbody
+        - @users.each do |user|
+          .display-tr
+            .display-td= user.username
+            .display-td= user.email
+            .display-td= user.login
+            .display-td= user.created_at
+            .display-td= user.confirmed_at
+            .display-td= (if user.is_admin then '&#x2714;' else '&#x2716;' end).html_safe
+
+    %table.prev-next-buttons
+      %tr
+        %td
+          - if @prev[:offset]
+            %a{ :href => admin_users_path(@prev) }= t('admin.users.prev')
+        %td
+          - if @next[:offset]
+            %a{ :href => admin_users_path(@next) }= t('admin.users.next')
+
+  -#The case of there being no users should never happen, so it is not a
+  -#problem if the table is simply blank.

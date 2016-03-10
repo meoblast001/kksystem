@@ -14,3 +14,6 @@ en:
     users:
       header: 'Users'
       search: 'Search'
+      confirmed: 'Confirmed'
+      prev: 'Previous'
+      next: 'Next'

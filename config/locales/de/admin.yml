@@ -14,3 +14,6 @@ de:
     users:
       header: 'Benutzer'
       search: 'Suche'
+      confirmed: 'Bestätigt'
+      prev: 'Vorherige'
+      next: 'Nächste'

@@ -5,6 +5,9 @@ en:
     login: 'Username or E-Mail Address'
     password: 'Password'
     password_confirmation: 'Confirm Password'
+    created_at: 'Sign-Up Date'
+    confirmed_at: 'Confirmation Date'
+    is_admin: 'Admin'
 
     registrations:
       create:

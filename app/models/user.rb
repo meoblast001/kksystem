@@ -25,6 +25,11 @@ class User < ActiveRecord::Base
 
   attr_accessor :login
 
+  def self.search(str)
+    where { username.matches("%#{str}%") | email.matches("%#{str}%") |
+            unconfirmed_email.matches("%#{str}%") }
+  end
+
   #Overrides password validation to handle Devise and Django passwords.
   def valid_password?(password)
     #Try Devise password validation.

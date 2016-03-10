@@ -14,6 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class AdminController < ApplicationController
+  USERS_INDEX_ITEM_LIMIT = 50
+
   before_action :generate_navlinks
 
   def statistics
@@ -29,6 +31,24 @@ class AdminController < ApplicationController
     #Users page.
     add_breadcrumb I18n.t('admin.header'), admin_statistics_path
     add_breadcrumb I18n.t('admin.users.header'), admin_users_path
+
+    all_users = User.all
+    all_users = @users.search(params[:search]) if params[:search]
+    @users = all_users.offset(params[:offset].to_i).
+             limit(USERS_INDEX_ITEM_LIMIT)
+
+    #Determine previous and next offsets.
+    offset = params[:offset].to_i
+    prev_off = if offset - USERS_INDEX_ITEM_LIMIT > 0
+               then offset - USERS_INDEX_ITEM_LIMIT
+               elsif offset > 0 then 0 else nil end
+    next_off = if offset + USERS_INDEX_ITEM_LIMIT < all_users.count
+               then offset + USERS_INDEX_ITEM_LIMIT else nil end
+    @prev = { :offset => prev_off }
+    @next = { :offset => next_off }
+    if params[:search]
+      @prev[:search] = @next[:search] = params[:search]
+    end
   end
 
   private
