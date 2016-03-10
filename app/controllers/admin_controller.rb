@@ -25,6 +25,12 @@ class AdminController < ApplicationController
     @card_daily_creation = Card.daily_creation_stats(1.months.ago, 0.months.ago)
   end
 
+  def users
+    #Users page.
+    add_breadcrumb I18n.t('admin.header'), admin_statistics_path
+    add_breadcrumb I18n.t('admin.users.header'), admin_users_path
+  end
+
   private
 
   # Private: Method called before action to generate the navigation bar on the
@@ -32,6 +38,7 @@ class AdminController < ApplicationController
   def generate_navlinks
     @admin_navlinks = {
         admin_statistics_path => I18n.t('admin.statistics.header'),
+        admin_users_path => I18n.t('admin.users.header'),
       }
   end
 end

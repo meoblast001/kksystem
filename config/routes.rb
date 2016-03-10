@@ -31,4 +31,5 @@ Kksystem::Application.routes.draw do
   get '/cards/new/:cardset_id' => 'cards#new', :as => :new_card
 
   get '/admin/statistics' => 'admin#statistics', :as => :admin_statistics
+  get '/admin/users' => 'admin#users', :as => :admin_users
 end

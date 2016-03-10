@@ -10,3 +10,7 @@ de:
 
       card_daily_creation:
         label: 'Täglich verfasste Karten'
+
+    users:
+      header: 'Benutzer'
+      search: 'Suche'

@@ -10,3 +10,7 @@ en:
 
       card_daily_creation:
         label: 'Card Daily Creation'
+
+    users:
+      header: 'Users'
+      search: 'Search'
