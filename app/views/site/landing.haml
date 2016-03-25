@@ -84,6 +84,8 @@
             = t('landing.copyright')
             %br
             = t('landing.license')
+            %br
+            %a{ :href => privacy_policy_url }= t('landing.privacy_policy')
           .col-md-6.system-info
             #{t('landing.version.kksystem')}: #{Kksystem::VERSION}
             %br
