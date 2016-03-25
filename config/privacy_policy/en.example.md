@@ -28,8 +28,8 @@ notified and the content deleted.
 
 ### Data Protection
 
-Unless necessary to comply with the law, the operator will not give data to
-third parties unless
+Unless necessary to comply with the law, the operator will not give the user's
+data to third parties unless
 
   * the user gives explicit consent to do so or
   * the data is being stored as an encrypted backup.
